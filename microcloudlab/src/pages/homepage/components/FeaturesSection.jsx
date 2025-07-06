@@ -1,119 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
 const FeaturesSection = () => {
   const [activeFeature, setActiveFeature] = useState(0);
+  const [features, setFeatures] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const features = [
-    {
-      id: 'cloud-hardware',
-      title: 'Cloud-Based Hardware Access',
-      subtitle: 'Real microcontrollers in the cloud',
-      icon: 'Cloud',
-      color: 'primary',
-      bgColor: 'primary/10',
-      description: 'Access real ESP32, Arduino, Raspberry Pi, and other microcontrollers instantly through your browser. No physical hardware required.',
-      benefits: [
-        'Instant access to 24+ microcontroller types',
-        'No hardware procurement or maintenance',
-        'Always up-to-date firmware and tools',
-        'Scalable from 1 to 1000+ concurrent users'
-      ],
-      demo: {
-        title: 'Live Hardware Connection',
-        content: `Connected to ESP32 DevKit v1
-Status: Online
-Firmware: v4.4.2
-Memory: 520KB SRAM, 4MB Flash
-GPIO Pins: 30 available
-Sensors: Temperature, Humidity, Motion`
-      }
-    },
-    {
-      id: 'collaborative-coding',
-      title: 'Collaborative Development',
-      subtitle: 'GitHub for embedded systems',
-      icon: 'Users',
-      color: 'accent',
-      bgColor: 'accent/10',
-      description: 'Work together on embedded projects with real-time collaboration, version control, and team management features.',
-      benefits: [
-        'Real-time collaborative coding',
-        'Git integration for embedded projects',
-        'Team workspaces and permissions',
-        'Code review and merge workflows'
-      ],
-      demo: {
-        title: 'Team Collaboration',
-        content: `Active Collaborators: 3
-- Sarah Chen (Lead Developer)
-- Mike Rodriguez (Hardware Engineer)  
-- Alex Kim (Firmware Specialist)
+  useEffect(() => {
+    fetch('http://localhost:8000/api/features/')
+      .then((res) => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
+      .then((data) => {
+        console.log('Fetched features:', data);
+        setFeatures(data.features || data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching features:', err);
+        setError('Failed to load features.');
+        setLoading(false);
+      });
+  }, []);
 
-Recent Activity:
-✓ Sarah updated sensor calibration
-✓ Mike added WiFi connectivity
-✓ Alex optimized power management`
-      }
-    },
-    {
-      id: 'instant-deployment',
-      title: 'Instant Deployment',
-      subtitle: 'From code to hardware in seconds',
-      icon: 'Zap',
-      color: 'conversion',
-      bgColor: 'conversion/10',
-      description: 'Deploy your code to real hardware instantly. No flashing, no cables, no setup time. Just click and run.',
-      benefits: [
-        'One-click deployment to hardware',
-        'Automatic compilation and optimization',
-        'Real-time debugging and monitoring',
-        'Rollback and version management'
-      ],
-      demo: {
-        title: 'Deployment Pipeline',
-        content: `Deployment Status: Success ✓
-Build Time: 2.3 seconds
-Upload Time: 0.8 seconds
-Total Time: 3.1 seconds
-
-Hardware Response:
-> Program started successfully
-> WiFi connected: 192.168.1.42
-> Sensors initialized
-> Ready for commands`
-      }
-    },
-    {
-      id: 'educational-tools',
-      title: 'Educational Excellence',
-      subtitle: 'Built for learning and teaching',
-      icon: 'GraduationCap',
-      color: 'success',
-      bgColor: 'success/10',
-      description: 'Comprehensive educational tools including curriculum integration, progress tracking, and assignment management.',
-      benefits: [
-        'Curriculum-aligned learning paths',
-        'Automated grading and feedback',
-        'Student progress analytics',
-        'Classroom management tools'
-      ],
-      demo: {
-        title: 'Classroom Dashboard',
-        content: `Class: Embedded Systems 101
-Students: 45 active
-Current Assignment: IoT Sensor Project
-
-Progress Overview:
-✓ Completed: 32 students (71%)
-⏳ In Progress: 10 students (22%)
-❌ Not Started: 3 students (7%)
-
-Average Score: 87%`
-      }
-    }
-  ];
+  if (loading) return <div className="text-center py-10">Loading features...</div>;
+  if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
+  if (!features || features.length === 0) return <div className="text-center py-10">No features available.</div>;
 
   return (
     <section className="py-20 bg-gradient-to-br from-surface to-background">
