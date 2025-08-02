@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../../components/ui/Header';
 import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
@@ -517,15 +518,17 @@ const ResourcesSupport = () => {
             >
               Try Interactive Demo
             </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              iconName="Zap"
-              iconPosition="left"
-              className="border-white text-white hover:bg-white hover:text-primary"
-            >
-              Start Free Trial
-            </Button>
+            <Link to="/ide">
+              <Button
+                variant="outline"
+                size="lg"
+                iconName="Zap"
+                iconPosition="left"
+                className="border-white text-white hover:bg-white hover:text-primary"
+              >
+                Start Free Trial
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

@@ -295,8 +295,8 @@ void reconnectMQTT() {
   };
 
   const handleStartTrial = () => {
-    // In a real app, this would redirect to signup
-    alert('Trial signup would be implemented here with user registration flow');
+    // Navigate to the IDE
+    window.location.href = '/ide';
   };
 
   const handleTutorialComplete = (stepId) => {

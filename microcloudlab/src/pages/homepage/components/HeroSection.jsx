@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
 
@@ -153,6 +154,7 @@ void setup() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
+              <Link to="/ide">
               <Button 
                 variant="primary" 
                 size="lg"
@@ -162,6 +164,7 @@ void setup() {
               >
                 Start Free Trial
               </Button>
+              </Link>
               <Button 
                 variant="outline" 
                 size="lg"

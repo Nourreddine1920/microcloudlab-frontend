@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Header from '../../components/ui/Header';
 import Icon from '../../components/AppIcon';
@@ -242,15 +243,17 @@ const ContactPartnership = () => {
             with MicroCloudLab's cloud-based embedded development platform.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <Button
-              variant="secondary"
-              size="lg"
-              iconName="Zap"
-              iconPosition="left"
-              onClick={() => window.location.href = '/platform-demo'}
-            >
-              Start Free Trial
-            </Button>
+            <Link to="/ide">
+              <Button
+                variant="secondary"
+                size="lg"
+                iconName="Zap"
+                iconPosition="left"
+                className="bg-white text-primary hover:bg-white/90 shadow-xl"
+              >
+                Start Free Trial
+              </Button>
+            </Link>
             <Button
               variant="outline"
               size="lg"

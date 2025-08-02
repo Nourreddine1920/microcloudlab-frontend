@@ -2,27 +2,33 @@ import React, { useState } from 'react';
 import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import Icon from '../../../components/AppIcon';
+import { contactAPI } from '../../../services/api';
+import { useApiMutation } from '../../../hooks/useApiState';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     company: '',
-    category: '',
+    inquiry_type: '',
     subject: '',
     message: '',
     priority: 'normal'
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
+  // Use API mutation hook
+  const { mutate: submitContact, loading: isSubmitting, error: submitError } = useApiMutation(
+    (data) => contactAPI.create(data)
+  );
+
   const categories = [
-    { value: 'technical-support', label: 'Technical Support', icon: 'Wrench', description: 'Platform issues, bugs, and technical questions' },
-    { value: 'sales', label: 'Sales Consultation', icon: 'ShoppingCart', description: 'Pricing, demos, and purchase inquiries' },
-    { value: 'education', label: 'Educational Partnerships', icon: 'GraduationCap', description: 'Curriculum integration and institutional programs' },
-    { value: 'media', label: 'Media Inquiries', icon: 'Newspaper', description: 'Press releases, interviews, and media requests' },
-    { value: 'general', label: 'General Questions', icon: 'MessageCircle', description: 'Other inquiries and feedback' }
+    { value: 'SUPPORT', label: 'Technical Support', icon: 'Wrench', description: 'Platform issues, bugs, and technical questions' },
+    { value: 'SALES', label: 'Sales Consultation', icon: 'ShoppingCart', description: 'Pricing, demos, and purchase inquiries' },
+    { value: 'PARTNERSHIP', label: 'Partnership', icon: 'Handshake', description: 'Business partnerships and collaborations' },
+    { value: 'GENERAL', label: 'General Questions', icon: 'MessageCircle', description: 'Other inquiries and feedback' },
+    { value: 'FEEDBACK', label: 'Feedback', icon: 'ThumbsUp', description: 'Suggestions and feedback' }
   ];
 
   const handleInputChange = (e) => {
@@ -35,31 +41,42 @@ const ContactForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
     
-    // Mock form submission
-    setTimeout(() => {
+    try {
+      // Map form data to API format
+      const apiData = {
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        inquiry_type: formData.inquiry_type,
+        subject: formData.subject,
+        message: formData.message
+      };
+
+      await submitContact(apiData);
       setSubmitStatus('success');
-      setIsSubmitting(false);
       setFormData({
         name: '',
         email: '',
         company: '',
-        category: '',
+        inquiry_type: '',
         subject: '',
         message: '',
         priority: 'normal'
       });
-    }, 2000);
+    } catch (error) {
+      setSubmitStatus('error');
+      console.error('Contact form submission error:', error);
+    }
   };
 
   const getResponseTime = (category) => {
     const times = {
-      'technical-support': '2-4 hours',
-      'sales': '24 hours',
-      'education': '48 hours',
-      'media': '24 hours',
-      'general': '72 hours'
+      'SUPPORT': '2-4 hours',
+      'SALES': '24 hours',
+      'PARTNERSHIP': '48 hours',
+      'GENERAL': '72 hours',
+      'FEEDBACK': '72 hours'
     };
     return times[category] || '72 hours';
   };
@@ -72,7 +89,7 @@ const ContactForm = () => {
         </div>
         <h3 className="text-xl font-semibold text-success-800 mb-2">Message Sent Successfully!</h3>
         <p className="text-success-700 mb-4">
-          Thank you for contacting us. We'll get back to you within {getResponseTime(formData.category)}.
+          Thank you for contacting us. We'll get back to you within {getResponseTime(formData.inquiry_type)}.
         </p>
         <Button 
           variant="success" 
@@ -81,6 +98,28 @@ const ContactForm = () => {
           iconPosition="left"
         >
           Send Another Message
+        </Button>
+      </div>
+    );
+  }
+
+  if (submitStatus === 'error') {
+    return (
+      <div className="bg-error-50 border border-error-200 rounded-xl p-8 text-center">
+        <div className="w-16 h-16 bg-error-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Icon name="AlertCircle" size={32} className="text-error-600" />
+        </div>
+        <h3 className="text-xl font-semibold text-error-800 mb-2">Submission Failed</h3>
+        <p className="text-error-700 mb-4">
+          {submitError || 'There was an error sending your message. Please try again.'}
+        </p>
+        <Button 
+          variant="error" 
+          onClick={() => setSubmitStatus(null)}
+          iconName="RotateCcw"
+          iconPosition="left"
+        >
+          Try Again
         </Button>
       </div>
     );
@@ -144,22 +183,22 @@ const ContactForm = () => {
             <label
               key={category.value}
               className={`relative flex items-start p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                formData.category === category.value
+                formData.inquiry_type === category.value
                   ? 'border-primary bg-primary-50' :'border-border hover:border-primary/50 hover:bg-surface'
               }`}
             >
               <input
                 type="radio"
-                name="category"
+                name="inquiry_type"
                 value={category.value}
-                checked={formData.category === category.value}
+                checked={formData.inquiry_type === category.value}
                 onChange={handleInputChange}
                 className="sr-only"
                 required
               />
               <div className="flex items-start space-x-3">
                 <div className={`p-2 rounded-lg ${
-                  formData.category === category.value
+                  formData.inquiry_type === category.value
                     ? 'bg-primary text-primary-foreground'
                     : 'bg-surface text-text-secondary'
                 }`}>
@@ -172,7 +211,7 @@ const ContactForm = () => {
                   <div className="text-xs text-text-secondary mt-1">
                     {category.description}
                   </div>
-                  {formData.category === category.value && (
+                  {formData.inquiry_type === category.value && (
                     <div className="text-xs text-primary font-medium mt-2">
                       Response time: {getResponseTime(category.value)}
                     </div>
@@ -201,7 +240,7 @@ const ContactForm = () => {
       </div>
 
       {/* Priority for Technical Support */}
-      {formData.category === 'technical-support' && (
+      {formData.inquiry_type === 'SUPPORT' && (
         <div>
           <label className="block text-sm font-medium text-text-primary mb-3">
             Priority Level
@@ -253,17 +292,16 @@ const ContactForm = () => {
       {/* Submit Button */}
       <div className="flex items-center justify-between pt-4">
         <div className="text-sm text-text-secondary">
-          <Icon name="Shield" size={16} className="inline mr-1" />
-          Your information is secure and will never be shared
+          * Required fields
         </div>
         <Button
           type="submit"
           variant="primary"
           size="lg"
-          loading={isSubmitting}
-          disabled={!formData.name || !formData.email || !formData.category || !formData.subject || !formData.message || formData.message.length < 20}
           iconName="Send"
           iconPosition="right"
+          loading={isSubmitting}
+          disabled={isSubmitting || formData.message.length < 20}
         >
           {isSubmitting ? 'Sending...' : 'Send Message'}
         </Button>
