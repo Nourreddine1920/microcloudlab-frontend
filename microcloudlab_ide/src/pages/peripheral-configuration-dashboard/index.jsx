@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../../components/ui/Header';
+import { useBoard } from '../../contexts/BoardContext';
 import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
 import PeripheralCategoryTabs from './components/PeripheralCategoryTabs';
@@ -11,12 +12,110 @@ import QuickStatsOverview from './components/QuickStatsOverview';
 import FloatingActionMenu from './components/FloatingActionMenu';
 
 const PeripheralConfigurationDashboard = () => {
+  const { selectedBoard } = useBoard();
   const [activeCategory, setActiveCategory] = useState('communication');
   const [searchQuery, setSearchQuery] = useState('');
   const [isPreviewCollapsed, setIsPreviewCollapsed] = useState(false);
   const [filteredPeripherals, setFilteredPeripherals] = useState([]);
 
-  const peripheralData = {
+  // Generate board-specific peripheral data
+  const getBoardSpecificPeripherals = () => {
+    if (!selectedBoard) {
+      return defaultPeripheralData;
+    }
+
+    const boardCategories = selectedBoard.peripheralCategories || {};
+    const specificData = {};
+
+    // Map board-specific peripheral categories to detailed configurations
+    Object.keys(boardCategories).forEach(category => {
+      specificData[category] = boardCategories[category].map((peripheralName, index) => ({
+        id: `${peripheralName.toLowerCase().replace(/\s+/g, '-')}-${index}`,
+        name: peripheralName,
+        description: getPeripheralDescription(peripheralName),
+        icon: getPeripheralIcon(peripheralName),
+        status: Math.random() > 0.5 ? 'configured' : Math.random() > 0.3 ? 'partial' : 'not_configured',
+        instances: { 
+          active: Math.floor(Math.random() * 3), 
+          total: Math.floor(Math.random() * 8) + 1 
+        },
+        pins: { 
+          used: Math.floor(Math.random() * 8), 
+          available: selectedBoard.id === 'arduino-uno' ? 20 : 144 
+        },
+        completeness: Math.floor(Math.random() * 101),
+        lastModified: Math.random() > 0.3 ? new Date().toISOString() : null
+      }));
+    });
+
+    return specificData;
+  };
+
+  const getPeripheralDescription = (name) => {
+    const descriptions = {
+      'UART': 'Universal Asynchronous Receiver Transmitter',
+      'UART1': 'Universal Asynchronous Receiver Transmitter 1',
+      'UART2': 'Universal Asynchronous Receiver Transmitter 2',
+      'SPI': 'Serial Peripheral Interface',
+      'SPI1': 'Serial Peripheral Interface 1',
+      'SPI2': 'Serial Peripheral Interface 2',
+      'I2C': 'Inter-Integrated Circuit',
+      'I2C1': 'Inter-Integrated Circuit 1',
+      'I2C2': 'Inter-Integrated Circuit 2',
+      'WiFi': 'Wireless Network Interface',
+      'Bluetooth': 'Bluetooth Low Energy Interface',
+      'Bluetooth LE': 'Bluetooth Low Energy Interface',
+      'CAN1': 'Controller Area Network 1',
+      'USB OTG': 'Universal Serial Bus On-The-Go',
+      'GPIO Port A': 'General Purpose Input/Output Port A',
+      'GPIO Port B': 'General Purpose Input/Output Port B',
+      'GPIO Port C': 'General Purpose Input/Output Port C',
+      'GPIO Port D': 'General Purpose Input/Output Port D',
+      'Timer 1': 'Advanced Control Timer 1',
+      'Timer 2': 'General Purpose Timer 2',
+      'Timer 3': 'General Purpose Timer 3',
+      'PWM Channel 1': 'Pulse Width Modulation Channel 1',
+      'PWM Channel 2': 'Pulse Width Modulation Channel 2',
+      'Watchdog Timer': 'Independent Watchdog Timer',
+      'ADC1': 'Analog to Digital Converter 1',
+      'ADC2': 'Analog to Digital Converter 2',
+      'DAC1': 'Digital to Analog Converter 1',
+      'Comparator 1': 'Analog Comparator 1',
+      'RCC': 'Reset and Clock Control',
+      'Power Management': 'Power Control Unit',
+      'NVIC': 'Nested Vector Interrupt Controller',
+      'DMA1': 'Direct Memory Access Controller 1',
+      'DMA2': 'Direct Memory Access Controller 2',
+      'RTC': 'Real Time Clock',
+      'Clock Control': 'System Clock Controller',
+      'PIO': 'Programmable Input/Output'
+    };
+    return descriptions[name] || `${name} peripheral interface`;
+  };
+
+  const getPeripheralIcon = (name) => {
+    if (name.includes('UART') || name.includes('SPI') || name.includes('I2C') || name.includes('CAN') || name.includes('USB')) {
+      return 'Radio';
+    }
+    if (name.includes('WiFi') || name.includes('Bluetooth')) {
+      return 'Wifi';
+    }
+    if (name.includes('GPIO')) {
+      return 'Zap';
+    }
+    if (name.includes('Timer') || name.includes('PWM') || name.includes('Watchdog')) {
+      return 'Clock';
+    }
+    if (name.includes('ADC') || name.includes('DAC') || name.includes('Comparator')) {
+      return 'Activity';
+    }
+    if (name.includes('Power') || name.includes('RCC') || name.includes('NVIC') || name.includes('DMA') || name.includes('RTC') || name.includes('Clock')) {
+      return 'Settings';
+    }
+    return 'Settings';
+  };
+
+  const defaultPeripheralData = {
     communication: [
       {
         id: 'uart1',
@@ -326,6 +425,8 @@ const PeripheralConfigurationDashboard = () => {
     ]
   };
 
+  const peripheralData = getBoardSpecificPeripherals();
+
   useEffect(() => {
     const currentPeripherals = peripheralData[activeCategory] || [];
     if (searchQuery) {
@@ -337,7 +438,7 @@ const PeripheralConfigurationDashboard = () => {
     } else {
       setFilteredPeripherals(currentPeripherals);
     }
-  }, [activeCategory, searchQuery]);
+  }, [activeCategory, searchQuery, selectedBoard]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -367,9 +468,23 @@ const PeripheralConfigurationDashboard = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <div>
-                    <h1 className="text-heading-lg font-heading">STM32 Configuration Dashboard</h1>
+                    <div className="flex items-center space-x-3 mb-2">
+                      <h1 className="text-heading-lg font-heading">
+                        {selectedBoard ? `${selectedBoard.name} Configuration Dashboard` : 'Configuration Dashboard'}
+                      </h1>
+                      {selectedBoard && (
+                        <Link to="/ide">
+                          <Button variant="outline" size="sm" iconName="ArrowLeftRight">
+                            Change Board
+                          </Button>
+                        </Link>
+                      )}
+                    </div>
                     <p className="text-body-sm text-muted-foreground">
-                      Configure and manage STM32F407VGT6 peripherals
+                      {selectedBoard 
+                        ? `Configure and manage ${selectedBoard.name} peripherals`
+                        : 'Configure and manage microcontroller peripherals'
+                      }
                     </p>
                   </div>
                 </div>
