@@ -20,6 +20,7 @@ import ConfigurationImportExportManager from "pages/ide/configuration-import-exp
 import PeripheralConfigurationEditor from "pages/ide/peripheral-configuration-editor";
 import PinAssignmentVisualizer from "pages/ide/pin-assignment-visualizer";
 import PeripheralConfigurationDashboard from "pages/ide/peripheral-configuration-dashboard";
+import ProtectedRoute from "components/ProtectedRoute";
 
 const Routes = () => {
   return (
@@ -40,11 +41,31 @@ const Routes = () => {
         
         {/* IDE Routes */}
         <Route path="/ide" element={<IDEHome />} />
-        <Route path="/ide/configuration-validation-conflicts" element={<ConfigurationValidationConflicts />} />
-        <Route path="/ide/configuration-import-export-manager" element={<ConfigurationImportExportManager />} />
-        <Route path="/ide/peripheral-configuration-editor" element={<PeripheralConfigurationEditor />} />
-        <Route path="/ide/pin-assignment-visualizer" element={<PinAssignmentVisualizer />} />
-        <Route path="/ide/peripheral-configuration-dashboard" element={<PeripheralConfigurationDashboard />} />
+        <Route path="/ide/configuration-validation-conflicts" element={
+          <ProtectedRoute requireBoard={true}>
+            <ConfigurationValidationConflicts />
+          </ProtectedRoute>
+        } />
+        <Route path="/ide/configuration-import-export-manager" element={
+          <ProtectedRoute requireBoard={true}>
+            <ConfigurationImportExportManager />
+          </ProtectedRoute>
+        } />
+        <Route path="/ide/peripheral-configuration-editor" element={
+          <ProtectedRoute requireBoard={true}>
+            <PeripheralConfigurationEditor />
+          </ProtectedRoute>
+        } />
+        <Route path="/ide/pin-assignment-visualizer" element={
+          <ProtectedRoute requireBoard={true}>
+            <PinAssignmentVisualizer />
+          </ProtectedRoute>
+        } />
+        <Route path="/ide/peripheral-configuration-dashboard" element={
+          <ProtectedRoute requireBoard={true}>
+            <PeripheralConfigurationDashboard />
+          </ProtectedRoute>
+        } />
         
         <Route path="*" element={<NotFound />} />
       </RouterRoutes>

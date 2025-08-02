@@ -1,13 +1,33 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../components/ui/Button';
 import Header from '../../components/ui/Header';
 import Icon from '../../components/AppIcon';
+import { useBoard } from '../../contexts/BoardContext';
 
 const IDEHome = () => {
-  const [selectedBoard, setSelectedBoard] = useState(null);
+  const { selectedBoard: contextSelectedBoard, availableBoards, selectBoard } = useBoard();
+  const [localSelectedBoard, setLocalSelectedBoard] = useState(contextSelectedBoard);
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Show message if user was redirected due to missing board selection
+  const [showRedirectMessage, setShowRedirectMessage] = useState(false);
 
-  const availableBoards = [
+  useEffect(() => {
+    if (location.state?.message) {
+      setShowRedirectMessage(true);
+      // Clear the message after showing it
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate]);
+
+  useEffect(() => {
+    setLocalSelectedBoard(contextSelectedBoard);
+  }, [contextSelectedBoard]);
+
+  // This is now provided by the context, but we'll keep the static data as fallback
+  const fallbackBoards = [
     {
       id: 'arduino-uno',
       name: 'Arduino Uno',
@@ -115,13 +135,14 @@ const IDEHome = () => {
   ];
 
   const handleBoardSelect = (board) => {
-    setSelectedBoard(board);
+    setLocalSelectedBoard(board);
+    selectBoard(board); // Update the global context
   };
 
   const handleStartWithBoard = () => {
-    if (selectedBoard) {
-      // Navigate to the configuration dashboard with the selected board
-      window.location.href = `/ide/peripheral-configuration-dashboard?board=${selectedBoard.id}`;
+    if (localSelectedBoard) {
+      // Navigate to the configuration dashboard - the board is now stored in context
+      navigate('/ide/peripheral-configuration-dashboard');
     }
   };
 
@@ -197,6 +218,27 @@ const IDEHome = () => {
       {/* Board Selection Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Redirect Message */}
+          {showRedirectMessage && (
+            <div className="bg-warning/10 border border-warning/20 rounded-lg p-4 mb-8 max-w-4xl mx-auto">
+              <div className="flex items-center space-x-3">
+                <Icon name="AlertTriangle" size={20} className="text-warning flex-shrink-0" />
+                <div>
+                  <p className="text-warning font-medium">Board Selection Required</p>
+                  <p className="text-text-secondary text-sm">
+                    {location.state?.message || "Please select a board first to access peripheral configuration tools."}
+                  </p>
+                </div>
+                <button 
+                  onClick={() => setShowRedirectMessage(false)}
+                  className="text-warning hover:text-warning/80"
+                >
+                  <Icon name="X" size={16} />
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-headline text-text-primary mb-4">
               Choose Your Development Board
@@ -205,6 +247,14 @@ const IDEHome = () => {
               Select a microcontroller board to start your embedded development journey. 
               All boards are available for free trial with full IDE access.
             </p>
+            {contextSelectedBoard && (
+              <div className="mt-4">
+                <div className="inline-flex items-center space-x-2 bg-accent/10 text-accent px-4 py-2 rounded-full text-sm">
+                  <Icon name="Check" size={16} />
+                  <span>Currently selected: <strong>{contextSelectedBoard.name}</strong></span>
+                </div>
+              </div>
+            )}
         </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -212,13 +262,13 @@ const IDEHome = () => {
               <div 
                 key={board.id}
                 className={`relative bg-card border-2 rounded-xl p-6 hover:shadow-lg transition-all duration-300 cursor-pointer ${
-                  selectedBoard?.id === board.id
+                  localSelectedBoard?.id === board.id
                     ? 'border-accent shadow-lg scale-105'
                     : 'border-border hover:border-primary/30'
                 }`}
                 onClick={() => handleBoardSelect(board)}
               >
-                {selectedBoard?.id === board.id && (
+                {localSelectedBoard?.id === board.id && (
                   <div className="absolute -top-2 -right-2">
                     <div className="bg-accent text-white w-6 h-6 rounded-full flex items-center justify-center">
                       <Icon name="Check" size={12} />
@@ -280,12 +330,12 @@ const IDEHome = () => {
             ))}
           </div>
 
-          {selectedBoard && (
+          {localSelectedBoard && (
             <div className="text-center">
               <div className="inline-flex items-center space-x-4 bg-accent/10 border border-accent/20 rounded-xl px-6 py-4 mb-6">
                 <Icon name="Cpu" size={20} className="text-accent" />
                 <span className="text-accent font-medium">
-                  Selected: {selectedBoard.name}
+                  Selected: {localSelectedBoard.name}
                 </span>
               </div>
               
