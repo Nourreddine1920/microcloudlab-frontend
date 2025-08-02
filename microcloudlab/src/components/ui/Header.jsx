@@ -7,8 +7,13 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  // Check if we're in the IDE section
-  const isInIDE = location.pathname.startsWith('/ide');
+  // Check if we're in the IDE section with fallback
+  const isInIDE = location?.pathname?.startsWith('/ide') || false;
+
+  // Debug logging
+  React.useEffect(() => {
+    console.log('Header render - Location:', location?.pathname, 'isInIDE:', isInIDE);
+  }, [location?.pathname, isInIDE]);
 
   // Main app navigation items
   const mainAppNavigationItems = [
@@ -99,14 +104,17 @@ const Header = () => {
       <div className="flex items-center justify-between h-16 px-4 lg:px-6">
         {/* Logo Section */}
         <div className="flex items-center">
-          <Link to={isInIDE ? "/ide" : "/"} className="flex items-center space-x-3">
+          <Link 
+            to="/" 
+            className="flex items-center space-x-3 hover:bg-surface/50 rounded-lg px-2 py-1 transition-colors"
+          >
             <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg">
               <Icon name="Cpu" size={20} className="text-white" />
             </div>
             <div className="flex flex-col">
               <span className="text-lg font-headline text-text-primary">MicroCloudLab</span>
               <span className="text-xs text-text-secondary">
-                {isInIDE ? "IDE" : "Embedded Development Platform"}
+                {isInIDE ? "IDE • Click to return to main app" : "Embedded Development Platform"}
               </span>
             </div>
           </Link>
@@ -135,6 +143,11 @@ const Header = () => {
         <div className="hidden lg:flex items-center space-x-2">
           {isInIDE ? (
             <>
+              <Link to="/">
+                <Button variant="ghost" size="sm" iconName="ArrowLeft">
+                  Back to Main App
+                </Button>
+              </Link>
               <Button variant="ghost" size="sm" iconName="HelpCircle">
                 Help
               </Button>
@@ -195,6 +208,11 @@ const Header = () => {
           <div className="px-4 py-3 border-t border-border space-y-2">
             {isInIDE ? (
               <>
+                <Link to="/">
+                  <Button variant="ghost" size="sm" iconName="ArrowLeft" fullWidth>
+                    Back to Main App
+                  </Button>
+                </Link>
                 <Button variant="ghost" size="sm" iconName="HelpCircle" fullWidth>
                   Help & Documentation
                 </Button>
