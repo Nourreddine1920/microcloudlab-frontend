@@ -83,7 +83,7 @@ const PeripheralCard = ({ peripheral }) => {
       </div>
 
       <div className="flex space-x-2">
-        <Link to="/peripheral-configuration-editor" className="flex-1">
+        <Link to={`/ide/peripheral-configuration-editor?peripheral=${peripheral.peripheralType || 'UART'}&instance=${peripheral.name}`} className="flex-1">
           <Button variant="default" size="sm" iconName="Settings" fullWidth>
             Configure
           </Button>

@@ -9,30 +9,111 @@ import ConfigurationPreviewPanel from './components/ConfigurationPreviewPanel';
 import GlobalSearchBar from './components/GlobalSearchBar';
 import QuickStatsOverview from './components/QuickStatsOverview';
 import FloatingActionMenu from './components/FloatingActionMenu';
+import { useMcu } from '../context/McuContext';
 
 const PeripheralConfigurationDashboard = () => {
   const [searchParams] = useSearchParams();
-  const selectedBoard = searchParams.get('board');
+  const { selectedMcu, selectMcu, getAvailablePeripheralInstances, getCurrentConfiguration } = useMcu();
+  
+  // Get board from URL params and set it in MCU context if not already selected
+  const boardParam = searchParams.get('board');
+  useEffect(() => {
+    if (boardParam && (!selectedMcu || selectedMcu.id !== boardParam)) {
+      selectMcu(boardParam);
+    }
+  }, [boardParam, selectedMcu, selectMcu]);
   
   const [activeCategory, setActiveCategory] = useState('communication');
   const [searchQuery, setSearchQuery] = useState('');
   const [isPreviewCollapsed, setIsPreviewCollapsed] = useState(false);
   const [filteredPeripherals, setFilteredPeripherals] = useState([]);
 
-  // Board display name mapping
-  const getBoardDisplayName = (boardId) => {
-    const boardNames = {
-      'arduino-uno': 'Arduino Uno',
-      'esp32-devkit': 'ESP32 DevKit',
-      'raspberry-pi-pico': 'Raspberry Pi Pico',
-      'stm32f103-blue-pill': 'STM32F103 Blue Pill',
-      'nordic-nrf52': 'Nordic nRF52',
-      'ti-cc3200': 'TI CC3200'
+  // Generate peripheral data based on selected MCU
+  const getPeripheralDataForMcu = () => {
+    if (!selectedMcu) return { communication: [], timing: [], analog: [], power: [], connectivity: [] };
+    
+    const peripheralCategories = {
+      communication: [],
+      timing: [],
+      analog: [],
+      power: [],
+      connectivity: []
     };
-    return boardNames[boardId] || boardId;
+
+    // Process MCU peripherals
+    Object.keys(selectedMcu.supportedPeripherals).forEach(peripheralType => {
+      const instances = getAvailablePeripheralInstances(peripheralType);
+      const category = getPeripheralCategory(peripheralType);
+      
+      instances.forEach(instance => {
+        peripheralCategories[category].push({
+          id: `${peripheralType.toLowerCase()}_${instance.toLowerCase()}`,
+          name: instance,
+          description: getPeripheralDescription(peripheralType),
+          icon: getPeripheralIcon(peripheralType),
+          status: 'available',
+          instances: { active: 0, total: instances.length },
+          pins: { used: 0, available: selectedMcu.pinout ? Object.values(selectedMcu.pinout).flat().length : 0 },
+          completeness: 0,
+          lastModified: null,
+          peripheralType: peripheralType
+        });
+      });
+    });
+
+    return peripheralCategories;
   };
 
-  const peripheralData = {
+  const getPeripheralCategory = (type) => {
+    const categoryMap = {
+      'UART': 'communication',
+      'SPI': 'communication', 
+      'I2C': 'communication',
+      'WiFi': 'connectivity',
+      'Bluetooth': 'connectivity',
+      'PWM': 'timing',
+      'Timer': 'timing',
+      'ADC': 'analog',
+      'DAC': 'analog',
+      'GPIO': 'power'
+    };
+    return categoryMap[type] || 'power';
+  };
+
+  const getPeripheralDescription = (type) => {
+    const descriptions = {
+      'UART': 'Universal Asynchronous Receiver Transmitter',
+      'SPI': 'Serial Peripheral Interface',
+      'I2C': 'Inter-Integrated Circuit',
+      'WiFi': 'Wireless Local Area Network',
+      'Bluetooth': 'Short-range wireless communication',
+      'PWM': 'Pulse Width Modulation',
+      'Timer': 'Hardware Timer',
+      'ADC': 'Analog to Digital Converter',
+      'DAC': 'Digital to Analog Converter',
+      'GPIO': 'General Purpose Input/Output'
+    };
+    return descriptions[type] || 'General peripheral';
+  };
+
+  const getPeripheralIcon = (type) => {
+    const iconMap = {
+      'UART': 'Radio',
+      'SPI': 'Zap',
+      'I2C': 'Link',
+      'WiFi': 'Wifi',
+      'Bluetooth': 'Bluetooth',
+      'PWM': 'Activity',
+      'Timer': 'Clock',
+      'ADC': 'TrendingUp',
+      'DAC': 'TrendingDown',
+      'GPIO': 'Cpu'
+    };
+    return iconMap[type] || 'Settings';
+  };
+
+  // Use MCU-specific peripheral data or fallback
+  const peripheralData = selectedMcu ? getPeripheralDataForMcu() : {
     communication: [
       {
         id: 'uart1',
@@ -353,7 +434,7 @@ const PeripheralConfigurationDashboard = () => {
     } else {
       setFilteredPeripherals(currentPeripherals);
     }
-  }, [activeCategory, searchQuery]);
+  }, [activeCategory, searchQuery, selectedMcu]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -384,19 +465,23 @@ const PeripheralConfigurationDashboard = () => {
                 <div className="flex items-center space-x-4">
                   <div>
                     <h1 className="text-heading-lg font-heading">
-                      {selectedBoard ? `${getBoardDisplayName(selectedBoard)} Configuration Dashboard` : 'STM32 Configuration Dashboard'}
+                                              {selectedMcu ? `${selectedMcu.name} Configuration Dashboard` : 'MCU Configuration Dashboard'}
                     </h1>
                     <p className="text-body-sm text-muted-foreground">
-                      {selectedBoard 
-                        ? `Configure and manage ${getBoardDisplayName(selectedBoard)} peripherals`
-                        : 'Configure and manage STM32F407VGT6 peripherals'
+                      {selectedMcu 
+                        ? `Configure and manage ${selectedMcu.name} peripherals`
+                        : 'Select an MCU to configure peripherals'
                       }
                     </p>
-                    {selectedBoard && (
+                    {selectedMcu && (
                       <div className="flex items-center space-x-2 mt-2">
                         <div className="flex items-center space-x-2 bg-accent/10 text-accent px-3 py-1 rounded-full text-xs font-medium">
                           <Icon name="Cpu" size={12} />
-                          <span>Selected Board: {getBoardDisplayName(selectedBoard)}</span>
+                          <span>Selected MCU: {selectedMcu.name}</span>
+                        </div>
+                        <div className="flex items-center space-x-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-medium">
+                          <Icon name="Zap" size={12} />
+                          <span>{selectedMcu.peripherals.length} Peripherals Available</span>
                         </div>
                       </div>
                     )}
@@ -410,17 +495,17 @@ const PeripheralConfigurationDashboard = () => {
                   />
                   
                   <div className="hidden lg:flex items-center space-x-2">
-                    <Link to="/configuration-validation-conflicts">
+                    <Link to="/ide/configuration-validation-conflicts">
                       <Button variant="outline" size="sm" iconName="AlertTriangle">
                         Validate
                       </Button>
                     </Link>
-                    <Link to="/configuration-import-export-manager">
+                    <Link to="/ide/configuration-import-export-manager">
                       <Button variant="outline" size="sm" iconName="Upload">
                         Import
                       </Button>
                     </Link>
-                    <Link to="/configuration-import-export-manager">
+                    <Link to="/ide/configuration-import-export-manager">
                       <Button variant="default" size="sm" iconName="Download">
                         Export
                       </Button>
@@ -493,22 +578,22 @@ const PeripheralConfigurationDashboard = () => {
             <div className="bg-card border border-border rounded-lg p-6">
               <h3 className="text-heading-sm font-heading mb-4">Quick Actions</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Link to="/pin-assignment-visualizer">
+                <Link to="/ide/pin-assignment-visualizer">
                   <Button variant="outline" size="sm" iconName="Map" fullWidth>
                     Pin Visualizer
                   </Button>
                 </Link>
-                <Link to="/configuration-validation-conflicts">
+                <Link to="/ide/configuration-validation-conflicts">
                   <Button variant="outline" size="sm" iconName="CheckSquare" fullWidth>
                     Validate Config
                   </Button>
                 </Link>
-                <Link to="/configuration-import-export-manager">
+                <Link to="/ide/configuration-import-export-manager">
                   <Button variant="outline" size="sm" iconName="FileText" fullWidth>
                     Manage Files
                   </Button>
                 </Link>
-                <Link to="/peripheral-configuration-editor">
+                <Link to="/ide/peripheral-configuration-editor">
                   <Button variant="default" size="sm" iconName="Settings" fullWidth>
                     New Config
                   </Button>
