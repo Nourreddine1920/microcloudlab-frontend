@@ -4,10 +4,16 @@ import Icon from '../AppIcon';
 
 const Breadcrumb = () => {
   const location = useLocation();
+  
+  // Safety check for location
+  if (!location || !location.pathname) {
+    return null;
+  }
+  
   const pathnames = location.pathname.split('/').filter((x) => x);
 
-  // Don't show breadcrumb on homepage
-  if (location.pathname === '/') {
+  // Don't show breadcrumb on homepage or if no pathnames
+  if (location.pathname === '/' || pathnames.length === 0) {
     return null;
   }
 

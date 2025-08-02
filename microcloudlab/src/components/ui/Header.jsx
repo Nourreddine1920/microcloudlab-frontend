@@ -7,8 +7,13 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  // Check if we're in the IDE section
-  const isInIDE = location.pathname.startsWith('/ide');
+  // Check if we're in the IDE section with fallback
+  const isInIDE = location?.pathname?.startsWith('/ide') || false;
+
+  // Debug logging
+  React.useEffect(() => {
+    console.log('Header render - Location:', location?.pathname, 'isInIDE:', isInIDE);
+  }, [location?.pathname, isInIDE]);
 
   // Main app navigation items
   const mainAppNavigationItems = [
@@ -100,9 +105,8 @@ const Header = () => {
         {/* Logo Section */}
         <div className="flex items-center">
           <Link 
-            to={isInIDE ? "/" : "/"} 
-            className={`flex items-center space-x-3 ${isInIDE ? 'hover:bg-surface rounded-lg px-2 py-1 transition-colors' : ''}`}
-            title={isInIDE ? "Return to Main App" : "MicroCloudLab Home"}
+            to="/" 
+            className="flex items-center space-x-3 hover:bg-surface/50 rounded-lg px-2 py-1 transition-colors"
           >
             <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg">
               <Icon name="Cpu" size={20} className="text-white" />
