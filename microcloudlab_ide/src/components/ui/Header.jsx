@@ -54,8 +54,20 @@ const Header = () => {
         {/* Logo Section */}
         <div className="flex items-center">
           <Link to="/peripheral-configuration-dashboard" className="flex items-center space-x-3">
-            <div className="flex items-center justify-center w-8 h-8 bg-primary rounded-lg">
-              <Icon name="Cpu" size={20} color="white" />
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden">
+              <img 
+                src="/assets/images/logo.png" 
+                alt="MicroCloudLab Logo" 
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  // Fallback to icon if image fails to load
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+              <div className="hidden items-center justify-center w-full h-full bg-primary rounded-lg">
+                <Icon name="Cpu" size={20} color="white" />
+              </div>
             </div>
             <div className="flex flex-col">
               <span className="text-heading-sm text-foreground font-heading">MicroCloudLab</span>
