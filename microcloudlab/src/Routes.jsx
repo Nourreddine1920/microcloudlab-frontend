@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route } from "react-router-dom";
 import ScrollToTop from "components/ScrollToTop";
 import ErrorBoundary from "components/ErrorBoundary";
+import Breadcrumb from "components/ui/Breadcrumb";
 // Add your imports here
 import Homepage from "pages/homepage";
 import SolutionsHub from "pages/solutions-hub";
@@ -25,6 +26,7 @@ const Routes = () => {
     <BrowserRouter>
       <ErrorBoundary>
       <ScrollToTop />
+      <Breadcrumb />
       <RouterRoutes>
         {/* Define your routes here */}
         <Route path="/" element={<Homepage />} />
