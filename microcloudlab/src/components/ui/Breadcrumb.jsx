@@ -14,6 +14,10 @@ const Breadcrumb = () => {
 
   // Don't show breadcrumb on homepage or if no pathnames
   if (location.pathname === '/' || pathnames.length === 0) {
+  const pathnames = location.pathname.split('/').filter((x) => x);
+
+  // Don't show breadcrumb on homepage
+  if (location.pathname === '/') {
     return null;
   }
 
