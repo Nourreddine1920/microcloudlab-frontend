@@ -23,8 +23,13 @@ const PeripheralConfigurationEditor = () => {
     }
   }, [boardParam, selectedMcu, selectMcu]);
   
-  // Get peripheral info from navigation state or default to UART
-  const peripheralInfo = location.state || { type: 'UART', instance: 'UART1' };
+  // Get peripheral info from URL parameters, navigation state, or default to UART
+  const peripheralTypeParam = searchParams.get('peripheral');
+  const peripheralInstanceParam = searchParams.get('instance');
+  const peripheralInfo = {
+    type: peripheralTypeParam || location.state?.type || 'UART',
+    instance: peripheralInstanceParam || location.state?.instance || 'UART1'
+  };
 
   // Board display name mapping
   const getBoardDisplayName = (boardId) => {
@@ -75,24 +80,26 @@ const PeripheralConfigurationEditor = () => {
   const [showMobileDrawer, setShowMobileDrawer] = useState(false);
   const [mobileDrawerView, setMobileDrawerView] = useState('preview');
 
-  // Update form data when MCU or peripheral instance changes
+  // Update form data when MCU or peripheral info changes
   useEffect(() => {
     if (selectedMcu) {
-      const defaultPins = getPeripheralPins(peripheralInfo.type, formData.instance);
+      const defaultPins = getPeripheralPins(peripheralInfo.type, peripheralInfo.instance);
       const availableInstances = getAvailablePeripheralInstances(peripheralInfo.type);
+      const targetInstance = peripheralInfo.instance && availableInstances.includes(peripheralInfo.instance) 
+        ? peripheralInfo.instance 
+        : availableInstances[0] || 'UART1';
       
-      // Update pins to match the selected MCU's pinout
+      // Update form data to match the selected MCU's pinout and peripheral info
       setFormData(prevData => ({
         ...prevData,
+        instance: targetInstance,
         txPin: defaultPins.tx || 'N/A',
         rxPin: defaultPins.rx || 'N/A',
         rtsPin: defaultPins.rts || 'N/A',
-        ctsPin: defaultPins.cts || 'N/A',
-        // Update instance if current one is not available for this MCU
-        instance: availableInstances.includes(prevData.instance) ? prevData.instance : availableInstances[0] || 'UART1'
+        ctsPin: defaultPins.cts || 'N/A'
       }));
     }
-  }, [selectedMcu, peripheralInfo.type, getPeripheralPins, getAvailablePeripheralInstances]);
+  }, [selectedMcu, peripheralInfo.type, peripheralInfo.instance, getPeripheralPins, getAvailablePeripheralInstances]);
 
   // Configuration sections for accordion
   const configurationSections = [

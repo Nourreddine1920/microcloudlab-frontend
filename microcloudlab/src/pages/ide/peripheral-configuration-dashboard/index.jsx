@@ -495,17 +495,17 @@ const PeripheralConfigurationDashboard = () => {
                   />
                   
                   <div className="hidden lg:flex items-center space-x-2">
-                    <Link to="/configuration-validation-conflicts">
+                    <Link to="/ide/configuration-validation-conflicts">
                       <Button variant="outline" size="sm" iconName="AlertTriangle">
                         Validate
                       </Button>
                     </Link>
-                    <Link to="/configuration-import-export-manager">
+                    <Link to="/ide/configuration-import-export-manager">
                       <Button variant="outline" size="sm" iconName="Upload">
                         Import
                       </Button>
                     </Link>
-                    <Link to="/configuration-import-export-manager">
+                    <Link to="/ide/configuration-import-export-manager">
                       <Button variant="default" size="sm" iconName="Download">
                         Export
                       </Button>
@@ -578,22 +578,22 @@ const PeripheralConfigurationDashboard = () => {
             <div className="bg-card border border-border rounded-lg p-6">
               <h3 className="text-heading-sm font-heading mb-4">Quick Actions</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Link to="/pin-assignment-visualizer">
+                <Link to="/ide/pin-assignment-visualizer">
                   <Button variant="outline" size="sm" iconName="Map" fullWidth>
                     Pin Visualizer
                   </Button>
                 </Link>
-                <Link to="/configuration-validation-conflicts">
+                <Link to="/ide/configuration-validation-conflicts">
                   <Button variant="outline" size="sm" iconName="CheckSquare" fullWidth>
                     Validate Config
                   </Button>
                 </Link>
-                <Link to="/configuration-import-export-manager">
+                <Link to="/ide/configuration-import-export-manager">
                   <Button variant="outline" size="sm" iconName="FileText" fullWidth>
                     Manage Files
                   </Button>
                 </Link>
-                <Link to="/peripheral-configuration-editor">
+                <Link to="/ide/peripheral-configuration-editor">
                   <Button variant="default" size="sm" iconName="Settings" fullWidth>
                     New Config
                   </Button>
