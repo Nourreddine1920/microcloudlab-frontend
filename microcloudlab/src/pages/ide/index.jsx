@@ -3,55 +3,14 @@ import { Link } from 'react-router-dom';
 import Button from '../../components/ui/Button';
 import Header from '../../components/ui/Header';
 import Icon from '../../components/AppIcon';
+import { useMcu } from './context/McuContext';
 
 const IDEHome = () => {
-  const [selectedBoard, setSelectedBoard] = useState(null);
+  const { selectedMcu, selectMcu, MCU_SPECIFICATIONS } = useMcu();
+  const [selectedBoard, setSelectedBoard] = useState(selectedMcu?.id || null);
 
-  const availableBoards = [
-    {
-      id: 'arduino-uno',
-      name: 'Arduino Uno',
-      description: 'ATmega328P microcontroller, perfect for beginners',
-      specs: '16MHz • 32KB Flash • 2KB SRAM',
-      image: 'https://images.unsplash.com/photo-1553406830-ef2513450d76?w=100&h=100&fit=crop',
-      status: 'available',
-      difficulty: 'Beginner',
-      peripherals: ['GPIO', 'UART', 'SPI', 'I2C', 'ADC', 'PWM'],
-      price: 'Free'
-    },
-    {
-      id: 'esp32-devkit',
-      name: 'ESP32 DevKit',
-      description: 'Dual-core WiFi/BT microcontroller with rich peripherals',
-      specs: '240MHz • 4MB Flash • 520KB SRAM',
-      image: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=100&h=100&fit=crop',
-      status: 'available',
-      difficulty: 'Intermediate',
-      peripherals: ['WiFi', 'Bluetooth', 'GPIO', 'UART', 'SPI', 'I2C', 'ADC', 'DAC', 'PWM'],
-      price: 'Free'
-    },
-    {
-      id: 'raspberry-pi-pico',
-      name: 'Raspberry Pi Pico',
-      description: 'RP2040 dual-core ARM Cortex-M0+ microcontroller',
-      specs: '133MHz • 2MB Flash • 264KB SRAM',
-      image: 'https://images.unsplash.com/photo-1551808525-51a94da548ce?w=100&h=100&fit=crop',
-      status: 'available',
-      difficulty: 'Intermediate',
-      peripherals: ['GPIO', 'UART', 'SPI', 'I2C', 'ADC', 'PWM', 'PIO'],
-      price: 'Free'
-    },
-    {
-      id: 'stm32f103-blue-pill',
-      name: 'STM32F103 Blue Pill',
-      description: 'ARM Cortex-M3 microcontroller with extensive peripherals',
-      specs: '72MHz • 128KB Flash • 20KB SRAM',
-      image: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=100&h=100&fit=crop',
-      status: 'available',
-      difficulty: 'Advanced',
-      peripherals: ['GPIO', 'UART', 'SPI', 'I2C', 'ADC', 'DAC', 'PWM', 'CAN', 'USB'],
-      price: 'Free'
-    },
+  // Get available boards from MCU specifications with fallback for missing ones
+  const availableBoards = Object.values(MCU_SPECIFICATIONS).concat([
     {
       id: 'nordic-nrf52',
       name: 'Nordic nRF52',
@@ -74,7 +33,7 @@ const IDEHome = () => {
       peripherals: ['WiFi', 'GPIO', 'UART', 'SPI', 'I2C', 'ADC', 'PWM'],
       price: 'Free'
     }
-  ];
+  ]);
 
   const ideFeatures = [
     {
@@ -115,13 +74,14 @@ const IDEHome = () => {
   ];
 
   const handleBoardSelect = (board) => {
-    setSelectedBoard(board);
+    setSelectedBoard(board.id);
+    selectMcu(board.id); // Update global MCU context
   };
 
   const handleStartWithBoard = () => {
-    if (selectedBoard) {
+    if (selectedBoard && selectedMcu) {
       // Navigate to the configuration dashboard with the selected board
-      window.location.href = `/ide/peripheral-configuration-dashboard?board=${selectedBoard.id}`;
+      window.location.href = `/ide/peripheral-configuration-dashboard?board=${selectedBoard}`;
     }
   };
 
@@ -212,13 +172,13 @@ const IDEHome = () => {
               <div 
                 key={board.id}
                 className={`relative bg-card border-2 rounded-xl p-6 hover:shadow-lg transition-all duration-300 cursor-pointer ${
-                  selectedBoard?.id === board.id
+                  selectedBoard === board.id
                     ? 'border-accent shadow-lg scale-105'
                     : 'border-border hover:border-primary/30'
                 }`}
                 onClick={() => handleBoardSelect(board)}
               >
-                {selectedBoard?.id === board.id && (
+                {selectedBoard === board.id && (
                   <div className="absolute -top-2 -right-2">
                     <div className="bg-accent text-white w-6 h-6 rounded-full flex items-center justify-center">
                       <Icon name="Check" size={12} />
@@ -280,13 +240,16 @@ const IDEHome = () => {
             ))}
           </div>
 
-          {selectedBoard && (
+          {selectedMcu && (
             <div className="text-center">
               <div className="inline-flex items-center space-x-4 bg-accent/10 border border-accent/20 rounded-xl px-6 py-4 mb-6">
                 <Icon name="Cpu" size={20} className="text-accent" />
                 <span className="text-accent font-medium">
-                  Selected: {selectedBoard.name}
+                  Selected: {selectedMcu.name}
                 </span>
+                <div className="text-xs text-text-secondary">
+                  {selectedMcu.specs} • {selectedMcu.peripherals.length} peripherals
+                </div>
               </div>
               
               <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
@@ -298,7 +261,7 @@ const IDEHome = () => {
                   onClick={handleStartWithBoard}
                   className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-oscilloscope"
                 >
-                  Start with {selectedBoard.name}
+                  Start with {selectedMcu.name}
                 </Button>
                 
                 <Button
@@ -306,7 +269,7 @@ const IDEHome = () => {
                   size="lg"
                   iconName="Settings"
                   iconPosition="left"
-                  onClick={() => window.location.href = `/ide/peripheral-configuration-editor?board=${selectedBoard.id}`}
+                  onClick={() => window.location.href = `/ide/peripheral-configuration-editor?board=${selectedMcu.id}`}
                 >
                   Configure Peripherals
                 </Button>

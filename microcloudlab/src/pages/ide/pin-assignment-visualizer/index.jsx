@@ -13,10 +13,12 @@ import MicrocontrollerDiagram from './components/MicrocontrollerDiagram';
 import ConflictWarningOverlay from './components/ConflictWarningOverlay';
 import PinConfigurationPopover from './components/PinConfigurationPopover';
 import Button from '../../../components/ui/Button';
+import { useMcu } from '../context/McuContext';
 
 
 const PinAssignmentVisualizer = () => {
-  const [selectedChip, setSelectedChip] = useState('stm32f103c8t6');
+  const { selectedMcu, selectMcu, getAvailablePins, getCurrentConfiguration, isPinAvailable } = useMcu();
+  const [selectedChip, setSelectedChip] = useState(selectedMcu?.id || 'stm32f103c8t6');
   const [viewMode, setViewMode] = useState('package');
   const [zoomLevel, setZoomLevel] = useState(1);
   const [selectedPin, setSelectedPin] = useState(null);
@@ -26,155 +28,64 @@ const PinAssignmentVisualizer = () => {
   const [showConfigPopover, setShowConfigPopover] = useState(false);
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-
-  // Mock pin data
-  const [pins, setPins] = useState([
-    {
-      id: 'PA0',
-      name: 'PA0',
-      status: 'configured',
-      currentAssignment: 'ADC1_IN0',
-      alternativeFunctions: ['ADC1_IN0', 'TIM2_CH1', 'USART2_CTS', 'WKUP'],
-      maxCurrent: '25mA',
-      voltageLevel: '3.3V',
-      fiveTolerant: true,
-      relatedPins: ['PA1', 'PA2']
-    },
-    {
-      id: 'PA1',
-      name: 'PA1',
-      status: 'conflict',
-      currentAssignment: 'USART2_RTS',
-      alternativeFunctions: ['ADC1_IN1', 'TIM2_CH2', 'USART2_RTS'],
-      maxCurrent: '25mA',
-      voltageLevel: '3.3V',
-      fiveTolerant: true,
-      relatedPins: ['PA0', 'PA2']
-    },
-    {
-      id: 'PA2',
-      name: 'PA2',
-      status: 'available',
-      currentAssignment: null,
-      alternativeFunctions: ['ADC1_IN2', 'TIM2_CH3', 'USART2_TX'],
-      maxCurrent: '25mA',
-      voltageLevel: '3.3V',
-      fiveTolerant: true,
-      relatedPins: ['PA0', 'PA1']
-    },
-    {
-      id: 'PA3',
-      name: 'PA3',
-      status: 'available',
-      currentAssignment: null,
-      alternativeFunctions: ['ADC1_IN3', 'TIM2_CH4', 'USART2_RX'],
-      maxCurrent: '25mA',
-      voltageLevel: '3.3V',
-      fiveTolerant: true,
-      relatedPins: []
-    },
-    {
-      id: 'PA4',
-      name: 'PA4',
-      status: 'reserved',
-      currentAssignment: 'SPI1_NSS',
-      alternativeFunctions: ['ADC1_IN4', 'SPI1_NSS', 'USART2_CK', 'DAC_OUT1'],
-      maxCurrent: '25mA',
-      voltageLevel: '3.3V',
-      fiveTolerant: false,
-      relatedPins: ['PA5', 'PA6', 'PA7']
-    },
-    {
-      id: 'PA5',
-      name: 'PA5',
-      status: 'configured',
-      currentAssignment: 'SPI1_SCK',
-      alternativeFunctions: ['ADC1_IN5', 'SPI1_SCK', 'DAC_OUT2'],
-      maxCurrent: '25mA',
-      voltageLevel: '3.3V',
-      fiveTolerant: false,
-      relatedPins: ['PA4', 'PA6', 'PA7']
-    },
-    {
-      id: 'PA6',
-      name: 'PA6',
-      status: 'configured',
-      currentAssignment: 'SPI1_MISO',
-      alternativeFunctions: ['ADC1_IN6', 'SPI1_MISO', 'TIM3_CH1'],
-      maxCurrent: '25mA',
-      voltageLevel: '3.3V',
-      fiveTolerant: true,
-      relatedPins: ['PA4', 'PA5', 'PA7']
-    },
-    {
-      id: 'PA7',
-      name: 'PA7',
-      status: 'configured',
-      currentAssignment: 'SPI1_MOSI',
-      alternativeFunctions: ['ADC1_IN7', 'SPI1_MOSI', 'TIM3_CH2'],
-      maxCurrent: '25mA',
-      voltageLevel: '3.3V',
-      fiveTolerant: true,
-      relatedPins: ['PA4', 'PA5', 'PA6']
-    },
-    // PB pins
-    {
-      id: 'PB0',
-      name: 'PB0',
-      status: 'available',
-      currentAssignment: null,
-      alternativeFunctions: ['ADC1_IN8', 'TIM3_CH3'],
-      maxCurrent: '25mA',
-      voltageLevel: '3.3V',
-      fiveTolerant: true,
-      relatedPins: ['PB1']
-    },
-    {
-      id: 'PB1',
-      name: 'PB1',
-      status: 'available',
-      currentAssignment: null,
-      alternativeFunctions: ['ADC1_IN9', 'TIM3_CH4'],
-      maxCurrent: '25mA',
-      voltageLevel: '3.3V',
-      fiveTolerant: true,
-      relatedPins: ['PB0']
-    },
-    // PC pins
-    {
-      id: 'PC13',
-      name: 'PC13',
-      status: 'configured',
-      currentAssignment: 'GPIO_Output',
-      alternativeFunctions: ['RTC_OUT', 'RTC_TAMP1', 'RTC_TS', 'WKUP2'],
-      maxCurrent: '3mA',
-      voltageLevel: '3.3V',
-      fiveTolerant: false,
-      relatedPins: ['PC14', 'PC15']
-    },
-    {
-      id: 'PC14',
-      name: 'PC14',
-      status: 'reserved',
-      currentAssignment: 'OSC32_IN',
-      alternativeFunctions: ['OSC32_IN', 'RCC_OSC32_IN'],
-      maxCurrent: '3mA',
-      voltageLevel: '3.3V',
-      fiveTolerant: false,
-      relatedPins: ['PC13', 'PC15']
-    },
-    {
-      id: 'PC15',
-      name: 'PC15',
-      status: 'reserved',
-      currentAssignment: 'OSC32_OUT',
-      alternativeFunctions: ['OSC32_OUT', 'RCC_OSC32_OUT'],
-      maxCurrent: '3mA',
-      voltageLevel: '3.3V',
-      fiveTolerant: false,
-      relatedPins: ['PC13', 'PC14']
+  
+  // Update selected chip when MCU changes
+  useEffect(() => {
+    if (selectedMcu && selectedMcu.id !== selectedChip) {
+      setSelectedChip(selectedMcu.id);
     }
-  ]);
+  }, [selectedMcu, selectedChip]);
+
+  // Update pins when MCU changes
+  useEffect(() => {
+    if (selectedMcu) {
+      const availablePins = getAvailablePins();
+      const newPins = availablePins.map(pin => ({
+        id: pin.name,
+        name: pin.name,
+        status: isPinAvailable(pin.name) ? 'available' : 'configured',
+        currentAssignment: null,
+        alternativeFunctions: pin.functions || ['GPIO'],
+        maxCurrent: '25mA',
+        voltageLevel: '3.3V',
+        fiveTolerant: true,
+        relatedPins: []
+      }));
+      setPins(newPins);
+    }
+  }, [selectedMcu, getAvailablePins, isPinAvailable]);
+
+  // Get pins from MCU context
+  const [pins, setPins] = useState(() => {
+    if (selectedMcu) {
+      const availablePins = getAvailablePins();
+      return availablePins.map(pin => ({
+        id: pin.name,
+        name: pin.name,
+        status: isPinAvailable(pin.name) ? 'available' : 'configured',
+        currentAssignment: null,
+        alternativeFunctions: pin.functions || ['GPIO'],
+        maxCurrent: '25mA',
+        voltageLevel: '3.3V',
+        fiveTolerant: true,
+        relatedPins: []
+      }));
+    }
+    // Fallback pins for when no MCU is selected
+    return [
+      {
+        id: 'PA0',
+        name: 'PA0',
+        status: 'available',
+        currentAssignment: null,
+        alternativeFunctions: ['GPIO', 'ADC'],
+        maxCurrent: '25mA',
+        voltageLevel: '3.3V',
+        fiveTolerant: true,
+        relatedPins: []
+      }
+    ];
+  });
 
   // Mock conflict data
   const conflicts = [

@@ -7,12 +7,21 @@ import ConfigurationForm from './components/ConfigurationForm';
 import CodePreviewPanel from './components/CodePreviewPanel';
 import MobileConfigurationDrawer from './components/MobileConfigurationDrawer';
 import QuickActionToolbar from '../../../components/ui/QuickActionToolbar';
+import { useMcu } from '../context/McuContext';
 
 const PeripheralConfigurationEditor = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const selectedBoard = searchParams.get('board');
+  const { selectedMcu, selectMcu, getAvailablePeripheralInstances, getPeripheralPins } = useMcu();
+  
+  // Get board from URL params and set it in MCU context if not already selected
+  const boardParam = searchParams.get('board');
+  useEffect(() => {
+    if (boardParam && (!selectedMcu || selectedMcu.id !== boardParam)) {
+      selectMcu(boardParam);
+    }
+  }, [boardParam, selectedMcu, selectMcu]);
   
   // Get peripheral info from navigation state or default to UART
   const peripheralInfo = location.state || { type: 'UART', instance: 'UART1' };
@@ -31,25 +40,32 @@ const PeripheralConfigurationEditor = () => {
   };
   
   const [activeSection, setActiveSection] = useState('basic');
-  const [formData, setFormData] = useState({
-    instance: peripheralInfo.instance || 'UART1',
-    baudRate: '115200',
-    dataBits: '8',
-    parity: 'none',
-    stopBits: '1',
-    flowControl: 'none',
-    txBufferSize: '256',
-    rxBufferSize: '256',
-    dmaEnable: false,
-    interruptEnable: true,
-    autoBaud: false,
-    oversampling: '16',
-    txPin: 'PA9',
-    rxPin: 'PA10',
-    rtsPin: 'PA12',
-    ctsPin: 'PA11',
-    gpioSpeed: 'high',
-    pullResistor: 'none'
+  const [formData, setFormData] = useState(() => {
+    // Get default pins for the selected MCU and peripheral type
+    const defaultPins = selectedMcu ? getPeripheralPins(peripheralInfo.type, peripheralInfo.instance) : {};
+    const availableInstances = selectedMcu ? getAvailablePeripheralInstances(peripheralInfo.type) : [];
+    const defaultInstance = peripheralInfo.instance || availableInstances[0] || 'UART1';
+    
+    return {
+      instance: defaultInstance,
+      baudRate: '115200',
+      dataBits: '8',
+      parity: 'none',
+      stopBits: '1',
+      flowControl: 'none',
+      txBufferSize: '256',
+      rxBufferSize: '256',
+      dmaEnable: false,
+      interruptEnable: true,
+      autoBaud: false,
+      oversampling: '16',
+      txPin: defaultPins.tx || 'N/A',
+      rxPin: defaultPins.rx || 'N/A',
+      rtsPin: defaultPins.rts || 'N/A',
+      ctsPin: defaultPins.cts || 'N/A',
+      gpioSpeed: 'high',
+      pullResistor: 'none'
+    };
   });
   
   const [validationErrors, setValidationErrors] = useState({});
@@ -58,6 +74,25 @@ const PeripheralConfigurationEditor = () => {
   const [lastValidated, setLastValidated] = useState(null);
   const [showMobileDrawer, setShowMobileDrawer] = useState(false);
   const [mobileDrawerView, setMobileDrawerView] = useState('preview');
+
+  // Update form data when MCU or peripheral instance changes
+  useEffect(() => {
+    if (selectedMcu) {
+      const defaultPins = getPeripheralPins(peripheralInfo.type, formData.instance);
+      const availableInstances = getAvailablePeripheralInstances(peripheralInfo.type);
+      
+      // Update pins to match the selected MCU's pinout
+      setFormData(prevData => ({
+        ...prevData,
+        txPin: defaultPins.tx || 'N/A',
+        rxPin: defaultPins.rx || 'N/A',
+        rtsPin: defaultPins.rts || 'N/A',
+        ctsPin: defaultPins.cts || 'N/A',
+        // Update instance if current one is not available for this MCU
+        instance: availableInstances.includes(prevData.instance) ? prevData.instance : availableInstances[0] || 'UART1'
+      }));
+    }
+  }, [selectedMcu, peripheralInfo.type, getPeripheralPins, getAvailablePeripheralInstances]);
 
   // Configuration sections for accordion
   const configurationSections = [
@@ -254,7 +289,7 @@ const PeripheralConfigurationEditor = () => {
       <ConfigurationToolbar
         peripheralType={peripheralInfo.type}
         peripheralInstance={formData.instance}
-        selectedBoard={selectedBoard ? getBoardDisplayName(selectedBoard) : null}
+        selectedBoard={selectedMcu?.name || null}
         hasUnsavedChanges={hasUnsavedChanges}
         validationErrors={Object.keys(validationErrors).length}
         validationWarnings={0}
@@ -265,6 +300,8 @@ const PeripheralConfigurationEditor = () => {
         onValidate={validateConfiguration}
         onExport={handleExport}
         onImport={handleImport}
+        selectedMcu={selectedMcu}
+        availableInstances={selectedMcu ? getAvailablePeripheralInstances(peripheralInfo.type) : []}
       />
 
       {/* Main Content Area */}

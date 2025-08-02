@@ -14,6 +14,7 @@ import NotFound from "pages/NotFound";
 import ApiTest from "components/ApiTest";
 
 // IDE imports
+import { McuProvider } from "pages/ide/context/McuContext";
 import IDEHome from "pages/ide";
 import ConfigurationValidationConflicts from "pages/ide/configuration-validation-conflicts";
 import ConfigurationImportExportManager from "pages/ide/configuration-import-export-manager";
@@ -38,13 +39,13 @@ const Routes = () => {
         <Route path="/platform-demo" element={<PlatformDemo />} />
         <Route path="/api-test" element={<ApiTest />} />
         
-        {/* IDE Routes */}
-        <Route path="/ide" element={<IDEHome />} />
-        <Route path="/ide/configuration-validation-conflicts" element={<ConfigurationValidationConflicts />} />
-        <Route path="/ide/configuration-import-export-manager" element={<ConfigurationImportExportManager />} />
-        <Route path="/ide/peripheral-configuration-editor" element={<PeripheralConfigurationEditor />} />
-        <Route path="/ide/pin-assignment-visualizer" element={<PinAssignmentVisualizer />} />
-        <Route path="/ide/peripheral-configuration-dashboard" element={<PeripheralConfigurationDashboard />} />
+        {/* IDE Routes - Wrapped with MCU Context */}
+        <Route path="/ide" element={<McuProvider><IDEHome /></McuProvider>} />
+        <Route path="/ide/configuration-validation-conflicts" element={<McuProvider><ConfigurationValidationConflicts /></McuProvider>} />
+        <Route path="/ide/configuration-import-export-manager" element={<McuProvider><ConfigurationImportExportManager /></McuProvider>} />
+        <Route path="/ide/peripheral-configuration-editor" element={<McuProvider><PeripheralConfigurationEditor /></McuProvider>} />
+        <Route path="/ide/pin-assignment-visualizer" element={<McuProvider><PinAssignmentVisualizer /></McuProvider>} />
+        <Route path="/ide/peripheral-configuration-dashboard" element={<McuProvider><PeripheralConfigurationDashboard /></McuProvider>} />
         
         <Route path="*" element={<NotFound />} />
       </RouterRoutes>
