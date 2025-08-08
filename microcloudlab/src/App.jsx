@@ -1,14 +1,17 @@
 import React from 'react';
 import Routes from './Routes';
 import { BoardProvider } from './contexts/BoardContext';
+import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
   return (
-    <BoardProvider>
-      <div className="App">
-        <Routes />
-      </div>
-    </BoardProvider>
+    <AuthProvider>
+      <BoardProvider>
+        <div className="App">
+          <Routes />
+        </div>
+      </BoardProvider>
+    </AuthProvider>
   );
 }
 

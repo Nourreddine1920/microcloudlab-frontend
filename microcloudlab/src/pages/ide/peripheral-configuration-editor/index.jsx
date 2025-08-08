@@ -274,7 +274,7 @@ const PeripheralConfigurationEditor = () => {
   // Redirect if no peripheral selected
   useEffect(() => {
     if (!peripheralInfo.type) {
-      navigate('/peripheral-configuration-dashboard');
+      navigate('/ide/peripheral-configuration-dashboard');
     }
   }, [peripheralInfo, navigate]);
 

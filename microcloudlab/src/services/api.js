@@ -3,10 +3,13 @@ const API_BASE_URL = 'http://localhost:8000/api';
 // Generic API functions
 const apiRequest = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
+  const token = localStorage.getItem('auth_token');
   const config = {
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
+    credentials: 'include',
     ...options,
   };
 

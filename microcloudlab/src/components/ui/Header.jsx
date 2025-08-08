@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Icon from '../AppIcon';
 import Button from './Button';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { isAuthenticated, signOut } = useAuth();
 
   // Check if we're in the IDE section with fallback
   const isInIDE = location?.pathname?.startsWith('/ide') || false;
@@ -166,14 +168,40 @@ const Header = () => {
               <Button variant="outline" size="sm" iconName="Download">
                 Export
               </Button>
+              {isAuthenticated && (
+                <Button variant="ghost" size="sm" iconName="LogOut" onClick={signOut}>
+                  Sign out
+                </Button>
+              )}
             </>
           ) : (
             <>
-              <Link to="/ide">
-                <Button variant="primary" size="sm" iconName="Code">
-                  Try IDE
+              <Link to="/pricing">
+                <Button variant="ghost" size="sm" iconName="CreditCard">
+                  Pricing
                 </Button>
               </Link>
+              {!isAuthenticated && (
+                <>
+                  <Link to="/auth/login">
+                    <Button variant="outline" size="sm" iconName="LogIn">
+                      Sign in
+                    </Button>
+                  </Link>
+                  <Link to="/auth/register">
+                    <Button variant="primary" size="sm" iconName="UserPlus">
+                      Sign up
+                    </Button>
+                  </Link>
+                </>
+              )}
+              {isAuthenticated && (
+                <Link to="/ide">
+                  <Button variant="primary" size="sm" iconName="Code">
+                    Open IDE
+                  </Button>
+                </Link>
+              )}
               <Button variant="outline" size="sm" iconName="MessageCircle">
                 Contact
               </Button>
@@ -231,14 +259,40 @@ const Header = () => {
                 <Button variant="outline" size="sm" iconName="Download" fullWidth>
                   Export Configuration
                 </Button>
+                {isAuthenticated && (
+                  <Button variant="ghost" size="sm" iconName="LogOut" fullWidth onClick={signOut}>
+                    Sign out
+                  </Button>
+                )}
               </>
             ) : (
               <>
-                <Link to="/ide">
-                  <Button variant="primary" size="sm" iconName="Code" fullWidth>
-                    Try IDE
+                <Link to="/pricing">
+                  <Button variant="ghost" size="sm" iconName="CreditCard" fullWidth>
+                    Pricing
                   </Button>
                 </Link>
+                {!isAuthenticated && (
+                  <>
+                    <Link to="/auth/login">
+                      <Button variant="outline" size="sm" iconName="LogIn" fullWidth>
+                        Sign in
+                      </Button>
+                    </Link>
+                    <Link to="/auth/register">
+                      <Button variant="primary" size="sm" iconName="UserPlus" fullWidth>
+                        Sign up
+                      </Button>
+                    </Link>
+                  </>
+                )}
+                {isAuthenticated && (
+                  <Link to="/ide">
+                    <Button variant="primary" size="sm" iconName="Code" fullWidth>
+                      Open IDE
+                    </Button>
+                  </Link>
+                )}
                 <Button variant="outline" size="sm" iconName="MessageCircle" fullWidth>
                   Contact Us
                 </Button>
