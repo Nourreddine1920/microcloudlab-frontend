@@ -9,6 +9,7 @@ const PeripheralCard = ({ peripheral }) => {
       case 'configured': return 'text-success';
       case 'partial': return 'text-warning';
       case 'conflict': return 'text-error';
+      case 'available': return 'text-muted-foreground';
       default: return 'text-muted-foreground';
     }
   };
@@ -18,6 +19,7 @@ const PeripheralCard = ({ peripheral }) => {
       case 'configured': return 'CheckCircle';
       case 'partial': return 'AlertTriangle';
       case 'conflict': return 'XCircle';
+      case 'available': return 'Circle';
       default: return 'Circle';
     }
   };
@@ -27,8 +29,21 @@ const PeripheralCard = ({ peripheral }) => {
       case 'configured': return 'Configured';
       case 'partial': return 'Partial';
       case 'conflict': return 'Conflict';
+      case 'available': return 'Available';
       default: return 'Not configured';
     }
+  };
+
+  const getCompletenessColor = (completeness) => {
+    if (completeness >= 80) return 'bg-success';
+    if (completeness >= 40) return 'bg-warning';
+    return 'bg-error';
+  };
+
+  const getCompletenessText = (completeness) => {
+    if (completeness >= 80) return 'Excellent';
+    if (completeness >= 40) return 'Good';
+    return 'Needs work';
   };
 
   return (
@@ -56,8 +71,10 @@ const PeripheralCard = ({ peripheral }) => {
 
       <div className="space-y-2 mb-4">
         <div className="flex items-center justify-between text-body-sm">
-          <span className="text-muted-foreground">Instances</span>
-          <span className="font-medium">{peripheral.instances.active}/{peripheral.instances.total}</span>
+          <span className="text-muted-foreground">Status</span>
+          <span className={`font-medium ${getStatusColor(peripheral.status)}`}>
+            {getStatusText(peripheral.status)}
+          </span>
         </div>
         
         {peripheral.pins && (
@@ -69,10 +86,7 @@ const PeripheralCard = ({ peripheral }) => {
 
         <div className="w-full bg-muted rounded-full h-2">
           <div 
-            className={`h-2 rounded-full transition-all ${
-              peripheral.completeness > 80 ? 'bg-success' :
-              peripheral.completeness > 40 ? 'bg-warning': 'bg-error'
-            }`}
+            className={`h-2 rounded-full transition-all ${getCompletenessColor(peripheral.completeness)}`}
             style={{ width: `${peripheral.completeness}%` }}
           />
         </div>
@@ -83,14 +97,24 @@ const PeripheralCard = ({ peripheral }) => {
       </div>
 
       <div className="flex space-x-2">
-        <Link to={`/ide/peripheral-configuration-editor?peripheral=${peripheral.peripheralType || 'UART'}&instance=${peripheral.name}`} className="flex-1">
-          <Button variant="default" size="sm" iconName="Settings" fullWidth>
-            Configure
+        <Link 
+          to={`/ide/peripheral-configuration-editor?type=${peripheral.peripheralType}&instance=${peripheral.name}`} 
+          className="flex-1"
+        >
+          <Button 
+            variant={peripheral.status === 'configured' ? 'outline' : 'default'} 
+            size="sm" 
+            iconName={peripheral.status === 'configured' ? 'Edit' : 'Settings'} 
+            fullWidth
+          >
+            {peripheral.status === 'configured' ? 'Edit' : 'Configure'}
           </Button>
         </Link>
-        <Button variant="outline" size="sm" iconName="Eye">
-          Preview
-        </Button>
+        {peripheral.status === 'configured' && (
+          <Button variant="outline" size="sm" iconName="Eye">
+            Preview
+          </Button>
+        )}
       </div>
 
       {peripheral.lastModified && (
@@ -98,6 +122,30 @@ const PeripheralCard = ({ peripheral }) => {
           <div className="flex items-center justify-between text-caption text-muted-foreground">
             <span>Last modified</span>
             <span>{new Date(peripheral.lastModified).toLocaleDateString()}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Configuration summary for configured peripherals */}
+      {peripheral.status === 'configured' && peripheral.configuration && (
+        <div className="mt-3 pt-3 border-t border-border">
+          <div className="space-y-1">
+            <div className="flex items-center justify-between text-caption">
+              <span className="text-muted-foreground">Baud Rate</span>
+              <span className="font-medium">{peripheral.configuration.baudRate || 'N/A'}</span>
+            </div>
+            {peripheral.configuration.txPin && (
+              <div className="flex items-center justify-between text-caption">
+                <span className="text-muted-foreground">TX Pin</span>
+                <span className="font-medium">{peripheral.configuration.txPin}</span>
+              </div>
+            )}
+            {peripheral.configuration.rxPin && (
+              <div className="flex items-center justify-between text-caption">
+                <span className="text-muted-foreground">RX Pin</span>
+                <span className="font-medium">{peripheral.configuration.rxPin}</span>
+              </div>
+            )}
           </div>
         </div>
       )}

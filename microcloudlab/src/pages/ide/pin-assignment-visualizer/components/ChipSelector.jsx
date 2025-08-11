@@ -1,35 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from '../../../../components/ui/Select';
 import Icon from '../../../../components/AppIcon';
 
 const ChipSelector = ({ selectedChip, onChipChange, className = "" }) => {
-  const chipOptions = [
-    { 
-      value: 'stm32f103c8t6', 
-      label: 'STM32F103C8T6',
-      description: '48-pin LQFP, ARM Cortex-M3, 64KB Flash'
-    },
-    { 
-      value: 'stm32f407vgt6', 
-      label: 'STM32F407VGT6',
-      description: '100-pin LQFP, ARM Cortex-M4, 1MB Flash'
-    },
-    { 
-      value: 'stm32f429zit6', 
-      label: 'STM32F429ZIT6',
-      description: '144-pin LQFP, ARM Cortex-M4, 2MB Flash'
-    },
-    { 
-      value: 'stm32l476rgt6', 
-      label: 'STM32L476RGT6',
-      description: '64-pin LQFP, ARM Cortex-M4, 1MB Flash, Ultra-low-power'
-    },
-    { 
-      value: 'stm32h743vit6', 
-      label: 'STM32H743VIT6',
-      description: '100-pin LQFP, ARM Cortex-M7, 2MB Flash, High Performance'
-    }
-  ];
+  const [chipOptions, setChipOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchChipOptions = async () => {
+      try {
+        setIsLoading(true);
+        // Simulate API call
+        const response = await new Promise(resolve => setTimeout(() => {
+          resolve([
+            { 
+              value: 'stm32f103c8t6', 
+              label: 'STM32F103C8T6',
+              description: '48-pin LQFP, ARM Cortex-M3, 64KB Flash'
+            },
+            { 
+              value: 'stm32f407vgt6', 
+              label: 'STM32F407VGT6',
+              description: '100-pin LQFP, ARM Cortex-M4, 1MB Flash'
+            },
+            { 
+              value: 'stm32f429zit6', 
+              label: 'STM32F429ZIT6',
+              description: '144-pin LQFP, ARM Cortex-M4, 2MB Flash'
+            },
+            { 
+              value: 'stm32l476rgt6', 
+              label: 'STM32L476RGT6',
+              description: '64-pin LQFP, ARM Cortex-M4, 1MB Flash, Ultra-low-power'
+            },
+            { 
+              value: 'stm32h743vit6', 
+              label: 'STM32H743VIT6',
+              description: '100-pin LQFP, ARM Cortex-M7, 2MB Flash, High Performance'
+            }
+          ]);
+        }, 1000)); // Simulate 1-second network delay
+        setChipOptions(response);
+      } catch (err) {
+        setError('Failed to load chip options.');
+        console.error('Error fetching chip options:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchChipOptions();
+  }, []);
 
   return (
     <div className={`flex items-center space-x-3 ${className}`}>
@@ -43,16 +65,33 @@ const ChipSelector = ({ selectedChip, onChipChange, className = "" }) => {
           options={chipOptions}
           value={selectedChip}
           onChange={onChipChange}
-          placeholder="Select STM32 chip"
+          placeholder={isLoading ? "Loading chips..." : error ? "Error loading chips" : "Select STM32 chip"}
           searchable
           className="w-full"
+          disabled={isLoading || !!error}
         />
       </div>
       
-      <div className="flex items-center space-x-1 text-muted-foreground">
-        <Icon name="Info" size={16} />
-        <span className="text-caption">Package view available</span>
-      </div>
+      {isLoading && (
+        <div className="flex items-center space-x-1 text-muted-foreground">
+          <Icon name="Loader2" size={16} className="animate-spin" />
+          <span className="text-caption">Loading available chips...</span>
+        </div>
+      )}
+
+      {error && !isLoading && (
+        <div className="flex items-center space-x-1 text-destructive">
+          <Icon name="AlertTriangle" size={16} />
+          <span className="text-caption">Failed to load chip options.</span>
+        </div>
+      )}
+
+      {!isLoading && !error && (
+        <div className="flex items-center space-x-1 text-muted-foreground">
+          <Icon name="Info" size={16} />
+          <span className="text-caption">Package view available</span>
+        </div>
+      )}
     </div>
   );
 };

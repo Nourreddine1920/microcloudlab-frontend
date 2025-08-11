@@ -56,8 +56,10 @@ const Select = React.forwardRef(({
     };
 
     const handleToggle = () => {
+        console.log('Toggle clicked, current isOpen:', isOpen);
         if (!disabled) {
             const newIsOpen = !isOpen;
+            console.log('Setting isOpen to:', newIsOpen);
             setIsOpen(newIsOpen);
             onOpenChange?.(newIsOpen);
             if (!newIsOpen) {
@@ -67,6 +69,7 @@ const Select = React.forwardRef(({
     };
 
     const handleOptionSelect = (option) => {
+        console.log('Select option selected:', option);
         if (multiple) {
             const newValue = value || [];
             const updatedValue = newValue.includes(option.value)
@@ -203,7 +206,12 @@ const Select = React.forwardRef(({
                                             isSelected(option.value) && "bg-primary text-primary-foreground",
                                             option.disabled && "pointer-events-none opacity-50"
                                         )}
-                                        onClick={() => !option.disabled && handleOptionSelect(option)}
+                                        onClick={() => {
+                                            console.log('Dropdown option clicked:', option);
+                                            if (!option.disabled) {
+                                                handleOptionSelect(option);
+                                            }
+                                        }}
                                     >
                                         <span className="flex-1">{option.label}</span>
                                         {multiple && isSelected(option.value) && (

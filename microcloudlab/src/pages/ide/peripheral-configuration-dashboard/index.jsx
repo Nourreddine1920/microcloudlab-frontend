@@ -13,7 +13,14 @@ import { useMcu } from '../context/McuContext';
 
 const PeripheralConfigurationDashboard = () => {
   const [searchParams] = useSearchParams();
-  const { selectedMcu, selectMcu, getAvailablePeripheralInstances, getCurrentConfiguration } = useMcu();
+  const { 
+    selectedMcu, 
+    selectMcu, 
+    getAvailablePeripheralInstances, 
+    getPeripheralStatus,
+    getAllPeripheralStatuses,
+    getPeripheralConfiguration
+  } = useMcu();
   
   // Get board from URL params and set it in MCU context if not already selected
   const boardParam = searchParams.get('board');
@@ -28,7 +35,7 @@ const PeripheralConfigurationDashboard = () => {
   const [isPreviewCollapsed, setIsPreviewCollapsed] = useState(false);
   const [filteredPeripherals, setFilteredPeripherals] = useState([]);
 
-  // Generate peripheral data based on selected MCU
+  // Generate dynamic peripheral data based on selected MCU and current status
   const getPeripheralDataForMcu = () => {
     if (!selectedMcu) return { communication: [], timing: [], analog: [], power: [], connectivity: [] };
     
@@ -40,23 +47,33 @@ const PeripheralConfigurationDashboard = () => {
       connectivity: []
     };
 
-    // Process MCU peripherals
+    const allStatuses = getAllPeripheralStatuses();
+
+    // Process MCU peripherals with dynamic status
     Object.keys(selectedMcu.supportedPeripherals).forEach(peripheralType => {
       const instances = getAvailablePeripheralInstances(peripheralType);
       const category = getPeripheralCategory(peripheralType);
       
       instances.forEach(instance => {
+        const statusKey = `${peripheralType}_${instance}`;
+        const status = allStatuses[statusKey] || { status: 'available', completeness: 0, lastModified: null };
+        const configuration = getPeripheralConfiguration(peripheralType, instance);
+        
         peripheralCategories[category].push({
           id: `${peripheralType.toLowerCase()}_${instance.toLowerCase()}`,
           name: instance,
           description: getPeripheralDescription(peripheralType),
           icon: getPeripheralIcon(peripheralType),
-          status: 'available',
-          instances: { active: 0, total: instances.length },
-          pins: { used: 0, available: selectedMcu.pinout ? Object.values(selectedMcu.pinout).flat().length : 0 },
-          completeness: 0,
-          lastModified: null,
-          peripheralType: peripheralType
+          status: status.status,
+          instances: { active: status.status === 'configured' ? 1 : 0, total: instances.length },
+          pins: { 
+            used: configuration?.pins ? Object.keys(configuration.pins).length : 0, 
+            available: selectedMcu.pinout ? Object.values(selectedMcu.pinout).flat().length : 0 
+          },
+          completeness: status.completeness,
+          lastModified: status.lastModified,
+          peripheralType: peripheralType,
+          configuration: configuration
         });
       });
     });
@@ -112,316 +129,8 @@ const PeripheralConfigurationDashboard = () => {
     return iconMap[type] || 'Settings';
   };
 
-  // Use MCU-specific peripheral data or fallback
-  const peripheralData = selectedMcu ? getPeripheralDataForMcu() : {
-    communication: [
-      {
-        id: 'uart1',
-        name: 'UART1',
-        description: 'Universal Asynchronous Receiver Transmitter',
-        icon: 'Radio',
-        status: 'configured',
-        instances: { active: 1, total: 6 },
-        pins: { used: 2, available: 144 },
-        completeness: 100,
-        lastModified: '2025-07-30T10:30:00Z'
-      },
-      {
-        id: 'uart2',
-        name: 'UART2',
-        description: 'Universal Asynchronous Receiver Transmitter',
-        icon: 'Radio',
-        status: 'partial',
-        instances: { active: 1, total: 6 },
-        pins: { used: 1, available: 144 },
-        completeness: 65,
-        lastModified: '2025-07-29T15:45:00Z'
-      },
-      {
-        id: 'spi1',
-        name: 'SPI1',
-        description: 'Serial Peripheral Interface',
-        icon: 'Wifi',
-        status: 'configured',
-        instances: { active: 1, total: 3 },
-        pins: { used: 4, available: 144 },
-        completeness: 100,
-        lastModified: '2025-07-30T09:15:00Z'
-      },
-      {
-        id: 'spi2',
-        name: 'SPI2',
-        description: 'Serial Peripheral Interface',
-        icon: 'Wifi',
-        status: 'not_configured',
-        instances: { active: 0, total: 3 },
-        pins: { used: 0, available: 144 },
-        completeness: 0,
-        lastModified: null
-      },
-      {
-        id: 'i2c1',
-        name: 'I2C1',
-        description: 'Inter-Integrated Circuit',
-        icon: 'Link',
-        status: 'conflict',
-        instances: { active: 1, total: 3 },
-        pins: { used: 2, available: 144 },
-        completeness: 80,
-        lastModified: '2025-07-30T11:20:00Z'
-      },
-      {
-        id: 'i2c2',
-        name: 'I2C2',
-        description: 'Inter-Integrated Circuit',
-        icon: 'Link',
-        status: 'not_configured',
-        instances: { active: 0, total: 3 },
-        pins: { used: 0, available: 144 },
-        completeness: 0,
-        lastModified: null
-      },
-      {
-        id: 'can1',
-        name: 'CAN1',
-        description: 'Controller Area Network',
-        icon: 'Network',
-        status: 'partial',
-        instances: { active: 1, total: 2 },
-        pins: { used: 2, available: 144 },
-        completeness: 45,
-        lastModified: '2025-07-28T14:30:00Z'
-      },
-      {
-        id: 'usb',
-        name: 'USB OTG',
-        description: 'Universal Serial Bus On-The-Go',
-        icon: 'Usb',
-        status: 'not_configured',
-        instances: { active: 0, total: 1 },
-        pins: { used: 0, available: 144 },
-        completeness: 0,
-        lastModified: null
-      }
-    ],
-    gpio: [
-      {
-        id: 'gpioa',
-        name: 'GPIO Port A',
-        description: 'General Purpose Input/Output Port A',
-        icon: 'Zap',
-        status: 'configured',
-        instances: { active: 8, total: 16 },
-        pins: { used: 8, available: 16 },
-        completeness: 85,
-        lastModified: '2025-07-30T12:00:00Z'
-      },
-      {
-        id: 'gpiob',
-        name: 'GPIO Port B',
-        description: 'General Purpose Input/Output Port B',
-        icon: 'Zap',
-        status: 'partial',
-        instances: { active: 4, total: 16 },
-        pins: { used: 4, available: 16 },
-        completeness: 60,
-        lastModified: '2025-07-30T08:45:00Z'
-      },
-      {
-        id: 'gpioc',
-        name: 'GPIO Port C',
-        description: 'General Purpose Input/Output Port C',
-        icon: 'Zap',
-        status: 'configured',
-        instances: { active: 6, total: 16 },
-        pins: { used: 6, available: 16 },
-        completeness: 90,
-        lastModified: '2025-07-29T16:30:00Z'
-      },
-      {
-        id: 'gpiod',
-        name: 'GPIO Port D',
-        description: 'General Purpose Input/Output Port D',
-        icon: 'Zap',
-        status: 'not_configured',
-        instances: { active: 0, total: 16 },
-        pins: { used: 0, available: 16 },
-        completeness: 0,
-        lastModified: null
-      }
-    ],
-    timers: [
-      {
-        id: 'tim1',
-        name: 'Timer 1',
-        description: 'Advanced Control Timer',
-        icon: 'Clock',
-        status: 'configured',
-        instances: { active: 1, total: 1 },
-        pins: { used: 4, available: 144 },
-        completeness: 95,
-        lastModified: '2025-07-30T07:20:00Z'
-      },
-      {
-        id: 'tim2',
-        name: 'Timer 2',
-        description: 'General Purpose Timer',
-        icon: 'Clock',
-        status: 'partial',
-        instances: { active: 1, total: 1 },
-        pins: { used: 2, available: 144 },
-        completeness: 70,
-        lastModified: '2025-07-29T13:15:00Z'
-      },
-      {
-        id: 'tim3',
-        name: 'Timer 3',
-        description: 'General Purpose Timer',
-        icon: 'Clock',
-        status: 'not_configured',
-        instances: { active: 0, total: 1 },
-        pins: { used: 0, available: 144 },
-        completeness: 0,
-        lastModified: null
-      },
-      {
-        id: 'pwm1',
-        name: 'PWM Channel 1',
-        description: 'Pulse Width Modulation',
-        icon: 'Waves',
-        status: 'configured',
-        instances: { active: 2, total: 4 },
-        pins: { used: 2, available: 144 },
-        completeness: 100,
-        lastModified: '2025-07-30T06:45:00Z'
-      },
-      {
-        id: 'watchdog',
-        name: 'Watchdog Timer',
-        description: 'Independent Watchdog Timer',
-        icon: 'Shield',
-        status: 'partial',
-        instances: { active: 1, total: 1 },
-        pins: { used: 0, available: 144 },
-        completeness: 40,
-        lastModified: '2025-07-28T10:30:00Z'
-      }
-    ],
-    analog: [
-      {
-        id: 'adc1',
-        name: 'ADC1',
-        description: 'Analog to Digital Converter',
-        icon: 'Activity',
-        status: 'conflict',
-        instances: { active: 3, total: 16 },
-        pins: { used: 3, available: 144 },
-        completeness: 75,
-        lastModified: '2025-07-30T11:10:00Z'
-      },
-      {
-        id: 'adc2',
-        name: 'ADC2',
-        description: 'Analog to Digital Converter',
-        icon: 'Activity',
-        status: 'not_configured',
-        instances: { active: 0, total: 16 },
-        pins: { used: 0, available: 144 },
-        completeness: 0,
-        lastModified: null
-      },
-      {
-        id: 'dac1',
-        name: 'DAC1',
-        description: 'Digital to Analog Converter',
-        icon: 'TrendingUp',
-        status: 'configured',
-        instances: { active: 1, total: 2 },
-        pins: { used: 1, available: 144 },
-        completeness: 100,
-        lastModified: '2025-07-29T14:20:00Z'
-      },
-      {
-        id: 'comp1',
-        name: 'Comparator 1',
-        description: 'Analog Comparator',
-        icon: 'GitCompare',
-        status: 'partial',
-        instances: { active: 1, total: 2 },
-        pins: { used: 2, available: 144 },
-        completeness: 55,
-        lastModified: '2025-07-28T16:45:00Z'
-      }
-    ],
-    system: [
-      {
-        id: 'rcc',
-        name: 'RCC',
-        description: 'Reset and Clock Control',
-        icon: 'Settings',
-        status: 'configured',
-        instances: { active: 1, total: 1 },
-        pins: { used: 0, available: 144 },
-        completeness: 100,
-        lastModified: '2025-07-30T13:00:00Z'
-      },
-      {
-        id: 'pwr',
-        name: 'Power Management',
-        description: 'Power Control Unit',
-        icon: 'Battery',
-        status: 'configured',
-        instances: { active: 1, total: 1 },
-        pins: { used: 0, available: 144 },
-        completeness: 90,
-        lastModified: '2025-07-30T12:30:00Z'
-      },
-      {
-        id: 'nvic',
-        name: 'NVIC',
-        description: 'Nested Vector Interrupt Controller',
-        icon: 'Zap',
-        status: 'partial',
-        instances: { active: 5, total: 82 },
-        pins: { used: 0, available: 144 },
-        completeness: 60,
-        lastModified: '2025-07-29T17:15:00Z'
-      },
-      {
-        id: 'dma1',
-        name: 'DMA1',
-        description: 'Direct Memory Access Controller',
-        icon: 'ArrowRightLeft',
-        status: 'configured',
-        instances: { active: 3, total: 8 },
-        pins: { used: 0, available: 144 },
-        completeness: 85,
-        lastModified: '2025-07-30T09:45:00Z'
-      },
-      {
-        id: 'dma2',
-        name: 'DMA2',
-        description: 'Direct Memory Access Controller',
-        icon: 'ArrowRightLeft',
-        status: 'not_configured',
-        instances: { active: 0, total: 8 },
-        pins: { used: 0, available: 144 },
-        completeness: 0,
-        lastModified: null
-      },
-      {
-        id: 'rtc',
-        name: 'RTC',
-        description: 'Real Time Clock',
-        icon: 'Calendar',
-        status: 'partial',
-        instances: { active: 1, total: 1 },
-        pins: { used: 0, available: 144 },
-        completeness: 30,
-        lastModified: '2025-07-27T12:00:00Z'
-      }
-    ]
-  };
+  // Get dynamic peripheral data
+  const peripheralData = getPeripheralDataForMcu();
 
   useEffect(() => {
     const currentPeripherals = peripheralData[activeCategory] || [];
@@ -434,7 +143,7 @@ const PeripheralConfigurationDashboard = () => {
     } else {
       setFilteredPeripherals(currentPeripherals);
     }
-  }, [activeCategory, searchQuery, selectedMcu]);
+  }, [activeCategory, searchQuery, selectedMcu, peripheralData]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -449,6 +158,25 @@ const PeripheralConfigurationDashboard = () => {
       }
     }
   };
+
+  // Calculate overall statistics
+  const getOverallStats = () => {
+    const allPeripherals = Object.values(peripheralData).flat();
+    const configured = allPeripherals.filter(p => p.status === 'configured').length;
+    const total = allPeripherals.length;
+    const avgCompleteness = allPeripherals.length > 0 
+      ? Math.round(allPeripherals.reduce((sum, p) => sum + p.completeness, 0) / allPeripherals.length)
+      : 0;
+
+    return {
+      total,
+      configured,
+      available: total - configured,
+      avgCompleteness
+    };
+  };
+
+  const stats = getOverallStats();
 
   return (
     <div className="min-h-screen bg-background">
@@ -465,7 +193,7 @@ const PeripheralConfigurationDashboard = () => {
                 <div className="flex items-center space-x-4">
                   <div>
                     <h1 className="text-heading-lg font-heading">
-                                              {selectedMcu ? `${selectedMcu.name} Configuration Dashboard` : 'MCU Configuration Dashboard'}
+                      {selectedMcu ? `${selectedMcu.name} Configuration Dashboard` : 'MCU Configuration Dashboard'}
                     </h1>
                     <p className="text-body-sm text-muted-foreground">
                       {selectedMcu 
@@ -481,7 +209,11 @@ const PeripheralConfigurationDashboard = () => {
                         </div>
                         <div className="flex items-center space-x-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-medium">
                           <Icon name="Zap" size={12} />
-                          <span>{selectedMcu.peripherals.length} Peripherals Available</span>
+                          <span>{stats.configured}/{stats.total} Configured</span>
+                        </div>
+                        <div className="flex items-center space-x-2 bg-success/10 text-success px-3 py-1 rounded-full text-xs font-medium">
+                          <Icon name="TrendingUp" size={12} />
+                          <span>{stats.avgCompleteness}% Complete</span>
                         </div>
                       </div>
                     )}
@@ -525,7 +257,7 @@ const PeripheralConfigurationDashboard = () => {
           {/* Main Content */}
           <div className="px-4 lg:px-6 py-6 space-y-6">
             {/* Quick Stats Overview */}
-            <QuickStatsOverview />
+            <QuickStatsOverview stats={stats} />
 
             {/* Peripheral Cards Grid */}
             <div className="space-y-4">
