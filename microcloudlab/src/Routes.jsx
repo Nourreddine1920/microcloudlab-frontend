@@ -31,89 +31,89 @@ const Routes = () => {
   return (
     <BrowserRouter>
       <ErrorBoundary>
-      <ScrollToTop />
-      {/* <Breadcrumb /> */}
-      <RouterRoutes>
-        {/* Define your routes here */}
-        <Route path="/" element={<Homepage />} />
-        <Route path="/homepage" element={<Homepage />} />
-        <Route path="/solutions-hub" element={<SolutionsHub />} />
-        <Route path="/about-vision" element={<AboutVision />} />
-        <Route path="/resources-support" element={<ResourcesSupport />} />
-        <Route path="/contact-partnership" element={<ContactPartnership />} />
-        <Route path="/platform-demo" element={<PlatformDemo />} />
-        <Route path="/api-test" element={<ApiTest />} />
-        <Route path="/test" element={<TestPage />} />
-        
-        {/* Auth & Pricing */}
-        <Route path="/auth/login" element={<LoginPage />} />
-        <Route path="/auth/register" element={<RegisterPage />} />
-        <Route path="/pricing" element={<PricingPage />} />
+        <ScrollToTop />
+        {/* <Breadcrumb /> */}
+        <RouterRoutes>
+          {/* Define your routes here */}
+          <Route path="/" element={<Homepage />} />
+          <Route path="/homepage" element={<Homepage />} />
+          <Route path="/solutions-hub" element={<SolutionsHub />} />
+          <Route path="/about-vision" element={<AboutVision />} />
+          <Route path="/resources-support" element={<ResourcesSupport />} />
+          <Route path="/contact-partnership" element={<ContactPartnership />} />
+          <Route path="/platform-demo" element={<PlatformDemo />} />
+          <Route path="/api-test" element={<ApiTest />} />
+          <Route path="/test" element={<TestPage />} />
+          
+          {/* Auth & Pricing */}
+          <Route path="/auth/login" element={<LoginPage />} />
+          <Route path="/auth/register" element={<RegisterPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
 
-        {/* IDE Routes - Auth protected and wrapped with MCU Context */}
-        <Route
-          path="/ide"
-          element={
-            <ProtectedRoute requireAuth>
-              <McuProvider>
-                <IDEHome />
-              </McuProvider>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/ide/configuration-validation-conflicts"
-          element={
-            <ProtectedRoute requireAuth>
-              <McuProvider>
-                <ConfigurationValidationConflicts />
-              </McuProvider>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/ide/configuration-import-export-manager"
-          element={
-            <ProtectedRoute requireAuth>
-              <McuProvider>
-                <ConfigurationImportExportManager />
-              </McuProvider>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/ide/peripheral-configuration-editor"
-          element={
-            <ProtectedRoute requireAuth>
-              <McuProvider>
-                <PeripheralConfigurationEditor />
-              </McuProvider>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/ide/pin-assignment-visualizer"
-          element={
-            <ProtectedRoute requireAuth>
-              <McuProvider>
-                <PinAssignmentVisualizer />
-              </McuProvider>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/ide/peripheral-configuration-dashboard"
-          element={
-            <ProtectedRoute requireAuth>
-              <McuProvider>
-                <PeripheralConfigurationDashboard />
-              </McuProvider>
-            </ProtectedRoute>
-          }
-        />
-        
-        <Route path="*" element={<NotFound />} />
-      </RouterRoutes>
+          {/* IDE Routes - Auth protected and wrapped with MCU Context */}
+          <Route
+            path="/ide"
+            element={
+              <ProtectedRoute requireAuth>
+                <McuProvider>
+                  <IDEHome />
+                </McuProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ide/configuration-validation-conflicts"
+            element={
+              <ProtectedRoute requireAuth>
+                <McuProvider>
+                  <ConfigurationValidationConflicts />
+                </McuProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ide/configuration-import-export-manager"
+            element={
+              <ProtectedRoute requireAuth>
+                <McuProvider>
+                  <ConfigurationImportExportManager />
+                </McuProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ide/peripheral-configuration-editor"
+            element={
+              <ProtectedRoute requireAuth>
+                <McuProvider>
+                  <PeripheralConfigurationEditor />
+                </McuProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ide/pin-assignment-visualizer"
+            element={
+              <ProtectedRoute requireAuth>
+                <McuProvider>
+                  <PinAssignmentVisualizer />
+                </McuProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ide/peripheral-configuration-dashboard"
+            element={
+              <ProtectedRoute requireAuth>
+                <McuProvider>
+                  <PeripheralConfigurationDashboard />
+                </McuProvider>
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route path="*" element={<NotFound />} />
+        </RouterRoutes>
       </ErrorBoundary>
     </BrowserRouter>
   );

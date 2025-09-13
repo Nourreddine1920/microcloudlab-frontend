@@ -6,6 +6,9 @@ import Button from "../../../components/ui/Button";
 import ConfigurationForm from "./components/ConfigurationForm";
 import ConfigurationToolbar from "./components/ConfigurationToolbar";
 import CodePreviewPanel from "./components/CodePreviewPanel";
+import UartConfigViewer from "./components/UartConfigViewer";
+import PeripheralConfigViewer from "./components/PeripheralConfigViewer";
+import McuSelector from "./components/McuSelector";
 import { useMcu } from "../context/McuContext";
 import peripheralSchemas from "./components/peripheralSchemas";
 
@@ -14,6 +17,7 @@ const PeripheralConfigurationEditor = () => {
   const navigate = useNavigate();
   const {
     selectedMcu,
+    selectMcu,
     getPeripheralConfiguration,
     savePeripheralConfiguration,
     deletePeripheralConfiguration,
@@ -32,26 +36,72 @@ const PeripheralConfigurationEditor = () => {
   const [activeSection, setActiveSection] = useState("basic");
   const [selectedPeripheral, setSelectedPeripheral] = useState("UART");
 
-  const [formData, setFormData] = useState({
-    instance: instance,
-    baudRate: "115200",
-    dataBits: "8",
-    parity: "none",
-    stopBits: "1",
-    flowControl: "none",
-    txBufferSize: "256",
-    rxBufferSize: "256",
-    dmaEnable: false,
-    interruptEnable: true,
-    autoBaud: false,
-    oversampling: "16",
-    txPin: "PA9",
-    rxPin: "PA10",
-    rtsPin: "PA12",
-    ctsPin: "PA11",
-    gpioSpeed: "high",
-    pullResistor: "none",
-  });
+  // Initialize form data based on peripheral type
+  const getDefaultFormData = (peripheralType, instanceParam) => {
+    const baseData = {
+      instance: instanceParam,
+      gpioSpeed: "high",
+      pullResistor: "none",
+    };
+
+    switch (peripheralType.toUpperCase()) {
+      case 'UART':
+        return {
+          ...baseData,
+          baudRate: "115200",
+          dataBits: "8",
+          parity: "none",
+          stopBits: "1",
+          flowControl: "none",
+          txBufferSize: "256",
+          rxBufferSize: "256",
+          dmaEnable: false,
+          interruptEnable: true,
+          autoBaud: false,
+          oversampling: "16",
+          txPin: "PA9",
+          rxPin: "PA10",
+          rtsPin: "PA12",
+          ctsPin: "PA11",
+        };
+      case 'SPI':
+        return {
+          ...baseData,
+          mode: "master",
+          dataSize: "8",
+          clockPolarity: "low",
+          clockPhase: "first",
+          baudRatePrescaler: "16",
+          crcEnable: false,
+          nssPulse: true,
+          direction: "2lines",
+          dmaEnable: false,
+          interruptEnable: true,
+          mosiPin: "PA7",
+          misoPin: "PA6",
+          sckPin: "PA5",
+          nssPin: "PA4",
+        };
+      case 'I2C':
+        return {
+          ...baseData,
+          address: 8,
+          clockSpeed: "100000",
+          dutyCycle: "2",
+          generalCall: false,
+          noStretch: false,
+          dmaEnable: false,
+          interruptEnable: true,
+          sdaPin: "PB7",
+          sclPin: "PB6",
+          pullResistor: "up", // I2C typically needs pull-up
+        };
+      default:
+        return baseData;
+    }
+  };
+
+  const [formData, setFormData] = useState(getDefaultFormData(peripheralType, instance));
 
   const [validationErrors, setValidationErrors] = useState({});
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -61,26 +111,7 @@ const PeripheralConfigurationEditor = () => {
   const [mobileView, setMobileView] = useState("form");
 
   // Create default config function to avoid repetition
-  const getDefaultConfig = (instanceParam) => ({
-    instance: instanceParam,
-    baudRate: "115200",
-    dataBits: "8",
-    parity: "none",
-    stopBits: "1",
-    flowControl: "none",
-    txBufferSize: "256",
-    rxBufferSize: "256",
-    dmaEnable: false,
-    interruptEnable: true,
-    autoBaud: false,
-    oversampling: "16",
-    txPin: "PA9",
-    rxPin: "PA10",
-    rtsPin: "PA12",
-    ctsPin: "PA11",
-    gpioSpeed: "high",
-    pullResistor: "none",
-  });
+  const getDefaultConfig = (instanceParam) => getDefaultFormData(peripheralType, instanceParam);
 
   // Load existing configuration on mount - FIXED: removed formData from deps
   useEffect(() => {
@@ -188,7 +219,7 @@ const PeripheralConfigurationEditor = () => {
     return Object.keys(errors).length === 0;
   };
 
-  // Save configuration with dynamic status update
+  // Save configuration with dynamic status update and UART transmission
   const handleSave = async () => {
     const isValid = await validateConfiguration();
     if (isValid) {
@@ -197,6 +228,18 @@ const PeripheralConfigurationEditor = () => {
       try {
         // Save configuration with dynamic status update
         await savePeripheralConfiguration(peripheralType, instance, formData);
+
+        // Send configuration through UART if it's a UART peripheral
+        if (peripheralType === 'UART') {
+          try {
+            const { sendConfiguration } = await import('../../../services/uartService');
+            await sendConfiguration(formData);
+            console.log("Configuration sent through UART successfully");
+          } catch (uartError) {
+            console.error("Failed to send configuration through UART:", uartError);
+            // Continue with save even if UART send fails
+          }
+        }
 
         setHasUnsavedChanges(false);
         setIsSaving(false);
@@ -289,32 +332,37 @@ const PeripheralConfigurationEditor = () => {
     setMobileView(view);
   };
 
+  const handleMcuSelect = async (mcu) => {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate loading
+      selectMcu(mcu.id); // Use context's selectMcu function
+      setHasUnsavedChanges(false);
+      // Reset configuration to defaults for new MCU
+      setFormData(getDefaultConfig(instance));
+    } catch (error) {
+      console.error('Failed to select MCU:', error);
+    }
+  };
+
   if (!selectedMcu) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="pt-16 px-4 lg:px-6 py-12">
-          <div className="max-w-md mx-auto text-center">
-            <Icon
-              name="Cpu"
-              size={64}
-              className="text-muted-foreground mx-auto mb-4"
+        <div className="pt-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8">
+              <h1 className="text-heading-lg font-heading mb-2">
+                Select a Microcontroller
+              </h1>
+              <p className="text-body-sm text-muted-foreground">
+                Choose an MCU to begin configuring its peripherals
+              </p>
+            </div>
+            
+            <McuSelector
+              onSelect={handleMcuSelect}
+              currentMcu={selectedMcu}
             />
-            <h1 className="text-heading-lg font-heading mb-2">
-              No MCU Selected
-            </h1>
-            <p className="text-body-sm text-muted-foreground mb-6">
-              Please select an MCU from the dashboard to configure peripherals.
-            </p>
-            <Button
-              variant="default"
-              size="lg"
-              onClick={() =>
-                navigate("/ide/peripheral-configuration-dashboard")
-              }
-            >
-              Go to Dashboard
-            </Button>
           </div>
         </div>
       </div>
@@ -378,17 +426,37 @@ const PeripheralConfigurationEditor = () => {
             </div>
           </div>
 
-          {/* Configuration Form - FIXED: Added all required props */}
+          {/* Split view for form and UART config */}
           <div className="flex-1 overflow-y-auto">
-            <div className="p-4 lg:p-6">
-              <ConfigurationForm
-                activeSection={activeSection}
-                formData={formData}
-                onFormChange={handleFormChange}
-                validationErrors={validationErrors}
-                peripheralType={peripheralType}
-                peripheralSchemas={peripheralSchemas} // <-- Add this line!
-              />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 lg:p-6">
+              {/* Left side: Configuration Form */}
+              <div>
+                <div className="mb-4">
+                  <h2 className="text-xl font-semibold">Configuration Settings</h2>
+                </div>
+                <ConfigurationForm
+                  activeSection={activeSection}
+                  formData={formData}
+                  onFormChange={handleFormChange}
+                  validationErrors={validationErrors}
+                  peripheralType={peripheralType}
+                  peripheralSchemas={peripheralSchemas}
+                />
+              </div>
+              
+              {/* Right side: Peripheral Config Viewer */}
+              <div>
+                <div className="mb-4">
+                  <h2 className="text-xl font-semibold">{peripheralType} Frame Preview</h2>
+                </div>
+                <div className="sticky top-4">
+                  <PeripheralConfigViewer 
+                    peripheralType={peripheralType}
+                    config={formData} 
+                    instance={instance}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

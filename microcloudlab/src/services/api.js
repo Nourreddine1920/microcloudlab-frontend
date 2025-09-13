@@ -1,7 +1,7 @@
 const API_BASE_URL = 'http://localhost:8000/api';
 
 // Generic API functions
-const apiRequest = async (endpoint, options = {}) => {
+export const apiRequest = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
   const token = localStorage.getItem('auth_token');
   const config = {
