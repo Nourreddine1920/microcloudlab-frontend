@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import Header from '../../../components/ui/Header';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
@@ -13,6 +13,7 @@ import { useMcu } from '../context/McuContext';
 
 const PeripheralConfigurationDashboard = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { 
     selectedMcu, 
     selectMcu, 
@@ -221,6 +222,42 @@ const PeripheralConfigurationDashboard = () => {
                 </div>
 
                 <div className="flex items-center space-x-4">
+                  {/* Navigation Buttons */}
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      iconName="ArrowLeft"
+                      onClick={() => navigate('/ide/integrated')}
+                    >
+                      Back to IDE
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      iconName="CheckCircle"
+                      onClick={() => navigate('/ide/configuration-validation-conflicts')}
+                    >
+                      Validate
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      iconName="Cpu"
+                      onClick={() => navigate('/ide/pin-assignment-visualizer')}
+                    >
+                      Pin Mapping
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      iconName="Activity"
+                      onClick={() => navigate('/ide/peripheral-communication-dashboard')}
+                    >
+                      Monitor
+                    </Button>
+                  </div>
+                  
                   <GlobalSearchBar 
                     onSearch={handleSearch}
                     onFilterChange={handleFilterChange}

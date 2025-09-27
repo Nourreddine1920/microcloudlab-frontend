@@ -282,3 +282,90 @@ def peripheral_view_by_type(request, peripheral_type):
         'data': filtered_data,
         'count': len(filtered_data)
     })
+
+# Bulk Delete Microcontrollers Endpoint
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def bulk_delete_microcontrollers(request):
+    """
+    Delete multiple microcontrollers by their IDs
+    Only deletes microcontrollers that are marked as deletable (is_deletable=True)
+    """
+    try:
+        data = request.data
+        microcontroller_ids = data.get('ids', [])
+        
+        if not microcontroller_ids:
+            return Response({
+                'status': 'error',
+                'message': 'No microcontroller IDs provided'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Validate that all IDs are valid UUIDs
+        valid_ids = []
+        invalid_ids = []
+        
+        for mcu_id in microcontroller_ids:
+            try:
+                # Try to find the microcontroller
+                mcu = Microcontroller.objects.get(id=mcu_id)
+                if mcu.is_deletable:
+                    valid_ids.append(mcu_id)
+                else:
+                    invalid_ids.append({
+                        'id': mcu_id,
+                        'name': mcu.name,
+                        'reason': 'Not deletable (is_deletable=False)'
+                    })
+            except Microcontroller.DoesNotExist:
+                invalid_ids.append({
+                    'id': mcu_id,
+                    'name': 'Unknown',
+                    'reason': 'Microcontroller not found'
+                })
+            except Exception as e:
+                invalid_ids.append({
+                    'id': mcu_id,
+                    'name': 'Unknown',
+                    'reason': f'Invalid ID format: {str(e)}'
+                })
+        
+        # Delete valid microcontrollers
+        deleted_count = 0
+        deleted_microcontrollers = []
+        
+        for mcu_id in valid_ids:
+            try:
+                mcu = Microcontroller.objects.get(id=mcu_id)
+                deleted_microcontrollers.append({
+                    'id': str(mcu.id),
+                    'name': mcu.name,
+                    'type': mcu.type
+                })
+                mcu.delete()
+                deleted_count += 1
+            except Exception as e:
+                invalid_ids.append({
+                    'id': mcu_id,
+                    'name': 'Unknown',
+                    'reason': f'Deletion failed: {str(e)}'
+                })
+        
+        response_data = {
+            'status': 'success',
+            'message': f'Bulk delete completed. {deleted_count} microcontrollers deleted.',
+            'deleted_count': deleted_count,
+            'deleted_microcontrollers': deleted_microcontrollers,
+            'invalid_ids': invalid_ids,
+            'total_requested': len(microcontroller_ids),
+            'successful_deletions': deleted_count,
+            'failed_deletions': len(invalid_ids)
+        }
+        
+        return Response(response_data, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        return Response({
+            'status': 'error',
+            'message': f'Bulk delete failed: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

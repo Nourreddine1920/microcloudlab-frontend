@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../../components/ui/Header';
 import ConfigurationContextHeader from '../../../components/ui/ConfigurationContextHeader';
 import ValidationStatusIndicator from '../../../components/ui/ValidationStatusIndicator';
@@ -13,6 +14,7 @@ import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
 const ConfigurationValidationConflicts = () => {
+  const navigate = useNavigate();
   const [isValidating, setIsValidating] = useState(false);
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
   const [selectedIssues, setSelectedIssues] = useState([]);
@@ -348,6 +350,46 @@ const ConfigurationValidationConflicts = () => {
 
       <main className="pt-28 pb-8">
         <div className="max-w-7xl mx-auto px-4 lg:px-6">
+          {/* Navigation Bar */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  iconName="ArrowLeft"
+                  onClick={() => navigate('/ide/integrated')}
+                >
+                  Back to IDE
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  iconName="Layout"
+                  onClick={() => navigate('/ide/peripheral-configuration-dashboard')}
+                >
+                  Dashboard
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  iconName="Cpu"
+                  onClick={() => navigate('/ide/pin-assignment-visualizer')}
+                >
+                  Pin Mapping
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  iconName="Activity"
+                  onClick={() => navigate('/ide/peripheral-communication-dashboard')}
+                >
+                  Monitor
+                </Button>
+              </div>
+            </div>
+          </div>
+
           {/* Validation Status Header */}
           <ValidationStatusHeader
             lastValidated={new Date(Date.now() - 1800000)}

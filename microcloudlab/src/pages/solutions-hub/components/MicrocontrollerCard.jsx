@@ -83,13 +83,63 @@ const MicrocontrollerCard = ({ microcontroller }) => {
 
         {/* Specifications */}
         {parsedSpecs && Object.keys(parsedSpecs).length > 0 && (
-          <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-background rounded-lg">
-            {Object.entries(parsedSpecs).slice(0, 4).map(([key, value]) => (
-              <div key={key} className="text-center">
-                <div className="text-lg font-semibold text-primary">{value}</div>
-                <div className="text-xs text-text-secondary capitalize">{key.replace('_', ' ')}</div>
-              </div>
-            ))}
+          <div className="mb-6 p-4 bg-background rounded-lg">
+            <h4 className="text-sm font-semibold text-text-primary mb-3">Specifications</h4>
+            <div className="space-y-3">
+              {Object.entries(parsedSpecs).slice(0, 6).map(([key, value]) => {
+                // Handle different value types for better display
+                const renderSpecValue = (val, specKey) => {
+                  if (typeof val === 'object' && val !== null) {
+                    if (Array.isArray(val)) {
+                      return val.length > 0 ? val.join(', ') : 'N/A';
+                    } else {
+                      // For complex objects, show key information based on the spec type
+                      switch (specKey) {
+                        case 'microcontroller':
+                          return val.model || val.name || 'N/A';
+                        case 'onboard_debugger':
+                          return val.model || val.interface || 'N/A';
+                        case 'usb':
+                          return val.type || val.modes?.join(', ') || 'N/A';
+                        case 'audio':
+                          return val.dac || val.microphone || 'N/A';
+                        case 'leds':
+                          return val.user_leds ? `${val.user_leds} LEDs` : 'N/A';
+                        case 'buttons':
+                          return Array.isArray(val) ? val.join(', ') : val || 'N/A';
+                        case 'power':
+                          return val.supply_options?.join(', ') || val.current_consumption || 'N/A';
+                        case 'dimensions_mm':
+                          return val.length && val.width ? `${val.length}×${val.width}mm` : 'N/A';
+                        case 'use_cases':
+                          return Array.isArray(val) ? val.slice(0, 2).join(', ') : 'N/A';
+                        default:
+                          // Try to find a meaningful property
+                          const meaningfulProps = ['model', 'name', 'type', 'value', 'count', 'length', 'width'];
+                          for (const prop of meaningfulProps) {
+                            if (val[prop] !== undefined) {
+                              return val[prop];
+                            }
+                          }
+                          return 'N/A';
+                      }
+                    }
+                  }
+                  return val;
+                };
+
+                return (
+                  <div key={key} className="flex justify-between items-center py-1">
+                    <span className="text-sm text-text-secondary capitalize">
+                      {key.replace('_', ' ')}
+                    </span>
+                    <span className="text-sm font-medium text-text-primary text-right max-w-[60%]">
+                      {renderSpecValue(value, key)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 

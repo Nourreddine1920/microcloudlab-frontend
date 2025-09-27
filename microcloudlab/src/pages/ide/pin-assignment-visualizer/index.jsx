@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../../components/ui/Header';
 import ConfigurationContextHeader from '../../../components/ui/ConfigurationContextHeader';
 import QuickActionToolbar from '../../../components/ui/QuickActionToolbar';
@@ -17,6 +18,7 @@ import { useMcu } from '../context/McuContext';
 
 
 const PinAssignmentVisualizer = () => {
+  const navigate = useNavigate();
   const { selectedMcu, selectMcu, getAvailablePins, getCurrentConfiguration, isPinAvailable } = useMcu();
   const [selectedChip, setSelectedChip] = useState(selectedMcu?.id || 'stm32f103c8t6');
   const [viewMode, setViewMode] = useState('package');
@@ -252,8 +254,48 @@ const PinAssignmentVisualizer = () => {
         />
 
         <main className="pt-28 lg:pt-32">
-          {/* Toolbar */}
+          {/* Navigation Bar */}
           <div className="sticky top-28 lg:top-32 bg-background border-b border-border z-[998] p-4">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  iconName="ArrowLeft"
+                  onClick={() => navigate('/ide/integrated')}
+                >
+                  Back to IDE
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  iconName="Layout"
+                  onClick={() => navigate('/ide/peripheral-configuration-dashboard')}
+                >
+                  Dashboard
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  iconName="CheckCircle"
+                  onClick={() => navigate('/ide/configuration-validation-conflicts')}
+                >
+                  Validate
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  iconName="Activity"
+                  onClick={() => navigate('/ide/peripheral-communication-dashboard')}
+                >
+                  Monitor
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Toolbar */}
+          <div className="sticky top-40 lg:top-44 bg-background border-b border-border z-[998] p-4">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
               <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
                 <ChipSelector

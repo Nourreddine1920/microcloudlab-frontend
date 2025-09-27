@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { peripheralService } from '../../../services/peripheralService';
 import Button from '../../../components/ui/Button';
 
 const PeripheralCommunicationDashboard = () => {
+    const navigate = useNavigate();
     const [lastData, setLastData] = useState(null);
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -100,6 +102,42 @@ const PeripheralCommunicationDashboard = () => {
                         {loading ? 'Loading...' : 'Refresh History'}
                     </Button>
                 </div>
+            </div>
+
+            {/* Navigation Bar */}
+            <div className="flex items-center space-x-2">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    iconName="ArrowLeft"
+                    onClick={() => navigate('/ide/integrated')}
+                >
+                    Back to IDE
+                </Button>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    iconName="Layout"
+                    onClick={() => navigate('/ide/peripheral-configuration-dashboard')}
+                >
+                    Dashboard
+                </Button>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    iconName="CheckCircle"
+                    onClick={() => navigate('/ide/configuration-validation-conflicts')}
+                >
+                    Validate
+                </Button>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    iconName="Cpu"
+                    onClick={() => navigate('/ide/pin-assignment-visualizer')}
+                >
+                    Pin Mapping
+                </Button>
             </div>
 
             {/* Filter by peripheral type */}
