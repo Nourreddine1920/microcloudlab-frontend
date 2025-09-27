@@ -4,7 +4,8 @@ from .views import (
     MicrocontrollerViewSet, ProjectViewSet, CodeExecutionViewSet, UserProfileViewSet,
     TutorialViewSet, TutorialProgressViewSet, CaseStudyViewSet, ContactInquiryViewSet,
     PlatformStatsViewSet, TeamMemberViewSet, ResourceViewSet, 
-    peripheral_send, peripheral_view, peripheral_history, peripheral_view_by_type
+    peripheral_send, peripheral_view, peripheral_history, peripheral_view_by_type,
+    bulk_delete_microcontrollers
 )
 
 router = DefaultRouter()
@@ -21,6 +22,8 @@ router.register(r'teammembers', TeamMemberViewSet)
 router.register(r'resources', ResourceViewSet)
 
 urlpatterns = [
+    # Bulk operations (must come before router to avoid conflicts)
+    path('microcontrollers/bulk-delete/', bulk_delete_microcontrollers, name='bulk_delete_microcontrollers'),
     path('', include(router.urls)),
     # Generic peripheral communication endpoints
     path('peripheral/send/', peripheral_send, name='peripheral_send'),

@@ -28,6 +28,7 @@ class Microcontroller(models.Model):
     description = models.TextField()
     specifications = models.JSONField(default=default_dict, blank=True, null=True)  # RAM, Flash, GPIO pins, etc.
     is_available = models.BooleanField(default=True)
+    is_deletable = models.BooleanField(default=True, help_text="Whether this microcontroller can be deleted by admins")
     current_user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
