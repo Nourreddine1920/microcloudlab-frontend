@@ -21,11 +21,13 @@ import TestPage from "pages/TestPage";
 // IDE imports
 import { McuProvider } from "pages/ide/context/McuContext";
 import IDEHome from "pages/ide";
+import IntegratedIDE from "pages/ide/components/IntegratedIDE";
 import ConfigurationValidationConflicts from "pages/ide/configuration-validation-conflicts";
 import ConfigurationImportExportManager from "pages/ide/configuration-import-export-manager";
 import PeripheralConfigurationEditor from "pages/ide/peripheral-configuration-editor";
 import PinAssignmentVisualizer from "pages/ide/pin-assignment-visualizer";
 import PeripheralConfigurationDashboard from "pages/ide/peripheral-configuration-dashboard";
+import PeripheralCommunicationDashboard from "pages/ide/peripheral-communication-dashboard";
 
 const Routes = () => {
   return (
@@ -57,6 +59,16 @@ const Routes = () => {
               <ProtectedRoute requireAuth>
                 <McuProvider>
                   <IDEHome />
+                </McuProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ide/integrated"
+            element={
+              <ProtectedRoute requireAuth>
+                <McuProvider>
+                  <IntegratedIDE />
                 </McuProvider>
               </ProtectedRoute>
             }
@@ -107,6 +119,16 @@ const Routes = () => {
               <ProtectedRoute requireAuth>
                 <McuProvider>
                   <PeripheralConfigurationDashboard />
+                </McuProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ide/peripheral-communication-dashboard"
+            element={
+              <ProtectedRoute requireAuth>
+                <McuProvider>
+                  <PeripheralCommunicationDashboard />
                 </McuProvider>
               </ProtectedRoute>
             }

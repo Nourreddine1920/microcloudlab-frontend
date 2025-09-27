@@ -4,10 +4,12 @@ import Button from '../../components/ui/Button';
 import Header from '../../components/ui/Header';
 import Icon from '../../components/AppIcon';
 import { useMcu } from './context/McuContext';
+import IntegratedIDE from './components/IntegratedIDE';
 
 const IDEHome = () => {
   const { selectedMcu, selectMcu, MCU_SPECIFICATIONS } = useMcu();
   const [selectedBoard, setSelectedBoard] = useState(selectedMcu?.id || null);
+  const [showIntegratedIDE, setShowIntegratedIDE] = useState(false);
 
   // Get available boards from MCU specifications with fallback for missing ones
   const availableBoards = Object.values(MCU_SPECIFICATIONS).concat([
@@ -85,6 +87,15 @@ const IDEHome = () => {
     }
   };
 
+  const handleStartIntegratedIDE = () => {
+    setShowIntegratedIDE(true);
+  };
+
+  // Show integrated IDE if requested
+  if (showIntegratedIDE) {
+    return <IntegratedIDE />;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -116,9 +127,10 @@ const IDEHome = () => {
                 size="lg"
                 iconName="Code"
                 iconPosition="left"
+                onClick={handleStartIntegratedIDE}
                 className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-oscilloscope"
               >
-                Start Coding
+                Start Integrated IDE
               </Button>
               
               <Button
@@ -258,10 +270,10 @@ const IDEHome = () => {
                   size="lg"
                   iconName="Play"
                   iconPosition="left"
-                  onClick={handleStartWithBoard}
+                  onClick={handleStartIntegratedIDE}
                   className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-oscilloscope"
                 >
-                  Start with {selectedMcu.name}
+                  Start Integrated IDE
                 </Button>
                 
                 <Button
@@ -269,9 +281,9 @@ const IDEHome = () => {
                   size="lg"
                   iconName="Settings"
                   iconPosition="left"
-                  onClick={() => window.location.href = `/ide/peripheral-configuration-editor?board=${selectedMcu.id}`}
+                  onClick={() => window.location.href = `/ide/peripheral-configuration-dashboard?board=${selectedMcu.id}`}
                 >
-                  Configure Peripherals
+                  Peripheral Dashboard
                 </Button>
               </div>
             </div>
