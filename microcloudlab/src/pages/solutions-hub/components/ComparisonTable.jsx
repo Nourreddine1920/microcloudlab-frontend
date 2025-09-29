@@ -2,6 +2,17 @@ import React, { useState } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module ComparisonTable
+ */
+
+/**
+ * A component that displays a comparison table between the traditional
+ * development approach and the MicroCloudLab platform. It uses tabs to
+ * switch between comparing features, pricing, and support.
+ *
+ * @returns {JSX.Element} The rendered comparison table component.
+ */
 const ComparisonTable = () => {
   const [activeTab, setActiveTab] = useState('features');
 

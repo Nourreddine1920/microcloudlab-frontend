@@ -3,6 +3,24 @@ import { Link, useLocation } from 'react-router-dom';
 import Icon from '../AppIcon';
 import Button from './Button';
 
+/**
+ * @module ConfigurationContextHeader
+ */
+
+/**
+ * A fixed header component that displays the context of the current peripheral configuration.
+ * It shows the peripheral type, instance, status, and provides quick actions like saving, validating, and exporting.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string|null} [props.peripheralType=null] - The type of the peripheral being configured (e.g., "UART").
+ * @param {string|null} [props.peripheralInstance=null] - The specific instance of the peripheral (e.g., "UART0").
+ * @param {('draft'|'valid'|'invalid'|'warning')} [props.configurationStatus='draft'] - The current status of the configuration.
+ * @param {number} [props.validationErrors=0] - The number of validation errors.
+ * @param {Function} props.onSave - Callback function to be executed when the save button is clicked.
+ * @param {Function} props.onValidate - Callback function to be executed when the validate button is clicked.
+ * @param {Function} props.onExport - Callback function to be executed when the export button is clicked.
+ * @returns {JSX.Element|null} The rendered header component, or null if no configuration is active.
+ */
 const ConfigurationContextHeader = ({ 
   peripheralType = null, 
   peripheralInstance = null, 

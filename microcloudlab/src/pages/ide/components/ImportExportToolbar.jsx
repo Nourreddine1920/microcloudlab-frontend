@@ -3,6 +3,27 @@ import Icon from '../../../../components/AppIcon';
 import Button from '../../../../components/ui/Button';
 import Input from '../../../../components/ui/Input';
 
+/**
+ * @module ImportExportToolbar
+ */
+
+/**
+ * A toolbar component providing functionality for importing, exporting, searching,
+ * and comparing configurations. It includes dropdown menus for various import/export
+ * formats and a toggle for compare mode.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Function} props.onImport - Callback function to handle the import action. It receives the selected import source or the uploaded file.
+ * @param {Function} props.onExport - Callback function to handle the export action. It receives the selected export format.
+ * @param {Function} props.onSearch - Callback function to handle search input changes.
+ * @param {string} props.searchQuery - The current search query string.
+ * @param {boolean} props.isCompareMode - A flag indicating if compare mode is active.
+ * @param {Function} props.onToggleCompareMode - Callback function to toggle compare mode.
+ * @param {Array<string>} props.selectedForComparison - An array of IDs of configurations selected for comparison.
+ * @param {Function} props.onCompareConfigurations - Callback function to initiate the comparison of selected configurations.
+ * @param {Function} props.onCreateFolder - Callback function to handle the creation of a new folder.
+ * @returns {JSX.Element} The rendered import/export toolbar component.
+ */
 const ImportExportToolbar = ({ 
   onImport, 
   onExport, 

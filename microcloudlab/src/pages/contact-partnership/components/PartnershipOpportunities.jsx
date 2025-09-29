@@ -2,6 +2,17 @@ import React, { useState } from 'react';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
 
+/**
+ * @module PartnershipOpportunities
+ */
+
+/**
+ * A component that details various partnership opportunities and special programs.
+ * It presents information in an expandable, accordion-style format for different
+ * partnership types and showcases special initiatives like startup and open-source programs.
+ *
+ * @returns {JSX.Element} The rendered partnership opportunities section.
+ */
 const PartnershipOpportunities = () => {
   const [selectedPartnership, setSelectedPartnership] = useState(null);
 

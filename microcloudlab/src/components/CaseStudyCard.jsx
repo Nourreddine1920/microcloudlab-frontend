@@ -1,6 +1,18 @@
 import React from 'react';
 import Icon from './AppIcon';
 
+/**
+ * @module CaseStudyCard
+ */
+
+/**
+ * A card component to display a summary of a case study.
+ * It shows the title, subtitle, industry, description, challenge, solution, results, and technologies used.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object} props.caseStudy - The case study object to display.
+ * @returns {JSX.Element|null} The rendered case study card, or null if no case study is provided.
+ */
 const CaseStudyCard = ({ caseStudy }) => {
   if (!caseStudy) return null;
 

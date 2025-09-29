@@ -2,6 +2,21 @@ import React, { useState, useEffect } from 'react';
 import Select from '../../../../components/ui/Select';
 import Icon from '../../../../components/AppIcon';
 
+/**
+ * @module ChipSelector
+ */
+
+/**
+ * A dropdown component for selecting a specific microcontroller chip.
+ * It fetches a list of available chips and displays them in a searchable select input.
+ * It also shows loading and error states.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string} props.selectedChip - The value of the currently selected chip.
+ * @param {Function} props.onChipChange - A callback function to be executed when the chip selection changes.
+ * @param {string} [props.className=""] - Additional CSS classes to apply to the component's container.
+ * @returns {JSX.Element} The rendered chip selector component.
+ */
 const ChipSelector = ({ selectedChip, onChipChange, className = "" }) => {
   const [chipOptions, setChipOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);

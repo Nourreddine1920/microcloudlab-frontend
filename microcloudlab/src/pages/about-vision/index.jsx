@@ -7,6 +7,18 @@ import TeamSection from './components/TeamSection';
 import DemocratizingSection from './components/DemocratizingSection';
 import RecognitionSection from './components/RecognitionSection';
 
+/**
+ * @module AboutVision
+ */
+
+/**
+ * The main page component for the "About & Vision" section of the website.
+ * It assembles various sections like Hero, Founding Story, Timeline, Team, etc.,
+ * to tell the story of MicroCloudLab. It also handles SEO by setting the
+ * document title and meta description.
+ *
+ * @returns {JSX.Element} The rendered About & Vision page.
+ */
 const AboutVision = () => {
   useEffect(() => {
     // Scroll to top when component mounts

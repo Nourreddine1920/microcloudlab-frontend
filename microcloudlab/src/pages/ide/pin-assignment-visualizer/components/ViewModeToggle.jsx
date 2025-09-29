@@ -1,7 +1,19 @@
 import React from 'react';
 import Button from '../../../../components/ui/Button';
 
+/**
+ * @module ViewModeToggle
+ */
 
+/**
+ * A toggle component for switching between different view modes, such as 'Package' and 'Functional'.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string} props.viewMode - The currently active view mode.
+ * @param {Function} props.onViewModeChange - A callback function to be executed when the view mode changes. It receives the new view mode key as an argument.
+ * @param {string} [props.className=""] - Additional CSS classes to apply to the component's container.
+ * @returns {JSX.Element} The rendered view mode toggle component.
+ */
 const ViewModeToggle = ({ viewMode, onViewModeChange, className = "" }) => {
   const viewModes = [
     {

@@ -2,6 +2,17 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module HeroSection
+ */
+
+/**
+ * The hero section for the "About & Vision" page.
+ * It features a prominent headline, a mission statement, key company statistics,
+ * and call-to-action buttons to engage the user.
+ *
+ * @returns {JSX.Element} The rendered hero section component.
+ */
 const HeroSection = () => {
   return (
     <section className="relative bg-gradient-to-br from-primary/5 via-background to-accent/5 pt-32 pb-20 overflow-hidden">

@@ -2,6 +2,27 @@ import React from "react";
 import { Check, Minus } from "lucide-react";
 import { cn } from "../../utils/cn";
 
+/**
+ * @module Checkbox
+ */
+
+/**
+ * A customizable checkbox component with support for indeterminate state, labels, descriptions, and error messages.
+ *
+ * @param {object} props - The properties for the checkbox component.
+ * @param {string} [props.className] - Additional CSS classes for the component.
+ * @param {string} [props.id] - A unique identifier for the checkbox.
+ * @param {boolean} [props.checked] - Whether the checkbox is checked.
+ * @param {boolean} [props.indeterminate=false] - Whether the checkbox is in an indeterminate state.
+ * @param {boolean} [props.disabled=false] - Whether the checkbox is disabled.
+ * @param {boolean} [props.required=false] - Whether the checkbox is required.
+ * @param {string} [props.label] - The label text for the checkbox.
+ * @param {string} [props.description] - A description text displayed below the label.
+ * @param {string} [props.error] - An error message to display.
+ * @param {('sm'|'default'|'lg')} [props.size='default'] - The size of the checkbox.
+ * @param {React.Ref} ref - The ref to forward to the input element.
+ * @returns {JSX.Element} The rendered checkbox component.
+ */
 const Checkbox = React.forwardRef(({
     className,
     id,
@@ -93,7 +114,21 @@ const Checkbox = React.forwardRef(({
 
 Checkbox.displayName = "Checkbox";
 
-// Checkbox Group component
+/**
+ * A component that groups multiple checkboxes under a single fieldset with a legend.
+ * It helps in managing related checkboxes and applying common properties like `disabled`.
+ *
+ * @param {object} props - The properties for the checkbox group component.
+ * @param {string} [props.className] - Additional CSS classes for the fieldset.
+ * @param {React.ReactNode} props.children - The `Checkbox` components to be grouped.
+ * @param {string} [props.label] - The label for the entire group, rendered as a legend.
+ * @param {string} [props.description] - A description for the checkbox group.
+ * @param {string} [props.error] - An error message for the group.
+ * @param {boolean} [props.required=false] - If true, a required indicator is shown next to the label.
+ * @param {boolean} [props.disabled=false] - If true, all checkboxes within the group are disabled.
+ * @param {React.Ref} ref - The ref to forward to the fieldset element.
+ * @returns {JSX.Element} The rendered checkbox group component.
+ */
 const CheckboxGroup = React.forwardRef(({
     className,
     children,

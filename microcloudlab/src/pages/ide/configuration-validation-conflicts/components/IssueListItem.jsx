@@ -3,6 +3,23 @@ import { Link } from 'react-router-dom';
 import Icon from '../../../../components/AppIcon';
 import Button from '../../../../components/ui/Button';
 
+/**
+ * @module IssueListItem
+ */
+
+/**
+ * A component that displays a single validation issue in a list.
+ * It shows the issue's severity, title, description, and provides actions to resolve,
+ * ignore, or navigate to the related configuration. It can be expanded to show more detailed information.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object} props.issue - The issue object to display.
+ * @param {Function} props.onResolve - Callback function to resolve the issue.
+ * @param {Function} props.onIgnore - Callback function to ignore the issue.
+ * @param {boolean} props.isExpanded - Whether the detailed view of the issue is expanded.
+ * @param {Function} props.onToggleExpand - Callback function to toggle the expanded state.
+ * @returns {JSX.Element} The rendered issue list item component.
+ */
 const IssueListItem = ({ 
   issue, 
   onResolve, 

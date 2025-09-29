@@ -2,14 +2,23 @@ import React, { createContext, useContext, useState, useCallback, useMemo, useEf
 
 const McuContext = createContext(undefined);
 
+/**
+ * @module McuContext
+ */
+
 // Initial state for MCU selection
 const initialMcuState = {
   selectedMcu: null,
-  peripheralStatus: {},
+  peripheralStatus: {},,
   configurations: {}
 };
 
-// MCU specifications and configurations
+/**
+ * A comprehensive object containing the specifications for all statically defined
+ * microcontrollers available in the platform. This includes details like name,
+ * description, pinouts, and supported peripherals.
+ * @type {object}
+ */
 export const MCU_SPECIFICATIONS = {
   "arduino-uno": {
     id: "arduino-uno",
@@ -239,6 +248,15 @@ export const MCU_SPECIFICATIONS = {
   },
 };
 
+/**
+ * Provides MCU-related state and functions to its children components.
+ * This includes the selected MCU, its configuration, and methods to manage them.
+ * It also persists configurations and peripheral statuses to localStorage.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {React.ReactNode} props.children - The child components that will consume the context.
+ * @returns {JSX.Element} The McuContext provider.
+ */
 export const McuProvider = ({ children }) => {
   const [selectedMcu, setSelectedMcu] = useState(null);
   const [mcuConfigurations, setMcuConfigurations] = useState({});
@@ -499,6 +517,30 @@ export const McuProvider = ({ children }) => {
   return <McuContext.Provider value={value}>{children}</McuContext.Provider>;
 };
 
+/**
+ * Custom hook for accessing the MCU context.
+ * Provides access to the selected MCU's state, specifications, and a suite of functions
+ * for managing configurations and peripherals.
+ *
+ * @returns {{
+ *   selectedMcu: object | null,
+ *   selectMcu: (mcuId: string) => void,
+ *   updateMcuConfiguration: (configUpdate: object) => void,
+ *   getCurrentConfiguration: () => object,
+ *   getAvailablePeripheralInstances: (peripheralType: string) => string[],
+ *   getPeripheralPins: (peripheralType: string, instance: string) => object,
+ *   getAvailablePins: () => object[],
+ *   isPinAvailable: (pinName: string) => boolean,
+ *   assignPinToPeripheral: (peripheralType: string, instance: string, pinFunction: string, pinName: string) => void,
+ *   savePeripheralConfiguration: (peripheralType: string, instance: string, configuration: object) => void,
+ *   deletePeripheralConfiguration: (peripheralType: string, instance: string) => void,
+ *   getPeripheralConfiguration: (peripheralType: string, instance: string) => object | null,
+ *   getPeripheralStatus: (peripheralType: string, instance: string) => object,
+ *   getAllPeripheralStatuses: () => object,
+ *   MCU_SPECIFICATIONS: object
+ * }} The MCU context.
+ * @throws {Error} If used outside of an `McuProvider`.
+ */
 export const useMcu = () => {
   const context = useContext(McuContext);
   if (!context) {

@@ -2,6 +2,20 @@ import React, { useState } from 'react';
 import Icon from '../../../../components/AppIcon';
 import Button from '../../../../components/ui/Button';
 
+/**
+ * @module ConfigurationPreviewPanel
+ */
+
+/**
+ * A collapsible side panel that provides a preview of the current microcontroller configuration.
+ * It includes tabs to display the configuration in different formats like JSON,
+ * generated C code, and a pin map.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {boolean} props.isCollapsed - A flag indicating whether the panel is collapsed.
+ * @param {Function} props.onToggle - A callback function to toggle the collapsed state of the panel.
+ * @returns {JSX.Element} The rendered configuration preview panel.
+ */
 const ConfigurationPreviewPanel = ({ isCollapsed, onToggle }) => {
   const [activeTab, setActiveTab] = useState('json');
 

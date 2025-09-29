@@ -12,6 +12,18 @@ import ROICalculator from './components/ROICalculator';
 import { caseStudyAPI, microcontrollerAPI, projectAPI } from '../../services/api';
 import { useApiState } from '../../hooks/useApiState';
 
+/**
+ * @module SolutionsHub
+ */
+
+/**
+ * The main page for the Solutions Hub, which showcases case studies,
+ * available microcontrollers, user projects, and industry-specific solutions.
+ * It features a tabbed interface to navigate between different content sections
+ * and fetches data from various API endpoints.
+ *
+ * @returns {JSX.Element} The rendered Solutions Hub page.
+ */
 const SolutionsHub = () => {
   const [activeTab, setActiveTab] = useState('case-studies');
   const [selectedIndustry, setSelectedIndustry] = useState('all');

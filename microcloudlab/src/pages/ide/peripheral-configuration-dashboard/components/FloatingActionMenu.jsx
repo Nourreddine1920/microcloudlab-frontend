@@ -3,6 +3,16 @@ import { Link } from 'react-router-dom';
 import Icon from '../../../../components/AppIcon';
 import Button from '../../../../components/ui/Button';
 
+/**
+ * @module FloatingActionMenu
+ */
+
+/**
+ * A floating action button (FAB) component that expands to show a menu of quick actions.
+ * It is designed for mobile views to provide easy access to common IDE functions.
+ *
+ * @returns {JSX.Element} The rendered floating action menu component.
+ */
 const FloatingActionMenu = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 

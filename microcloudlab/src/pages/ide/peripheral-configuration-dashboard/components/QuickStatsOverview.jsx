@@ -1,6 +1,18 @@
 import React from 'react';
 import Icon from '../../../../components/AppIcon';
 
+/**
+ * @module QuickStatsOverview
+ */
+
+/**
+ * A component that displays a high-level overview of the current configuration's statistics.
+ * It shows the number of configured vs. available peripherals and the average completeness percentage.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object} props.stats - An object containing the statistics to display, including total, configured, available, and avgCompleteness.
+ * @returns {JSX.Element} The rendered quick stats overview component.
+ */
 const QuickStatsOverview = ({ stats }) => {
   // Calculate dynamic stats if not provided
   const dynamicStats = stats || {

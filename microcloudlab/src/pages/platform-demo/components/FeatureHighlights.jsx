@@ -2,6 +2,19 @@ import React, { useState } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module FeatureHighlights
+ */
+
+/**
+ * A component that highlights the key features of the MicroCloudLab platform.
+ * It uses a tabbed or carousel-like interface to present features one by one,
+ * comparing the traditional approach with the MicroCloudLab way.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Function} props.onStartTrial - A callback function to be executed when the "Start Free Trial" button is clicked.
+ * @returns {JSX.Element} The rendered feature highlights component.
+ */
 const FeatureHighlights = ({ onStartTrial }) => {
   const [activeFeature, setActiveFeature] = useState(0);
 

@@ -7,6 +7,19 @@ import ConfigurationValidator from './ConfigurationValidator';
 import PinMappingVisualizer from './PinMappingVisualizer';
 import BoardSimulator from './BoardSimulator';
 
+/**
+ * @module ComprehensivePeripheralDashboard
+ */
+
+/**
+ * A comprehensive dashboard for managing all peripherals of a selected microcontroller.
+ * It provides a detailed view of all available and configured peripherals, with options
+ * for searching, filtering, and inspecting individual components. The dashboard integrates
+ * several key tools in a tabbed interface: an overview, a configuration validator,
+ * a pin mapping visualizer, and a board simulator.
+ *
+ * @returns {JSX.Element} The rendered comprehensive peripheral dashboard, or a prompt to select an MCU if none is chosen.
+ */
 const ComprehensivePeripheralDashboard = () => {
   const { 
     selectedMcu, 

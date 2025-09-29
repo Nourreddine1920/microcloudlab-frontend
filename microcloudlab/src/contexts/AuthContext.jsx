@@ -2,12 +2,36 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 
 const AuthContext = createContext(undefined);
 
+/**
+ * Custom hook to access the authentication context.
+ * Provides access to the user's authentication state and methods to sign in, sign up, and sign out.
+ *
+ * @returns {{
+ *   isLoading: boolean,
+ *   isAuthenticated: boolean,
+ *   token: string | null,
+ *   user: object | null,
+ *   signIn: (credentials: {email, password}) => Promise<{user: object}>,
+ *   signUp: (details: {name, email, password}) => Promise<{user: object}>,
+ *   signOut: () => void
+ * }} The authentication context.
+ * @throws {Error} If used outside of an `AuthProvider`.
+ */
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth must be used within an AuthProvider');
   return ctx;
 };
 
+/**
+ * Provides authentication state to its children components.
+ * It manages the user's session, including token and user data,
+ * and persists the session to localStorage.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {React.ReactNode} props.children - The child components to which the context will be provided.
+ * @returns {JSX.Element} The AuthContext provider.
+ */
 export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);

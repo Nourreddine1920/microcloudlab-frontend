@@ -2,6 +2,17 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 
+/**
+ * @module TeamSection
+ */
+
+/**
+ * A section component for the "About & Vision" page that introduces the MicroCloudLab team.
+ * It showcases the founding members with detailed profiles, the leadership team,
+ * and includes a call to action for joining the team.
+ *
+ * @returns {JSX.Element} The rendered TeamSection component.
+ */
 const TeamSection = () => {
   const founders = [
     {

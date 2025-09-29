@@ -1,16 +1,45 @@
 import React from "react";
 import Icon from "./AppIcon";
 
+/**
+ * @module ErrorBoundary
+ */
+
+/**
+ * A React component that catches JavaScript errors anywhere in its child component tree,
+ * logs those errors, and displays a fallback UI instead of the component tree that crashed.
+ *
+ * @extends React.Component
+ */
 class ErrorBoundary extends React.Component {
+  /**
+   * Creates an instance of ErrorBoundary.
+   * @param {object} props - The properties for the component.
+   */
   constructor(props) {
     super(props);
     this.state = { hasError: false };
   }
 
+  /**
+   * A lifecycle method that is invoked after an error has been thrown by a descendant component.
+   * It receives the error that was thrown as a parameter and should return a value to update state.
+   *
+   * @param {Error} error - The error that was thrown.
+   * @returns {object} An object to update state, indicating that an error has occurred.
+   */
   static getDerivedStateFromError(error) {
     return { hasError: true };
   }
 
+  /**
+   * A lifecycle method that is invoked after an error has been thrown by a descendant component.
+   * It receives two parameters: the error that was thrown, and an object with a `componentStack` key
+   * containing information about which component threw the error.
+   *
+   * @param {Error} error - The error that was thrown.
+   * @param {object} errorInfo - An object with a `componentStack` key.
+   */
   componentDidCatch(error, errorInfo) {
     error.__ErrorBoundary = true;
     window.__COMPONENT_ERROR__?.(error, errorInfo);

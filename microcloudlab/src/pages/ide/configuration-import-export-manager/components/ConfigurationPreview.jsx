@@ -2,6 +2,25 @@ import React, { useState } from 'react';
 import Icon from '../../../../components/AppIcon';
 import Button from '../../../../components/ui/Button';
 
+/**
+ * @module ConfigurationPreview
+ */
+
+/**
+ * A component that displays a detailed preview of a selected configuration file.
+ * It features a tabbed interface to show an overview, configured peripherals,
+ * pin assignments, and generated code. It also provides actions like editing,
+ * exporting, and comparing configurations.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object|null} props.selectedConfig - The configuration object to display. If null, a placeholder is shown.
+ * @param {Function} props.onExport - Callback function to handle the export action.
+ * @param {Function} props.onEdit - Callback function to handle the edit action.
+ * @param {Function} props.onCompare - Callback function to handle adding a configuration to the comparison.
+ * @param {boolean} props.isCompareMode - A flag indicating if the comparison mode is active.
+ * @param {Array<string>} props.selectedForComparison - An array of IDs of configurations currently selected for comparison.
+ * @returns {JSX.Element} The rendered configuration preview component.
+ */
 const ConfigurationPreview = ({ 
   selectedConfig, 
   onExport, 

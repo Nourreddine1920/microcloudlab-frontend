@@ -2,6 +2,26 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module SolutionCard
+ */
+
+/**
+ * A card component designed to showcase a specific solution or offering.
+ * It highlights features, stats, and includes a call to action.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string} props.title - The title of the solution.
+ * @param {string} props.description - A short description of the solution.
+ * @param {Array<string>} props.features - A list of key features for the solution.
+ * @param {string} props.icon - The name of the lucide-react icon to display.
+ * @param {string} props.gradient - The CSS gradient class for the top border.
+ * @param {string} props.ctaText - The text for the call-to-action button.
+ * @param {Function} props.onCtaClick - A callback function for the CTA button.
+ * @param {Array<object>} props.stats - An array of stat objects, each with a `value` and `label`.
+ * @param {boolean} [props.isHighlighted=false] - A flag to apply a highlighted style to the card.
+ * @returns {JSX.Element} The rendered solution card component.
+ */
 const SolutionCard = ({ 
   title, 
   description, 

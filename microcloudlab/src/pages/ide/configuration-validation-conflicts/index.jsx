@@ -13,6 +13,18 @@ import BulkActionsPanel from './components/BulkActionsPanel';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module ConfigurationValidationConflicts
+ */
+
+/**
+ * A comprehensive page for displaying and managing configuration validation issues and conflicts.
+ * It provides a dashboard view with summaries, filtering capabilities, a detailed issue list,
+ * and bulk action controls to help users identify and resolve problems in their
+ * microcontroller configuration.
+ *
+ * @returns {JSX.Element} The rendered configuration validation and conflicts page.
+ */
 const ConfigurationValidationConflicts = () => {
   const navigate = useNavigate();
   const [isValidating, setIsValidating] = useState(false);

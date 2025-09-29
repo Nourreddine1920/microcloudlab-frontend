@@ -3,6 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { peripheralService } from '../../../services/peripheralService';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module PeripheralCommunicationDashboard
+ */
+
+/**
+ * A dashboard for monitoring and viewing peripheral communication data.
+ * It displays the most recent communication event and a history of communications,
+ * which can be filtered by peripheral type.
+ *
+ * @returns {JSX.Element} The rendered peripheral communication dashboard.
+ */
 const PeripheralCommunicationDashboard = () => {
     const navigate = useNavigate();
     const [lastData, setLastData] = useState(null);

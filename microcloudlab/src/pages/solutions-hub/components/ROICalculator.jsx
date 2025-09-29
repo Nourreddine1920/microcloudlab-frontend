@@ -3,6 +3,20 @@ import Icon from '../../../components/AppIcon';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module ROICalculator
+ */
+
+/**
+ * An interactive calculator to estimate the Return on Investment (ROI)
+ * when using the MicroCloudLab platform compared to a traditional development approach.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string} props.title - The title of the calculator.
+ * @param {string} props.description - A short description of the calculator.
+ * @param {string} [props.calculationType="developer"] - The type of calculation to perform (not currently used).
+ * @returns {JSX.Element} The rendered ROI calculator component.
+ */
 const ROICalculator = ({ title, description, calculationType = "developer" }) => {
   const [inputs, setInputs] = useState({
     teamSize: 5,

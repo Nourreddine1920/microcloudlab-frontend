@@ -9,8 +9,23 @@ def default_dict():
 def default_list():
     return []
 
+
 class Microcontroller(models.Model):
-    """Model for different types of microcontrollers available in the platform"""
+    """
+    Represents a microcontroller available on the platform.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the microcontroller.
+        name (CharField): The display name of the microcontroller.
+        type (CharField): The type of the microcontroller from a predefined list.
+        description (TextField): A detailed description of the microcontroller.
+        specifications (JSONField): Technical specifications like RAM, Flash, etc.
+        is_available (BooleanField): Whether the microcontroller is currently available for use.
+        is_deletable (BooleanField): Whether this instance can be deleted by admins.
+        current_user (ForeignKey): The user currently using this microcontroller, if any.
+        created_at (DateTimeField): The timestamp when the record was created.
+        updated_at (DateTimeField): The timestamp when the record was last updated.
+    """
     MICROCONTROLLER_TYPES = [
         ('ESP32', 'ESP32'),
         ('ESP8266', 'ESP8266'),
@@ -39,8 +54,25 @@ class Microcontroller(models.Model):
     def __str__(self):
         return f"{self.name} ({self.type})"
 
+
 class Project(models.Model):
-    """Model for user projects"""
+    """
+    Represents a user's project on the platform.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the project.
+        title (CharField): The title of the project.
+        description (TextField): A detailed description of the project.
+        project_type (CharField): The category of the project.
+        owner (ForeignKey): The user who owns the project.
+        collaborators (ManyToManyField): Users who are collaborating on the project.
+        microcontroller (ForeignKey): The microcontroller associated with the project.
+        code_content (TextField): The source code of the project.
+        is_public (BooleanField): Whether the project is publicly visible.
+        is_active (BooleanField): Whether the project is currently active.
+        created_at (DateTimeField): The timestamp when the project was created.
+        updated_at (DateTimeField): The timestamp when the project was last updated.
+    """
     PROJECT_TYPES = [
         ('IOT', 'IoT Project'),
         ('ROBOTICS', 'Robotics'),
@@ -72,7 +104,21 @@ class Project(models.Model):
         return self.title
 
 class CodeExecution(models.Model):
-    """Model for tracking code executions and deployments"""
+    """
+    Tracks the execution of code on a microcontroller for a specific project.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the execution record.
+        project (ForeignKey): The project to which this execution belongs.
+        user (ForeignKey): The user who initiated the execution.
+        code_content (TextField): The snapshot of the code that was executed.
+        execution_status (CharField): The status of the execution (e.g., PENDING, RUNNING, SUCCESS, FAILED).
+        output_log (TextField): The log output generated during execution.
+        error_message (TextField): Any error messages produced during execution.
+        execution_time (FloatField): The duration of the execution in seconds.
+        memory_usage (IntegerField): The memory used by the execution in bytes.
+        created_at (DateTimeField): The timestamp when the execution was initiated.
+    """
     EXECUTION_STATUS = [
         ('PENDING', 'Pending'),
         ('RUNNING', 'Running'),
@@ -98,8 +144,23 @@ class CodeExecution(models.Model):
     def __str__(self):
         return f"{self.project.title} - {self.execution_status}"
 
+
 class UserProfile(models.Model):
-    """Extended user profile with additional information"""
+    """
+    Extends the default Django User model with additional profile information.
+
+    Attributes:
+        user (OneToOneField): A one-to-one link to the Django User model.
+        bio (TextField): A short biography of the user.
+        avatar (URLField): A URL to the user's avatar image.
+        github_username (CharField): The user's GitHub username.
+        linkedin_url (URLField): A URL to the user's LinkedIn profile.
+        website_url (URLField): A URL to the user's personal website.
+        experience_level (CharField): The user's self-reported experience level.
+        preferred_microcontrollers (ManyToManyField): A list of the user's favorite microcontrollers.
+        created_at (DateTimeField): The timestamp when the profile was created.
+        updated_at (DateTimeField): The timestamp when the profile was last updated.
+    """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True)
     avatar = models.URLField(blank=True)
@@ -119,8 +180,25 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
+
 class Tutorial(models.Model):
-    """Model for educational tutorials and guides"""
+    """
+    Represents an educational tutorial or guide on the platform.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the tutorial.
+        title (CharField): The title of the tutorial.
+        description (TextField): A short description of the tutorial.
+        content (TextField): The full content of the tutorial, likely in Markdown or HTML.
+        difficulty (CharField): The difficulty level of the tutorial (e.g., BEGINNER, INTERMEDIATE).
+        estimated_time (IntegerField): The estimated time to complete the tutorial in minutes.
+        microcontroller (ForeignKey): The specific microcontroller the tutorial is for, if any.
+        tags (JSONField): A list of tags for categorizing the tutorial.
+        is_published (BooleanField): Whether the tutorial is visible to users.
+        author (ForeignKey): The user who authored the tutorial.
+        created_at (DateTimeField): The timestamp when the tutorial was created.
+        updated_at (DateTimeField): The timestamp when the tutorial was last updated.
+    """
     DIFFICULTY_LEVELS = [
         ('BEGINNER', 'Beginner'),
         ('INTERMEDIATE', 'Intermediate'),
@@ -146,8 +224,19 @@ class Tutorial(models.Model):
     def __str__(self):
         return self.title
 
+
 class TutorialProgress(models.Model):
-    """Track user progress through tutorials"""
+    """
+    Tracks a user's progress through a specific tutorial.
+
+    Attributes:
+        user (ForeignKey): The user who is taking the tutorial.
+        tutorial (ForeignKey): The tutorial being taken.
+        is_completed (BooleanField): Whether the user has completed the tutorial.
+        completion_percentage (IntegerField): The user's progress percentage.
+        started_at (DateTimeField): The timestamp when the user started the tutorial.
+        completed_at (DateTimeField): The timestamp when the user completed the tutorial.
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE)
     is_completed = models.BooleanField(default=False)
@@ -164,8 +253,30 @@ class TutorialProgress(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.tutorial.title}"
 
+
 class CaseStudy(models.Model):
-    """Model for case studies and success stories"""
+    """
+    Represents a case study or success story published on the platform.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the case study.
+        title (CharField): The title of the case study.
+        subtitle (CharField): A brief subtitle.
+        description (TextField): A summary of the case study.
+        challenge (TextField): The problem or challenge that was addressed.
+        solution (TextField): The solution that was implemented.
+        results (TextField): The outcomes and results of the solution.
+        technologies_used (JSONField): A list of technologies used in the project.
+        industry (CharField): The industry to which the case study applies.
+        company_name (CharField): The name of the company featured in the case study.
+        image (URLField): A URL to a relevant image for the case study.
+        company_logo (URLField): A URL to the company's logo.
+        roi_percentage (FloatField): The return on investment percentage, if applicable.
+        time_saved (CharField): A description of the time saved.
+        cost_savings (CharField): A description of the cost savings.
+        is_featured (BooleanField): Whether the case study is featured on the platform.
+        created_at (DateTimeField): The timestamp when the case study was published.
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=200)
     subtitle = models.CharField(max_length=300)
@@ -191,8 +302,22 @@ class CaseStudy(models.Model):
     def __str__(self):
         return self.title
 
+
 class ContactInquiry(models.Model):
-    """Model for contact form submissions"""
+    """
+    Stores inquiries submitted through the contact form.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the inquiry.
+        name (CharField): The name of the person making the inquiry.
+        email (EmailField): The email address of the inquirer.
+        company (CharField): The company of the inquirer, if provided.
+        inquiry_type (CharField): The category of the inquiry (e.g., GENERAL, SUPPORT).
+        subject (CharField): The subject of the inquiry.
+        message (TextField): The content of the inquiry message.
+        is_read (BooleanField): Whether the inquiry has been read by an admin.
+        created_at (DateTimeField): The timestamp when the inquiry was submitted.
+    """
     INQUIRY_TYPES = [
         ('GENERAL', 'General Inquiry'),
         ('PARTNERSHIP', 'Partnership'),
@@ -218,8 +343,22 @@ class ContactInquiry(models.Model):
     def __str__(self):
         return f"{self.name} - {self.subject}"
 
+
 class PlatformStats(models.Model):
-    """Model for tracking platform statistics"""
+    """
+    Records daily statistics for the platform.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the daily stat record.
+        date (DateField): The date for which the statistics are recorded.
+        active_users (IntegerField): The number of active users on that day.
+        projects_created (IntegerField): The number of new projects created.
+        code_executions (IntegerField): The number of code executions performed.
+        tutorials_completed (IntegerField): The number of tutorials completed.
+        countries_represented (IntegerField): The number of unique countries of users.
+        uptime_percentage (FloatField): The platform's uptime percentage for the day.
+        created_at (DateTimeField): The timestamp when the stat record was created.
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     date = models.DateField(unique=True)
     active_users = models.IntegerField(default=0)
@@ -237,8 +376,24 @@ class PlatformStats(models.Model):
     def __str__(self):
         return f"Stats for {self.date}"
 
+
 class TeamMember(models.Model):
-    """Model for team member information"""
+    """
+    Represents a team member profile for the "About Us" page.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the team member.
+        name (CharField): The full name of the team member.
+        role (CharField): The role or title of the team member.
+        bio (TextField): A short biography of the team member.
+        avatar (URLField): A URL to the team member's avatar image.
+        linkedin_url (URLField): A URL to the team member's LinkedIn profile.
+        github_url (URLField): A URL to the team member's GitHub profile.
+        twitter_url (URLField): A URL to the team member's Twitter profile.
+        is_active (BooleanField): Whether the team member is currently active.
+        order (IntegerField): The display order for the team member.
+        created_at (DateTimeField): The timestamp when the record was created.
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=100)
@@ -257,8 +412,22 @@ class TeamMember(models.Model):
     def __str__(self):
         return f"{self.name} - {self.role}"
 
+
 class Resource(models.Model):
-    """Model for educational resources and documentation"""
+    """
+    Represents an educational or support resource, such as documentation, tutorials, or blog posts.
+
+    Attributes:
+        id (UUIDField): The unique identifier for the resource.
+        title (CharField): The title of the resource.
+        description (TextField): A short description of the resource.
+        resource_type (CharField): The type of the resource (e.g., DOCUMENTATION, VIDEO).
+        url (URLField): The URL where the resource can be accessed.
+        tags (JSONField): A list of tags for categorizing the resource.
+        difficulty_level (CharField): The difficulty level of the resource, if applicable.
+        is_featured (BooleanField): Whether the resource is featured on the platform.
+        created_at (DateTimeField): The timestamp when the resource was added.
+    """
     RESOURCE_TYPES = [
         ('DOCUMENTATION', 'Documentation'),
         ('VIDEO', 'Video Tutorial'),

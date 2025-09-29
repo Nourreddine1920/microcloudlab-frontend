@@ -2,6 +2,17 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 
+/**
+ * @module RecognitionSection
+ */
+
+/**
+ * A section component for the "About & Vision" page that showcases the recognition
+ * and impact of MicroCloudLab. It includes user testimonials, media coverage,
+ * awards, industry endorsements, and trust indicators.
+ *
+ * @returns {JSX.Element} The rendered RecognitionSection component.
+ */
 const RecognitionSection = () => {
   const testimonials = [
     {

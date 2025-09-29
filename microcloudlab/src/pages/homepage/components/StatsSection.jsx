@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Icon from '../../../components/AppIcon';
 
+/**
+ * @module StatsSection
+ */
+
+/**
+ * A section for the homepage that displays animated, live-updating statistics
+ * about platform usage. It includes key metrics like active users, projects created,
+ * and partner institutions, along with a mock real-time activity feed.
+ *
+ * @returns {JSX.Element} The rendered stats section component.
+ */
 const StatsSection = () => {
   const [stats, setStats] = useState({
     activeUsers: 0,

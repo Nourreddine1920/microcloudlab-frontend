@@ -12,6 +12,18 @@ import McuSelector from "./components/McuSelector";
 import { useMcu } from "../context/McuContext";
 import peripheralSchemas from "./components/peripheralSchemas";
 
+/**
+ * @module PeripheralConfigurationEditor
+ */
+
+/**
+ * A comprehensive editor page for configuring a specific peripheral instance.
+ * It includes a dynamic form based on the peripheral type, a live preview of the configuration,
+ * and actions for saving, validating, and managing the configuration.
+ * It also integrates with the `McuContext` to manage state.
+ *
+ * @returns {JSX.Element} The rendered peripheral configuration editor page.
+ */
 const PeripheralConfigurationEditor = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();

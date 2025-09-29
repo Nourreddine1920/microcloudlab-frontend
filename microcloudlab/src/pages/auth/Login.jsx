@@ -7,6 +7,17 @@ import Button from '../../components/ui/Button';
 import Icon from '../../components/AppIcon';
 import { useAuth } from '../../contexts/AuthContext';
 
+/**
+ * @module LoginPage
+ */
+
+/**
+ * The login page component for user authentication.
+ * It provides a form for users to enter their email and password to sign in.
+ * It handles form submission, displays errors, and redirects the user upon successful authentication.
+ *
+ * @returns {JSX.Element} The rendered login page.
+ */
 const LoginPage = () => {
   const { signIn, isLoading } = useAuth();
   const navigate = useNavigate();

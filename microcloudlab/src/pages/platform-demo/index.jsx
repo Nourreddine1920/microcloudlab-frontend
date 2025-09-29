@@ -14,6 +14,18 @@ import FeatureHighlights from './components/FeatureHighlights';
 import GuidedTutorial from './components/GuidedTutorial';
 import PerformanceMetrics from './components/PerformanceMetrics';
 
+/**
+ * @module PlatformDemo
+ */
+
+/**
+ * The main page component for the interactive platform demo.
+ * It showcases the core features of the MicroCloudLab IDE by assembling various
+ * components like the board selector, project explorer, code editor, serial monitor,
+ * and oscilloscope into a simulated development environment.
+ *
+ * @returns {JSX.Element} The rendered platform demo page.
+ */
 const PlatformDemo = () => {
   const [selectedBoard, setSelectedBoard] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);

@@ -1,100 +1,120 @@
-# React
+# MicroCloudLab - Cloud-Native Embedded Development Platform
 
-A modern React-based project utilizing the latest frontend technologies and tools for building responsive web applications.
+MicroCloudLab is a full-stack web application designed to revolutionize embedded systems development by providing a cloud-native Integrated Development Environment (IDE). It allows users to write, compile, and simulate microcontroller code directly in their browser, eliminating the need for physical hardware and complex toolchain setups.
 
-## 🚀 Features
+This repository contains both the frontend and backend components of the MicroCloudLab platform.
 
-- **React 18** - React version with improved rendering and concurrent features
-- **Vite** - Lightning-fast build tool and development server
-- **Redux Toolkit** - State management with simplified Redux setup
-- **TailwindCSS** - Utility-first CSS framework with extensive customization
-- **React Router v6** - Declarative routing for React applications
-- **Data Visualization** - Integrated D3.js and Recharts for powerful data visualization
-- **Form Management** - React Hook Form for efficient form handling
-- **Animation** - Framer Motion for smooth UI animations
-- **Testing** - Jest and React Testing Library setup
+## ✨ Features
 
-## 📋 Prerequisites
+### Frontend (React + Vite)
+- **Interactive IDE:** A rich, browser-based IDE for writing and managing embedded projects.
+- **Hardware Simulation:** Real-time simulation of microcontroller behavior, including serial monitor and virtual oscilloscope.
+- **Visual Configuration Tools:** Intuitive dashboards for configuring peripherals, assigning pins, and validating setups.
+- **Collaborative Features:** Team-based project management and real-time code collaboration.
+- **Responsive Design:** Fully responsive interface built with TailwindCSS for a seamless experience on any device.
+- **Comprehensive Component Library:** A well-documented library of reusable UI components.
 
-- Node.js (v14.x or higher)
-- npm or yarn
-
-## 🛠️ Installation
-
-1. Install dependencies:
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
-   
-2. Start the development server:
-   ```bash
-   npm start
-   # or
-   yarn start
-   ```
+### Backend (Django + DRF)
+- **RESTful API:** A robust API built with Django REST Framework to manage projects, users, configurations, and microcontrollers.
+- **Microcontroller Management:** Endpoints for listing, creating, and managing cloud-hosted microcontrollers.
+- **User & Project Management:** Secure handling of user profiles, projects, and collaborative access.
+- **Peripheral Communication Gateway:** A generic endpoint to simulate receiving data from various peripheral types.
+- **Extensible Data Models:** A well-defined database schema to support all platform features, from tutorials to case studies.
 
 ## 📁 Project Structure
 
+The repository is organized into two main directories:
+
 ```
-react_app/
-├── public/             # Static assets
-├── src/
-│   ├── components/     # Reusable UI components
-│   ├── pages/          # Page components
-│   ├── styles/         # Global styles and Tailwind configuration
-│   ├── App.jsx         # Main application component
-│   ├── Routes.jsx      # Application routes
-│   └── index.jsx       # Application entry point
-├── .env                # Environment variables
-├── index.html          # HTML template
-├── package.json        # Project dependencies and scripts
-├── tailwind.config.js  # Tailwind CSS configuration
-└── vite.config.js      # Vite configuration
-```
-
-## 🧩 Adding Routes
-
-To add new routes to the application, update the `Routes.jsx` file:
-
-```jsx
-import { useRoutes } from "react-router-dom";
-import HomePage from "pages/HomePage";
-import AboutPage from "pages/AboutPage";
-
-const ProjectRoutes = () => {
-  let element = useRoutes([
-    { path: "/", element: <HomePage /> },
-    { path: "/about", element: <AboutPage /> },
-    // Add more routes as needed
-  ]);
-
-  return element;
-};
+.
+├── microcloudlab/         # React Frontend Application
+│   ├── public/
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.mjs
+└── microcloudlab-backend/ # Django Backend Application
+    ├── api/               # Core API application
+    ├── backend/           # Django project settings
+    ├── db.sqlite3
+    └── manage.py
 ```
 
-## 🎨 Styling
+## 📋 Prerequisites
 
-This project uses Tailwind CSS for styling. The configuration includes:
+Before you begin, ensure you have the following installed:
 
-- Forms plugin for form styling
-- Typography plugin for text styling
-- Aspect ratio plugin for responsive elements
-- Container queries for component-specific responsive design
-- Fluid typography for responsive text
-- Animation utilities
+- **Node.js** (v18.x or higher)
+- **npm** or **yarn**
+- **Python** (v3.10 or higher)
+- **pip** (Python package installer)
 
-## 📱 Responsive Design
+## 🛠️ Setup and Installation
 
-The app is built with responsive design using Tailwind CSS breakpoints.
+Follow these steps to get both the frontend and backend development environments running.
 
+### Backend Setup
 
-## 📦 Deployment
+1.  **Navigate to the backend directory:**
+    ```bash
+    cd microcloudlab-backend
+    ```
 
-Build the application for production:
+2.  **Create and activate a virtual environment:**
+    ```bash
+    # For Unix/macOS
+    python3 -m venv venv
+    source venv/bin/activate
 
-```bash
-npm run build
-```
+    # For Windows
+    python -m venv venv
+    .\venv\Scripts\activate
+    ```
 
+3.  **Install Python dependencies:**
+    *(Note: A `requirements.txt` file is not included. You will need to install Django and other packages manually.)*
+    ```bash
+    pip install Django djangorestframework django-cors-headers
+    ```
+
+4.  **Apply database migrations:**
+    ```bash
+    python manage.py migrate
+    ```
+
+5.  **Start the backend development server:**
+    ```bash
+    python manage.py runserver
+    ```
+    The backend API will be available at `http://localhost:8000`.
+
+### Frontend Setup
+
+1.  **Open a new terminal window.**
+
+2.  **Navigate to the frontend directory:**
+    ```bash
+    cd microcloudlab
+    ```
+
+3.  **Install npm dependencies:**
+    ```bash
+    npm install
+    ```
+
+4.  **Start the frontend development server:**
+    ```bash
+    npm start
+    ```
+    The frontend application will be available at `http://localhost:5173`.
+
+## 🚀 Usage
+
+Once both servers are running, you can access the platform by opening `http://localhost:5173` in your web browser.
+
+- **Explore the Homepage:** Learn about the platform's features and user journeys.
+- **Use the Platform Demo:** Interact with a simulated IDE to see how the code editor, project explorer, and monitoring tools work.
+- **Access the IDE:** Navigate to `/ide` to select a microcontroller and start configuring peripherals using the visual dashboards and editors.
+
+---
+
+This README provides a comprehensive guide for new developers. For more detailed information, please refer to the docstrings and comments added throughout the source code.

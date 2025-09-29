@@ -3,6 +3,19 @@ import { packConfiguration, formatFrame, sendConfiguration } from '../../../../s
 import { useMcu } from '../../context/McuContext';
 import Button from '../../../../components/ui/Button';
 
+/**
+ * @module UartConfigViewer
+ */
+
+/**
+ * A component that visualizes the packed data frame specifically for a UART configuration.
+ * It displays the structured data frame and provides a button to send the configuration
+ * to the target board using the `uartService`.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object} props.config - The UART configuration object.
+ * @returns {JSX.Element|null} The rendered UART configuration viewer, or null if no frame data can be generated.
+ */
 const UartConfigViewer = ({ config }) => {
     const { selectedMcu } = useMcu();
     const [frameData, setFrameData] = useState(null);

@@ -2,6 +2,21 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 
+/**
+ * @module IndustryCard
+ */
+
+/**
+ * A card component that displays information about a specific industry solution.
+ * It shows industry-specific data, including case studies, projects, and key technologies.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object} props.industry - The industry object containing its name, icon, and count.
+ * @param {Array<object>} props.caseStudies - An array of case study objects to be filtered by industry.
+ * @param {Array<object>} props.projects - An array of project objects to be filtered by industry.
+ * @param {Array<object>} props.microcontrollers - An array of microcontroller objects (currently not used in the component).
+ * @returns {JSX.Element} The rendered industry card component.
+ */
 const IndustryCard = ({ industry, caseStudies, projects, microcontrollers }) => {
   const {
     name,

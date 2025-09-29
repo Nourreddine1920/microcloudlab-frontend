@@ -3,6 +3,18 @@ import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 import { useApiState } from '../../../hooks/useApiState';
 
+/**
+ * @module FeaturesSection
+ */
+
+/**
+ * A section for the homepage that showcases the key features of the platform.
+ * It uses a tabbed navigation to display details for each feature, including
+ * benefits and a simulated "live demo" terminal. It fetches data from multiple
+ * API endpoints to enrich the feature descriptions with dynamic stats.
+ *
+ * @returns {JSX.Element} The rendered features section component.
+ */
 const FeaturesSection = () => {
   const [activeFeature, setActiveFeature] = useState(0);
 

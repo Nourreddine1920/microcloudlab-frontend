@@ -1,5 +1,24 @@
 import { useState, useEffect, useCallback } from 'react';
 
+/**
+ * @module useApiState
+ */
+
+/**
+ * A custom hook for managing the state of an API request that fetches data.
+ * It handles loading, error, and data states, and provides a `refetch` function.
+ * The API call is automatically triggered when the component mounts or dependencies change.
+ *
+ * @param {Function} apiFunction - The asynchronous function that makes the API call.
+ * @param {Array} [dependencies=[]] - A list of dependencies that, when changed, will trigger a refetch.
+ * @returns {{
+ *   data: any | null,
+ *   loading: boolean,
+ *   error: string | null,
+ *   refetch: () => Promise<void>,
+ *   execute: (params: any) => Promise<any>
+ * }} An object containing the state of the API request and control functions.
+ */
 export const useApiState = (apiFunction, dependencies = []) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -50,6 +69,18 @@ export const useApiState = (apiFunction, dependencies = []) => {
   };
 };
 
+/**
+ * A custom hook for managing the state of an API request that performs a mutation (e.g., create, update, delete).
+ * It handles loading, error, and data states, and provides a `mutate` function to trigger the API call.
+ *
+ * @param {Function} apiFunction - The asynchronous function that makes the API call.
+ * @returns {{
+ *   mutate: (params: any) => Promise<any>,
+ *   loading: boolean,
+ *   error: string | null,
+ *   data: any | null
+ * }} An object containing the state of the mutation and the mutate function.
+ */
 export const useApiMutation = (apiFunction) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

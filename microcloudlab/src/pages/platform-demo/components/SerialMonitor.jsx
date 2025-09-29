@@ -2,6 +2,20 @@ import React, { useState, useEffect, useRef } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module SerialMonitor
+ */
+
+/**
+ * A component that simulates a serial monitor for viewing output from and sending commands to a running project.
+ * It displays timestamped messages with different types (info, success, error, data, command, response)
+ * and provides an input field for sending commands.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {boolean} props.isRunning - A flag indicating if a project is currently running, which activates the monitor.
+ * @param {object|null} props.selectedProject - The currently selected project object, used to source the appropriate mock output.
+ * @returns {JSX.Element} The rendered serial monitor component.
+ */
 const SerialMonitor = ({ isRunning, selectedProject }) => {
   const [output, setOutput] = useState([]);
   const [input, setInput] = useState('');

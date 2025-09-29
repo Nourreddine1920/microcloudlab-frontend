@@ -3,6 +3,17 @@ import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import Icon from '../../../components/AppIcon';
 
+/**
+ * @module CTASection
+ */
+
+/**
+ * A call-to-action section for the homepage.
+ * It encourages users to sign up, showcases pricing tiers,
+ * and reinforces trust with security and reliability signals.
+ *
+ * @returns {JSX.Element} The rendered CTA section component.
+ */
 const CTASection = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);

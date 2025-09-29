@@ -3,6 +3,19 @@ import Icon from '../../../components/AppIcon';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module SearchBar
+ */
+
+/**
+ * A search bar component with a search input, submit button, and quick search suggestions.
+ * It manages its own state for the search query and loading status.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Function} props.onSearch - A callback function to be executed when a search is submitted. It receives the search query as an argument.
+ * @param {string} [props.placeholder="Search documentation, tutorials, and resources..."] - The placeholder text for the search input.
+ * @returns {JSX.Element} The rendered search bar component.
+ */
 const SearchBar = ({ onSearch, placeholder = "Search documentation, tutorials, and resources..." }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);

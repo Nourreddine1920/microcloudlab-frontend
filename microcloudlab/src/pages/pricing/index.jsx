@@ -65,6 +65,17 @@ const tiers = [
   }
 ];
 
+/**
+ * @module PricingPage
+ */
+
+/**
+ * A component that displays the pricing plans for the MicroCloudLab platform.
+ * It shows different tiers (Free, Pro, Team), their features, and prices,
+ * along with a frequently asked questions section.
+ *
+ * @returns {JSX.Element} The rendered pricing page.
+ */
 const PricingPage = () => {
   return (
     <div className="min-h-screen bg-background">

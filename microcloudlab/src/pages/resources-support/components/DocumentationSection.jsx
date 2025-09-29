@@ -2,6 +2,17 @@ import React, { useState } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module DocumentationSection
+ */
+
+/**
+ * A component that displays technical documentation, organized into categories.
+ * It allows users to switch between different documentation sections like API Reference,
+ * Hardware Specifications, and Integration Guides using a tabbed interface.
+ *
+ * @returns {JSX.Element} The rendered documentation section component.
+ */
 const DocumentationSection = () => {
   const [activeCategory, setActiveCategory] = useState('api-reference');
 

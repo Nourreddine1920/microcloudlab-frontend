@@ -1,8 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'components/ui/Button';
-import Icon from 'components/AppIcon';
 
+/**
+ * @module NotFound
+ */
+
+/**
+ * A component displayed when a user navigates to a route that does not exist within the IDE section.
+ * It provides options to go back to the previous page or return to the main homepage.
+ *
+ * @returns {JSX.Element} The rendered 404 Not Found page.
+ */
 const NotFound = () => {
   const navigate = useNavigate();
 
@@ -27,7 +36,7 @@ const NotFound = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             variant="primary"
-            icon={<Icon name="ArrowLeft" />}
+            iconName="ArrowLeft"
             iconPosition="left"
             onClick={() => window.history.back()}
           >
@@ -36,7 +45,7 @@ const NotFound = () => {
 
           <Button
             variant="outline"
-            icon={<Icon name="Home" />}
+            iconName="Home"
             iconPosition="left"
             onClick={handleGoHome}
           >

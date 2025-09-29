@@ -2,6 +2,19 @@ import React, { useState, useRef, useEffect } from 'react';
 import Icon from '../../../../components/AppIcon';
 import Input from '../../../../components/ui/Input';
 
+/**
+ * @module GlobalSearchBar
+ */
+
+/**
+ * A global search bar component with an expandable UI and a dropdown for search results.
+ * It allows users to search for peripherals and filters them based on mock data.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Function} [props.onSearch] - A callback function to be executed when the search query changes.
+ * @param {Function} [props.onFilterChange] - A callback function to be executed when a search result is selected.
+ * @returns {JSX.Element} The rendered global search bar component.
+ */
 const GlobalSearchBar = ({ onSearch, onFilterChange }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);

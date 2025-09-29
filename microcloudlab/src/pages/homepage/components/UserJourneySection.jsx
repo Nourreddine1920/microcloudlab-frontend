@@ -3,6 +3,17 @@ import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
 import { Link } from 'react-router-dom';
 
+/**
+ * @module UserJourneySection
+ */
+
+/**
+ * A section for the homepage that presents different user journeys tailored
+ * to specific personas (Developers, Educators, Students). It allows users to
+ * select a path and see relevant features, use cases, and calls to action.
+ *
+ * @returns {JSX.Element} The rendered user journey section component.
+ */
 const UserJourneySection = () => {
   const [activeJourney, setActiveJourney] = useState(0);
 

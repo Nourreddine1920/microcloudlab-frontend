@@ -2,6 +2,27 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module SupportChannelCard
+ */
+
+/**
+ * A card component that displays information about a single support channel.
+ * It shows the channel's title, description, availability, response time, and key stats,
+ * along with a call to action.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string} props.title - The title of the support channel.
+ * @param {string} props.description - A short description of the support channel.
+ * @param {string} props.icon - The name of the lucide-react icon to display.
+ * @param {string} props.availability - The availability of the support channel (e.g., "24/7").
+ * @param {string} props.responseTime - The typical response time for the channel.
+ * @param {boolean} [props.isOnline=false] - A flag indicating if the channel is currently online.
+ * @param {object} props.stats - An object containing key statistics for the channel.
+ * @param {Function} props.onAccess - A callback function to be executed when the access button is clicked.
+ * @param {string} [props.actionText="Access"] - The text to display on the action button.
+ * @returns {JSX.Element} The rendered support channel card component.
+ */
 const SupportChannelCard = ({ 
   title, 
   description, 

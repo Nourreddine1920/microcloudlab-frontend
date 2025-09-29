@@ -1,6 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 
+/**
+ * @module MicrocontrollerDiagram
+ */
+
+/**
+ * A component that renders an interactive SVG diagram of a microcontroller.
+ * It visualizes the chip, its pins, their status, and assignments. It supports
+ * panning and zooming for easier navigation.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string} props.selectedChip - The ID of the currently selected chip.
+ * @param {Array<object>} props.pins - An array of pin objects to be rendered on the diagram.
+ * @param {object|null} props.selectedPin - The currently selected pin object.
+ * @param {Function} props.onPinSelect - A callback function to be executed when a pin is selected.
+ * @param {string} props.viewMode - The current view mode (not directly used in this component but passed for context).
+ * @param {number} props.zoomLevel - The current zoom level of the diagram.
+ * @param {Function} props.onZoomChange - A callback function to update the zoom level.
+ * @param {string} [props.className=""] - Additional CSS classes for the component's container.
+ * @returns {JSX.Element} The rendered interactive microcontroller diagram.
+ */
 const MicrocontrollerDiagram = ({ 
   selectedChip, 
   pins, 

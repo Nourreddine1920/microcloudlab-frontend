@@ -1,6 +1,16 @@
 import React from 'react';
 import Icon from '../../../components/AppIcon';
 
+/**
+ * @module Timeline
+ */
+
+/**
+ * A section component for the "About & Vision" page that displays a visual timeline
+ * of MicroCloudLab's major milestones. It also includes a teaser for the future roadmap.
+ *
+ * @returns {JSX.Element} The rendered Timeline component.
+ */
 const Timeline = () => {
   const milestones = [
     {

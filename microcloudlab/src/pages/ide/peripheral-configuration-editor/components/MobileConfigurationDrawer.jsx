@@ -3,6 +3,23 @@ import Icon from '../../../../components/AppIcon';
 import Button from '../../../../components/ui/Button';
 import CodePreviewPanel from './CodePreviewPanel';
 
+/**
+ * @module MobileConfigurationDrawer
+ */
+
+/**
+ * A drawer component designed for mobile views to display configuration details.
+ * It slides up from the bottom and provides a tabbed interface to show code previews,
+ * pin maps, and validation status.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {boolean} props.isOpen - Whether the drawer is open and visible.
+ * @param {Function} props.onClose - A callback function to close the drawer.
+ * @param {object} props.formData - The current form data for the peripheral configuration.
+ * @param {string} props.peripheralType - The type of the peripheral being configured.
+ * @param {string} [props.activeView='preview'] - The initial view to display in the drawer.
+ * @returns {JSX.Element|null} The rendered mobile drawer component, or null if it is not open.
+ */
 const MobileConfigurationDrawer = ({ 
   isOpen, 
   onClose, 

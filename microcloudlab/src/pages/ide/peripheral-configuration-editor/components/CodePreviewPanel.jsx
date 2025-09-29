@@ -2,6 +2,19 @@ import React, { useState, useEffect } from 'react';
 import Icon from '../../../../components/AppIcon';
 import Button from '../../../../components/ui/Button';
 
+/**
+ * @module CodePreviewPanel
+ */
+
+/**
+ * A panel that displays a live preview of generated code based on the current configuration.
+ * It supports multiple formats like C, JSON, and Makefile, presented in a tabbed interface.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object} props.formData - The current form data for the peripheral configuration.
+ * @param {string} [props.peripheralType='UART'] - The type of the peripheral being configured.
+ * @returns {JSX.Element} The rendered code preview panel.
+ */
 const CodePreviewPanel = ({ formData, peripheralType = 'UART' }) => {
   const [activeTab, setActiveTab] = useState('config');
   const [copied, setCopied] = useState(false);

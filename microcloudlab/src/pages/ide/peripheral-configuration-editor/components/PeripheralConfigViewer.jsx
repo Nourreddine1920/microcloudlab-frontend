@@ -3,6 +3,21 @@ import { peripheralService } from '../../../../services/peripheralService';
 import { useMcu } from '../../context/McuContext';
 import Button from '../../../../components/ui/Button';
 
+/**
+ * @module PeripheralConfigViewer
+ */
+
+/**
+ * A component that visualizes the packed data frame for a given peripheral configuration.
+ * It shows the structured data that would be sent to the hardware and provides a button
+ * to initiate the sending process.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string} props.peripheralType - The type of peripheral being configured (e.g., 'UART', 'SPI').
+ * @param {object} props.config - The configuration object for the peripheral.
+ * @param {string} props.instance - The specific instance of the peripheral (e.g., 'UART1').
+ * @returns {JSX.Element|null} The rendered peripheral configuration viewer, or null if no frame data can be generated.
+ */
 const PeripheralConfigViewer = ({ peripheralType, config, instance }) => {
     const { selectedMcu } = useMcu();
     const [frameData, setFrameData] = useState(null);

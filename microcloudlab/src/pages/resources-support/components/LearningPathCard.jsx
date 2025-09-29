@@ -2,6 +2,29 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module LearningPathCard
+ */
+
+/**
+ * A card component that displays a structured learning path.
+ * It shows the path's title, description, modules, duration, difficulty,
+ * and the user's progress if they have started it.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string} props.title - The title of the learning path.
+ * @param {string} props.description - A short description of the learning path.
+ * @param {Array<string>} props.modules - A list of module names included in the path.
+ * @param {string} props.duration - The estimated duration to complete the path.
+ * @param {('Beginner'|'Intermediate'|'Advanced')} props.difficulty - The difficulty level of the path.
+ * @param {number} [props.completedModules=0] - The number of modules the user has completed.
+ * @param {number} props.totalModules - The total number of modules in the path.
+ * @param {Array<string>} [props.skills=[]] - A list of skills the user will learn.
+ * @param {Function} props.onStart - A callback function to be executed when the user starts the learning path.
+ * @param {Function} props.onContinue - A callback function to be executed when the user continues the learning path.
+ * @param {boolean} [props.isStarted=false] - A flag indicating if the user has started this learning path.
+ * @returns {JSX.Element} The rendered learning path card component.
+ */
 const LearningPathCard = ({ 
   title, 
   description, 

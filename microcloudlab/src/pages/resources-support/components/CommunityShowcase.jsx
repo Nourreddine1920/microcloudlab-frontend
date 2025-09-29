@@ -3,6 +3,17 @@ import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 import Image from '../../../components/AppImage';
 
+/**
+ * @module CommunityShowcase
+ */
+
+/**
+ * A component that showcases projects created by the community.
+ * It features a filterable grid of project cards, each displaying project details,
+ * author information, and stats like likes, views, and forks.
+ *
+ * @returns {JSX.Element} The rendered community showcase component.
+ */
 const CommunityShowcase = () => {
   const [activeFilter, setActiveFilter] = useState('all');
 
