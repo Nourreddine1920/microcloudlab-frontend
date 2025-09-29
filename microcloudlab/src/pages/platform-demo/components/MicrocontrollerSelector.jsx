@@ -4,39 +4,39 @@ import Image from '../../../components/AppImage';
 
 const MicrocontrollerSelector = ({ selectedBoard, onBoardSelect, boards }) => {
   return (
-    <div className="bg-surface rounded-lg p-4 border border-border">
-      <div className="flex items-center space-x-2 mb-4">
-        <Icon name="Cpu" size={20} className="text-primary" />
-        <h3 className="text-lg font-semibold text-text-primary">Select Microcontroller</h3>
+    <div className="bg-background/60 backdrop-blur-sm rounded-xl p-6 border border-border shadow-brand">
+      <div className="flex items-center space-x-3 mb-5">
+        <Icon name="Cpu" size={24} className="text-primary" />
+        <h3 className="text-xl font-bold text-text-primary">Select Microcontroller</h3>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {boards.map((board) => (
           <button
             key={board.id}
             onClick={() => onBoardSelect(board)}
-            className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
+            className={`p-4 rounded-lg border-2 transition-all duration-200 text-left transform hover:scale-105 hover:shadow-lg ${
               selectedBoard?.id === board.id
-                ? 'border-primary bg-primary/5 shadow-md'
-                : 'border-border hover:border-primary/50 hover:bg-surface-hover'
+                ? 'border-primary bg-primary/10 shadow-md'
+                : 'border-border hover:border-primary/50 bg-surface'
             }`}
           >
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-background rounded-lg flex items-center justify-center overflow-hidden">
+            <div className="flex items-center space-x-4">
+              <div className="w-14 h-14 bg-background rounded-md flex items-center justify-center overflow-hidden border border-border">
                 <Image 
                   src={board.image} 
                   alt={board.name}
-                  className="w-10 h-10 object-contain"
+                  className="w-12 h-12 object-contain"
                 />
               </div>
               <div className="flex-1">
-                <h4 className="font-medium text-text-primary text-sm">{board.name}</h4>
+                <h4 className="font-semibold text-text-primary">{board.name}</h4>
                 <p className="text-xs text-text-secondary">{board.specs}</p>
-                <div className="flex items-center space-x-1 mt-1">
-                  <div className={`w-2 h-2 rounded-full ${
+                <div className="flex items-center space-x-1.5 mt-1">
+                  <div className={`w-2.5 h-2.5 rounded-full ${
                     board.status === 'online' ? 'bg-success' : 'bg-warning'
                   }`}></div>
-                  <span className="text-xs text-text-secondary capitalize">{board.status}</span>
+                  <span className="text-xs text-text-secondary capitalize font-medium">{board.status}</span>
                 </div>
               </div>
             </div>
@@ -45,14 +45,16 @@ const MicrocontrollerSelector = ({ selectedBoard, onBoardSelect, boards }) => {
       </div>
       
       {selectedBoard && (
-        <div className="mt-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
-          <div className="flex items-center space-x-2 mb-2">
-            <Icon name="CheckCircle" size={16} className="text-success" />
-            <span className="text-sm font-medium text-text-primary">Connected to {selectedBoard.name}</span>
+        <div className="mt-5 p-4 bg-primary/10 rounded-lg border-l-4 border-primary">
+          <div className="flex items-center space-x-3">
+            <Icon name="CheckCircle" size={20} className="text-primary" />
+            <div>
+              <span className="text-sm font-semibold text-text-primary">Connected to {selectedBoard.name}</span>
+              <p className="text-xs text-text-secondary mt-0.5">
+                Ready for programming • {selectedBoard.specs} • Cloud-hosted hardware
+              </p>
+            </div>
           </div>
-          <p className="text-xs text-text-secondary">
-            Ready for programming • {selectedBoard.specs} • Cloud-hosted hardware
-          </p>
         </div>
       )}
     </div>

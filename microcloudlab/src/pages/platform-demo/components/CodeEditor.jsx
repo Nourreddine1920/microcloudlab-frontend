@@ -23,37 +23,42 @@ const CodeEditor = ({ selectedFile, onCodeChange, onCompile, onRun, isCompiling,
     onCodeChange(newCode);
   };
 
-  const syntaxHighlight = (code) => {
-    // Simple syntax highlighting for Arduino/C++ code
-    return code
-      .replace(/(#include|#define|void|int|float|char|bool|String|const|return|if|else|for|while|switch|case|break|continue)/g, '<span class="text-blue-400">$1</span>')
-      .replace(/(setup|loop|pinMode|digitalWrite|digitalRead|analogRead|analogWrite|delay|Serial|begin|print|println)/g, '<span class="text-green-400">$1</span>')
-      .replace(/(".*?")/g, '<span class="text-yellow-400">$1</span>')
-      .replace(/(\/\/.*$)/gm, '<span class="text-gray-500">$1</span>')
-      .replace(/(\d+)/g, '<span class="text-purple-400">$1</span>');
+  const syntaxHighlight = (text) => {
+    let highlightedText = text;
+    // Highlight keywords
+    highlightedText = highlightedText.replace(/\b(void|int|float|char|bool|String|const|return|if|else|for|while|switch|case|break|continue|pinMode|digitalWrite|digitalRead|analogRead|analogWrite|delay|Serial|begin|print|println)\b/g, '<span class="text-primary-400">$1</span>');
+    // Highlight preprocessor directives
+    highlightedText = highlightedText.replace(/(#include|#define)/g, '<span class="text-accent-400">$1</span>');
+    // Highlight comments
+    highlightedText = highlightedText.replace(/(\/\/.*$)/gm, '<span class="text-gray-500 italic">$1</span>');
+    // Highlight strings
+    highlightedText = highlightedText.replace(/(".*?")/g, '<span class="text-yellow-400">$1</span>');
+    // Highlight numbers
+    highlightedText = highlightedText.replace(/\b(\d+)\b/g, '<span class="text-purple-400">$1</span>');
+    return highlightedText;
   };
 
   if (!selectedFile) {
     return (
-      <div className="bg-surface rounded-lg border border-border h-full flex items-center justify-center">
+      <div className="bg-gray-800/50 rounded-lg border border-border h-full flex items-center justify-center">
         <div className="text-center">
-          <Icon name="FileCode" size={48} className="text-text-secondary mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-text-primary mb-2">No File Selected</h3>
-          <p className="text-text-secondary">Select a project and file from the explorer to start coding</p>
+          <Icon name="FileCode" size={48} className="text-gray-500 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-300 mb-2">No File Selected</h3>
+          <p className="text-gray-400">Select a project and file from the explorer to start coding</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-surface rounded-lg border border-border h-full flex flex-col">
+    <div className="bg-gray-900 rounded-lg border border-border h-full flex flex-col shadow-2xl">
       {/* Editor Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border">
+      <div className="flex items-center justify-between p-3 border-b border-gray-700 bg-gray-800/50 rounded-t-lg">
         <div className="flex items-center space-x-3">
-          <Icon name="FileCode" size={18} className="text-primary" />
+          <Icon name="FileCode" size={20} className="text-primary" />
           <div>
-            <h3 className="font-semibold text-text-primary">{selectedFile.name}</h3>
-            <p className="text-xs text-text-secondary">Arduino C++ • Cloud IDE</p>
+            <h3 className="font-semibold text-white">{selectedFile.name}</h3>
+            <p className="text-xs text-gray-400">Arduino C++ • MicroCloudLab IDE</p>
           </div>
         </div>
         
@@ -61,11 +66,11 @@ const CodeEditor = ({ selectedFile, onCodeChange, onCompile, onRun, isCompiling,
           <Button
             variant="outline"
             size="sm"
-            iconName="Play"
+            iconName="Check"
             iconPosition="left"
             onClick={onCompile}
             disabled={isCompiling || isRunning}
-            className="text-xs"
+            className="text-xs !border-gray-600 hover:!bg-gray-700"
           >
             {isCompiling ? 'Compiling...' : 'Compile'}
           </Button>
@@ -76,64 +81,64 @@ const CodeEditor = ({ selectedFile, onCodeChange, onCompile, onRun, isCompiling,
             iconPosition="left"
             onClick={onRun}
             disabled={isCompiling || isRunning}
-            className="text-xs bg-accent hover:bg-accent/90"
+            className="text-xs bg-accent hover:bg-accent/90 text-black"
           >
-            {isRunning ? 'Running...' : 'Run'}
+            {isRunning ? 'Running...' : 'Run Program'}
           </Button>
         </div>
       </div>
 
       {/* Code Editor */}
-      <div className="flex-1 flex">
+      <div className="flex-1 flex overflow-hidden">
         {/* Line Numbers */}
-        <div className="bg-background border-r border-border p-4 text-right min-w-[60px]">
+        <div className="bg-gray-900 border-r border-gray-700 p-4 text-right min-w-[60px] overflow-y-auto">
           {lineNumbers.map((num) => (
-            <div key={num} className="text-xs text-text-secondary font-code leading-6">
+            <div key={num} className="text-sm text-gray-500 font-mono leading-6">
               {num}
             </div>
           ))}
         </div>
 
         {/* Code Area */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative h-full">
           <textarea
             value={code}
             onChange={handleCodeChange}
-            className="w-full h-full p-4 bg-transparent text-text-primary font-code text-sm leading-6 resize-none outline-none"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            className="absolute inset-0 w-full h-full p-4 bg-transparent text-transparent caret-white font-mono text-sm leading-6 resize-none outline-none"
+            style={{ fontFamily: "'JetBrains Mono', monospace" }}
             spellCheck={false}
             placeholder="// Start coding your embedded project here..."
           />
           
-          {/* Syntax Highlighting Overlay (Visual Only) */}
-          <div 
-            className="absolute inset-0 p-4 pointer-events-none font-code text-sm leading-6 whitespace-pre-wrap"
-            style={{ 
-              fontFamily: 'JetBrains Mono, monospace',
-              color: 'transparent'
-            }}
+          <pre
+            className="absolute inset-0 p-4 pointer-events-none font-mono text-sm leading-6 whitespace-pre-wrap overflow-auto"
+            style={{ fontFamily: "'JetBrains Mono', monospace" }}
             dangerouslySetInnerHTML={{ __html: syntaxHighlight(code) }}
           />
         </div>
       </div>
 
       {/* Editor Footer */}
-      <div className="flex items-center justify-between p-3 border-t border-border bg-background/50">
-        <div className="flex items-center space-x-4 text-xs text-text-secondary">
-          <span>Line {code.split('\n').length}</span>
-          <span>Characters {code.length}</span>
+      <div className="flex items-center justify-between p-2 border-t border-gray-700 bg-gray-800/50 rounded-b-lg">
+        <div className="flex items-center space-x-4 text-xs text-gray-400">
           <div className="flex items-center space-x-1">
-            <Icon name="Wifi" size={12} className="text-success" />
-            <span>Connected</span>
+            <Icon name="GitBranch" size={12} />
+            <span>main</span>
+          </div>
+          <span>Line {code.split('\n').length}, Col {code.length % 80}</span>
+          <div className="flex items-center space-x-1.5">
+            <Icon name="CheckCircle" size={14} className="text-success" />
+            <span>Ready</span>
           </div>
         </div>
         
-        <div className="flex items-center space-x-2 text-xs text-text-secondary">
+        <div className="flex items-center space-x-3 text-xs text-gray-400">
           <span>Arduino C++</span>
-          <div className="w-1 h-1 bg-text-secondary rounded-full"></div>
           <span>UTF-8</span>
-          <div className="w-1 h-1 bg-text-secondary rounded-full"></div>
-          <span>Auto-save enabled</span>
+          <div className="flex items-center space-x-1">
+            <Icon name="Save" size={12} />
+            <span>Auto-save on</span>
+          </div>
         </div>
       </div>
     </div>

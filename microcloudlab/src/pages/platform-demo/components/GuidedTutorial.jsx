@@ -110,17 +110,17 @@ const GuidedTutorial = ({ isActive, onClose, onStepComplete }) => {
   if (!isActive) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-background rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
+      <div className="bg-background rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col border border-border">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
-              <Icon name={currentTutorialStep.icon} size={20} className="text-white" />
+        <div className="flex items-center justify-between p-5 border-b border-border">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center shadow-md">
+              <Icon name={currentTutorialStep.icon} size={24} className="text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-text-primary">{currentTutorialStep.title}</h2>
-              <p className="text-sm text-text-secondary">
+              <h2 className="text-xl font-bold text-text-primary">{currentTutorialStep.title}</h2>
+              <p className="text-sm text-text-secondary font-medium">
                 Step {currentStep + 1} of {tutorialSteps.length}
               </p>
             </div>
@@ -128,51 +128,49 @@ const GuidedTutorial = ({ isActive, onClose, onStepComplete }) => {
           
           <button
             onClick={onClose}
-            className="p-2 hover:bg-surface rounded-lg transition-colors"
+            className="p-2 hover:bg-surface-hover rounded-full transition-colors"
           >
             <Icon name="X" size={20} className="text-text-secondary" />
           </button>
         </div>
 
         {/* Progress Bar */}
-        <div className="px-6 py-4 border-b border-border">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-text-primary">Tutorial Progress</span>
-            <span className="text-sm text-text-secondary">
+        <div className="px-6 pt-4 pb-3">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-sm font-semibold text-text-primary">Tutorial Progress</span>
+            <span className="text-sm font-bold text-primary">
               {Math.round(((currentStep + 1) / tutorialSteps.length) * 100)}%
             </span>
           </div>
-          <div className="w-full bg-surface rounded-full h-2">
+          <div className="w-full bg-surface rounded-full h-2.5">
             <div 
-              className="bg-gradient-to-r from-primary to-accent h-2 rounded-full transition-all duration-300"
+              className="bg-gradient-to-r from-primary to-accent h-2.5 rounded-full transition-all duration-300"
               style={{ width: `${((currentStep + 1) / tutorialSteps.length) * 100}%` }}
             ></div>
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-96">
-          <p className="text-text-secondary mb-4">{currentTutorialStep.description}</p>
+        <div className="p-6 overflow-y-auto flex-1">
+          <p className="text-text-secondary mb-4 text-base">{currentTutorialStep.description}</p>
           
-          <div className="bg-surface rounded-lg p-4 border border-border">
-            <pre className="text-sm text-text-primary whitespace-pre-wrap font-body">
+          <div className="bg-surface rounded-lg p-5 border border-border">
+            <pre className="text-base text-text-primary whitespace-pre-wrap font-body leading-relaxed">
               {currentTutorialStep.content}
             </pre>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-6 border-t border-border bg-surface/50">
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleSkip}
-              className="text-text-secondary"
-            >
-              Skip Tutorial
-            </Button>
-          </div>
+        <div className="flex items-center justify-between p-5 border-t border-border bg-surface/50 rounded-b-xl">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleSkip}
+            className="text-text-secondary hover:text-text-primary"
+          >
+            Skip Tutorial
+          </Button>
           
           <div className="flex items-center space-x-3">
             {currentStep > 0 && (
@@ -193,7 +191,7 @@ const GuidedTutorial = ({ isActive, onClose, onStepComplete }) => {
               iconName={currentStep === tutorialSteps.length - 1 ? "CheckCircle" : "ChevronRight"}
               iconPosition="right"
               onClick={handleNext}
-              className="bg-accent hover:bg-accent/90 text-accent-foreground"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-brand"
             >
               {currentTutorialStep.action}
             </Button>
@@ -201,16 +199,16 @@ const GuidedTutorial = ({ isActive, onClose, onStepComplete }) => {
         </div>
 
         {/* Step Indicators */}
-        <div className="flex justify-center space-x-2 p-4 border-t border-border">
+        <div className="flex justify-center space-x-2.5 py-3 border-t border-border">
           {tutorialSteps.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentStep(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-200 ${
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                 index === currentStep 
-                  ? 'bg-primary w-6' 
+                  ? 'bg-primary w-8'
                   : completedSteps.has(index)
-                  ? 'bg-success' :'bg-border hover:bg-primary/50'
+                  ? 'bg-success/70' :'bg-border hover:bg-primary/50'
               }`}
             />
           ))}
