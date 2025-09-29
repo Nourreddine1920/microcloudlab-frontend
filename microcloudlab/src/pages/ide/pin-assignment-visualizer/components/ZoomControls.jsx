@@ -1,7 +1,22 @@
 import React from 'react';
 import Button from '../../../../components/ui/Button';
 
+/**
+ * @module ZoomControls
+ */
 
+/**
+ * A set of controls for managing the zoom level of a view.
+ * It includes buttons for zooming in, zooming out, and resetting the zoom.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {number} props.zoomLevel - The current zoom level.
+ * @param {Function} props.onZoomIn - Callback function to handle zooming in.
+ * @param {Function} props.onZoomOut - Callback function to handle zooming out.
+ * @param {Function} props.onZoomReset - Callback function to reset the zoom level.
+ * @param {string} [props.className=""] - Additional CSS classes for the component's container.
+ * @returns {JSX.Element} The rendered zoom controls component.
+ */
 const ZoomControls = ({ zoomLevel, onZoomIn, onZoomOut, onZoomReset, className = "" }) => {
   const zoomPercentage = Math.round(zoomLevel * 100);
 

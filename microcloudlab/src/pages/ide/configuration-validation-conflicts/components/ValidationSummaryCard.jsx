@@ -1,6 +1,24 @@
 import React from 'react';
 import Icon from '../../../../components/AppIcon';
 
+/**
+ * @module ValidationSummaryCard
+ */
+
+/**
+ * A card component that displays a summary of a specific type of validation issue.
+ * It shows a count, title, description, and an optional trend indicator, with styling
+ * based on the issue type (error, warning, success, info).
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string} props.title - The title of the summary card (e.g., "Critical Errors").
+ * @param {number} props.count - The number of issues for this category.
+ * @param {('error'|'warning'|'success'|'info')} props.type - The type of summary, which determines the styling.
+ * @param {string} props.description - A short description of the summary category.
+ * @param {number|null} [props.trend=null] - The trend of the issue count compared to the last validation run.
+ * @param {Function} [props.onClick] - A callback function to be executed when the card is clicked.
+ * @returns {JSX.Element} The rendered validation summary card component.
+ */
 const ValidationSummaryCard = ({ 
   title, 
   count, 

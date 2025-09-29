@@ -3,6 +3,20 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useBoard } from '../contexts/BoardContext';
 import { useAuth } from '../contexts/AuthContext';
 
+/**
+ * @module ProtectedRoute
+ */
+
+/**
+ * A higher-order component that protects routes based on authentication status and board selection.
+ * It redirects unauthenticated users to the login page and users without a selected board to the IDE page.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {JSX.Element} props.children - The child components to render if the conditions are met.
+ * @param {boolean} [props.requireBoard=false] - Whether a board selection is required to access the route.
+ * @param {boolean} [props.requireAuth=false] - Whether authentication is required to access the route.
+ * @returns {JSX.Element} The child components, a redirect, or a loading indicator.
+ */
 const ProtectedRoute = ({ children, requireBoard = false, requireAuth = false }) => {
   const { selectedBoard, isLoading: isBoardLoading } = useBoard();
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();

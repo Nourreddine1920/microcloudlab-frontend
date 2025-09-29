@@ -9,6 +9,18 @@ import PartnershipOpportunities from './components/PartnershipOpportunities';
 import TeamContacts from './components/TeamContacts';
 import SupportChannels from './components/SupportChannels';
 
+/**
+ * @module ContactPartnership
+ */
+
+/**
+ * The main page for contact and partnership inquiries.
+ * This component features a tabbed interface to switch between different sections:
+ * a general contact form, partnership opportunities, team contacts, and support channels.
+ * It also includes a hero section with quick stats and a footer.
+ *
+ * @returns {JSX.Element} The rendered Contact & Partnership page.
+ */
 const ContactPartnership = () => {
   const [activeTab, setActiveTab] = useState('contact');
 

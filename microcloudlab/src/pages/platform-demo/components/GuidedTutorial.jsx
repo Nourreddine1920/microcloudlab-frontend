@@ -2,6 +2,21 @@ import React, { useState } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module GuidedTutorial
+ */
+
+/**
+ * A modal component that provides a step-by-step guided tutorial of the platform.
+ * It walks the user through various features and actions, with navigation controls
+ * to move between steps.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {boolean} props.isActive - A flag to control the visibility of the tutorial modal.
+ * @param {Function} props.onClose - A callback function to close the tutorial.
+ * @param {Function} props.onStepComplete - A callback function that is executed when a tutorial step is completed.
+ * @returns {JSX.Element|null} The rendered guided tutorial modal, or null if it is not active.
+ */
 const GuidedTutorial = ({ isActive, onClose, onStepComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState(new Set());

@@ -3,6 +3,22 @@ import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
 import { useMcu } from '../context/McuContext';
 
+/**
+ * @module EnhancedMcuSelector
+ */
+
+/**
+ * An advanced microcontroller selector component.
+ * It fetches MCU data from both local context and a backend API,
+ * providing filtering by search query, category, and difficulty.
+ * It displays the available MCUs in a grid and handles user selection.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Function} props.onMcuSelect - A callback function to be executed when an MCU is selected. It receives the selected MCU object as an argument.
+ * @param {object} [props.currentMcu] - The currently selected MCU object, used for highlighting the active selection.
+ * @param {boolean} [props.showBackendMcus=true] - A flag to determine whether to fetch and display MCUs from the backend API.
+ * @returns {JSX.Element} The rendered MCU selector component.
+ */
 const EnhancedMcuSelector = ({ onMcuSelect, currentMcu, showBackendMcus = true }) => {
   const { MCU_SPECIFICATIONS } = useMcu();
   const [backendMcus, setBackendMcus] = useState([]);

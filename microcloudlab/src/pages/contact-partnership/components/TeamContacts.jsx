@@ -3,6 +3,17 @@ import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 
+/**
+ * @module TeamContacts
+ */
+
+/**
+ * A component that displays contact information for key team members and office locations.
+ * It provides detailed profiles for team members, including their roles, expertise, and contact links.
+ * It also shows office addresses with maps and directions.
+ *
+ * @returns {JSX.Element} The rendered team contacts and locations section.
+ */
 const TeamContacts = () => {
   const teamMembers = [
     {

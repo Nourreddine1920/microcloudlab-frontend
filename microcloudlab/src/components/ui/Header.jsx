@@ -4,6 +4,17 @@ import Icon from '../AppIcon';
 import Button from './Button';
 import { useAuth } from '../../contexts/AuthContext';
 
+/**
+ * @module Header
+ */
+
+/**
+ * A responsive header component that provides navigation for both the main application and the IDE.
+ * It adapts its links and actions based on the current route and authentication status.
+ * It includes a desktop view and a collapsible mobile menu.
+ *
+ * @returns {JSX.Element} The rendered header component.
+ */
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();

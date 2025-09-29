@@ -2,6 +2,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module VirtualOscilloscope
+ */
+
+/**
+ * A component that simulates a virtual oscilloscope to visualize waveforms from a running project.
+ * It uses the HTML5 Canvas API to draw a grid and the waveform, which is generated based on the selected project.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {boolean} props.isRunning - A flag indicating if a project is currently running, which activates the oscilloscope.
+ * @param {object|null} props.selectedProject - The currently selected project object, used to determine the type of waveform to display.
+ * @returns {JSX.Element} The rendered virtual oscilloscope component.
+ */
 const VirtualOscilloscope = ({ isRunning, selectedProject }) => {
   const canvasRef = useRef(null);
   const [isActive, setIsActive] = useState(false);

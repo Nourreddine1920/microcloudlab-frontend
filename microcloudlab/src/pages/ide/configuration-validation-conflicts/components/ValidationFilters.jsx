@@ -4,6 +4,22 @@ import Button from '../../../../components/ui/Button';
 import Input from '../../../../components/ui/Input';
 import Select from '../../../../components/ui/Select';
 
+/**
+ * @module ValidationFilters
+ */
+
+/**
+ * A component that provides a set of filters for validation issues.
+ * It allows users to filter issues by search query, severity, peripheral,
+ * status, and other attributes.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object} props.filters - An object containing the current filter values.
+ * @param {Function} props.onFiltersChange - Callback function to update the filters.
+ * @param {Function} props.onClearFilters - Callback function to clear all active filters.
+ * @param {number} props.issueCount - The number of issues found with the current filters.
+ * @returns {JSX.Element} The rendered validation filters component.
+ */
 const ValidationFilters = ({ 
   filters, 
   onFiltersChange, 

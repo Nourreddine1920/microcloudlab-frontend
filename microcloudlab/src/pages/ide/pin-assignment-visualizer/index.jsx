@@ -16,7 +16,18 @@ import PinConfigurationPopover from './components/PinConfigurationPopover';
 import Button from '../../../components/ui/Button';
 import { useMcu } from '../context/McuContext';
 
+/**
+ * @module PinAssignmentVisualizer
+ */
 
+/**
+ * The main page component for the Pin Assignment Visualizer tool.
+ * This interactive tool allows users to visualize, assign, and manage microcontroller pin configurations.
+ * It integrates various components like a chip selector, diagram viewer, and details sidebars
+ * to provide a comprehensive pin mapping experience.
+ *
+ * @returns {JSX.Element} The rendered pin assignment visualizer page.
+ */
 const PinAssignmentVisualizer = () => {
   const navigate = useNavigate();
   const { selectedMcu, selectMcu, getAvailablePins, getCurrentConfiguration, isPinAvailable } = useMcu();

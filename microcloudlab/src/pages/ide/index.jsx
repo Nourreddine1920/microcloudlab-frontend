@@ -6,6 +6,18 @@ import Icon from '../../components/AppIcon';
 import { useMcu } from './context/McuContext';
 import IntegratedIDE from './components/IntegratedIDE';
 
+/**
+ * @module IDEHome
+ */
+
+/**
+ * The main landing page for the IDE section.
+ * It allows users to select a microcontroller board and navigate to various
+ * development tools like the configuration editor, pin visualizer, and more.
+ * It also provides an entry point to the full integrated IDE experience.
+ *
+ * @returns {JSX.Element} The rendered IDE home page.
+ */
 const IDEHome = () => {
   const { selectedMcu, selectMcu, MCU_SPECIFICATIONS } = useMcu();
   const [selectedBoard, setSelectedBoard] = useState(selectedMcu?.id || null);

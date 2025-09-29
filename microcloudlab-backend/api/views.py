@@ -20,17 +20,31 @@ from .serializers import (
 last_peripheral_data = None
 peripheral_data_history = []  # Store history of all peripheral communications
 
+
 class MicrocontrollerViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing microcontroller instances.
+    Provides `list`, `create`, `retrieve`, `update`, and `destroy` actions.
+    """
     queryset = Microcontroller.objects.all()
     serializer_class = MicrocontrollerSerializer
     permission_classes = [AllowAny]
 
+
 class ProjectViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing Project instances.
+    This viewset automatically assigns a default owner when a new project is created.
+    """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [AllowAny]
     
     def perform_create(self, serializer):
+        """
+        Assigns a default user as the owner when creating a new project.
+        If no users exist, a default user is created.
+        """
         # Get the first user or create a default user if none exists
         try:
             user = User.objects.first()
@@ -49,12 +63,21 @@ class ProjectViewSet(viewsets.ModelViewSet):
             )
         serializer.save(owner=user)
 
+
 class CodeExecutionViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for managing CodeExecution instances.
+    It automatically assigns a default user when a new execution is created.
+    """
     queryset = CodeExecution.objects.all()
     serializer_class = CodeExecutionSerializer
     permission_classes = [AllowAny]
     
     def perform_create(self, serializer):
+        """
+        Assigns a default user to the code execution record.
+        Creates a default user if none exist.
+        """
         # Get the first user or create a default user if none exists
         try:
             user = User.objects.first()
@@ -72,17 +95,30 @@ class CodeExecutionViewSet(viewsets.ModelViewSet):
             )
         serializer.save(user=user)
 
+
 class UserProfileViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing UserProfile instances.
+    """
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = [AllowAny]
 
+
 class TutorialViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for managing Tutorial instances.
+    It automatically assigns a default author when a new tutorial is created.
+    """
     queryset = Tutorial.objects.all()
     serializer_class = TutorialSerializer
     permission_classes = [AllowAny]
     
     def perform_create(self, serializer):
+        """
+        Assigns a default user as the author when creating a new tutorial.
+        Creates a default user if none exist.
+        """
         # Get the first user or create a default user if none exists
         try:
             user = User.objects.first()
@@ -100,43 +136,80 @@ class TutorialViewSet(viewsets.ModelViewSet):
             )
         serializer.save(author=user)
 
+
 class TutorialProgressViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for tracking user progress on tutorials.
+    """
     queryset = TutorialProgress.objects.all()
     serializer_class = TutorialProgressSerializer
     permission_classes = [AllowAny]
 
+
 class CaseStudyViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for managing CaseStudy instances.
+    """
     queryset = CaseStudy.objects.all()
     serializer_class = CaseStudySerializer
     permission_classes = [AllowAny]
 
+
 class ContactInquiryViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for handling contact inquiries submitted through the platform.
+    """
     queryset = ContactInquiry.objects.all()
     serializer_class = ContactInquirySerializer
     permission_classes = [AllowAny]
 
+
 class PlatformStatsViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing platform statistics.
+    """
     queryset = PlatformStats.objects.all()
     serializer_class = PlatformStatsSerializer
     permission_classes = [AllowAny]
 
+
 class TeamMemberViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for managing team member profiles.
+    """
     queryset = TeamMember.objects.all()
     serializer_class = TeamMemberSerializer
     permission_classes = [AllowAny]
 
+
 class ResourceViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for managing educational and support resources.
+    """
     queryset = Resource.objects.all()
     serializer_class = ResourceSerializer
     permission_classes = [AllowAny]
+
 
 # Generic Peripheral Communication Endpoint
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def peripheral_send(request):
     """
-    Handle peripheral configuration data from frontend for all peripheral types
-    Supports: UART, SPI, I2C, PWM, GPIO, ADC, DAC, CAN, USB, WiFi, Bluetooth
+    Handles peripheral configuration data from the frontend for all peripheral types.
+
+    This endpoint is designed to be a universal receiver for various peripheral
+    configurations such as UART, SPI, I2C, etc. It logs the received data,
+    stores it in-memory for debugging and historical viewing, and simulates a
+    successful response.
+
+    Args:
+        request (Request): The DRF request object. The request body should be a
+            JSON object containing `peripheral_type`, `instance`, `mcu_id`,
+            `configuration`, `data` (raw byte array), and `timestamp`.
+
+    Returns:
+        Response: A DRF response object indicating success or failure.
     """
     try:
         data = request.data
@@ -231,7 +304,17 @@ def peripheral_send(request):
 @permission_classes([AllowAny])
 def peripheral_view(request):
     """
-    View the last received peripheral configuration data
+    Retrieves the last received peripheral configuration data.
+
+    This view provides a way to inspect the most recent peripheral data that
+    was sent to the `peripheral_send` endpoint, which is useful for debugging.
+
+    Args:
+        request (Request): The DRF request object.
+
+    Returns:
+        Response: A DRF response object containing the last peripheral data
+                  or a 'no data' message.
     """
     global last_peripheral_data
     
@@ -252,7 +335,18 @@ def peripheral_view(request):
 @permission_classes([AllowAny])
 def peripheral_history(request):
     """
-    View the history of all peripheral communications
+    Retrieves the history of all peripheral communications.
+
+    This view returns a list of all peripheral data objects that have been
+    received by the `peripheral_send` endpoint during the server's current
+    session. The history is capped at the last 50 entries.
+
+    Args:
+        request (Request): The DRF request object.
+
+    Returns:
+        Response: A DRF response object containing the list of historical
+                  peripheral data.
     """
     global peripheral_data_history
     
@@ -267,7 +361,18 @@ def peripheral_history(request):
 @permission_classes([AllowAny])
 def peripheral_view_by_type(request, peripheral_type):
     """
-    View peripheral data filtered by type
+    Retrieves peripheral communication data filtered by a specific type.
+
+    This view filters the communication history to return only the entries
+    that match the provided `peripheral_type`.
+
+    Args:
+        request (Request): The DRF request object.
+        peripheral_type (str): The type of peripheral to filter by (e.g., 'UART', 'SPI').
+
+    Returns:
+        Response: A DRF response object containing the filtered list of
+                  peripheral data.
     """
     global peripheral_data_history
     
@@ -288,8 +393,20 @@ def peripheral_view_by_type(request, peripheral_type):
 @permission_classes([AllowAny])
 def bulk_delete_microcontrollers(request):
     """
-    Delete multiple microcontrollers by their IDs
-    Only deletes microcontrollers that are marked as deletable (is_deletable=True)
+    Deletes multiple microcontrollers in a single request.
+
+    This endpoint accepts a list of microcontroller IDs and attempts to delete
+    each one. It only deletes microcontrollers that are marked as deletable
+    (`is_deletable=True`).
+
+    Args:
+        request (Request): The DRF request object. The request body should
+            contain a JSON object with an `ids` key, which is a list of
+            microcontroller ID strings.
+
+    Returns:
+        Response: A DRF response object summarizing the bulk delete operation,
+                  including counts of successful and failed deletions.
     """
     try:
         data = request.data

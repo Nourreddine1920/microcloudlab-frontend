@@ -2,6 +2,20 @@ import React, { useState } from 'react';
 import Icon from '../../../../components/AppIcon';
 import Button from '../../../../components/ui/Button';
 
+/**
+ * @module ConfigurationComparison
+ */
+
+/**
+ * A modal component for comparing multiple microcontroller configurations side-by-side.
+ * It provides a tabbed interface to view differences in overview, peripherals, pin assignments, and settings.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Array<object>} props.configurations - An array of configuration objects to compare. Each object should contain details like name, chipType, version, peripherals, pinCount, etc.
+ * @param {Function} props.onClose - A callback function to close the comparison modal.
+ * @param {Function} props.onSelectForEdit - A callback function that is triggered when the user chooses to edit one of the compared configurations. It receives the selected configuration object as an argument.
+ * @returns {JSX.Element|null} The rendered comparison modal, or null if there are fewer than two configurations to compare.
+ */
 const ConfigurationComparison = ({ 
   configurations, 
   onClose, 

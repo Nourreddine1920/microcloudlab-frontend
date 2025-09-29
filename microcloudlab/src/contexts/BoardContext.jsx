@@ -2,6 +2,25 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const BoardContext = createContext();
 
+/**
+ * @module BoardContext
+ */
+
+/**
+ * Custom hook for accessing the board context.
+ * Provides state and functions for managing microcontroller board selection.
+ *
+ * @returns {{
+ *   selectedBoard: object | null,
+ *   availableBoards: object[],
+ *   isLoading: boolean,
+ *   selectBoard: (board: object) => void,
+ *   clearBoard: () => void,
+ *   getBoardById: (id: string) => object | undefined,
+ *   isAnyBoardSelected: boolean
+ * }} The board context.
+ * @throws {Error} If used outside of a `BoardProvider`.
+ */
 export const useBoard = () => {
   const context = useContext(BoardContext);
   if (!context) {
@@ -10,6 +29,15 @@ export const useBoard = () => {
   return context;
 };
 
+/**
+ * Provides board selection state to its children components.
+ * It manages the currently selected board, the list of available boards,
+ * and persists the selection to localStorage.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {React.ReactNode} props.children - The child components to which the context will be provided.
+ * @returns {JSX.Element} The BoardContext provider.
+ */
 export const BoardProvider = ({ children }) => {
   const [selectedBoard, setSelectedBoard] = useState(null);
   const [isLoading, setIsLoading] = useState(true);

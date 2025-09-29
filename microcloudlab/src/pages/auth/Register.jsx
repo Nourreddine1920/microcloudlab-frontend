@@ -7,6 +7,17 @@ import Button from '../../components/ui/Button';
 import Icon from '../../components/AppIcon';
 import { useAuth } from '../../contexts/AuthContext';
 
+/**
+ * @module RegisterPage
+ */
+
+/**
+ * The registration page component for new users.
+ * It provides a form for users to enter their name, email, and password to create an account.
+ * It handles form submission, displays errors, and redirects the user upon successful registration.
+ *
+ * @returns {JSX.Element} The rendered registration page.
+ */
 const RegisterPage = () => {
   const { signUp, isLoading } = useAuth();
   const navigate = useNavigate();

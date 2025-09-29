@@ -2,6 +2,27 @@ import React, { useState } from 'react';
 import Icon from '../../../../components/AppIcon';
 import Button from '../../../../components/ui/Button';
 
+/**
+ * @module BulkActionsPanel
+ */
+
+/**
+ * A panel that provides bulk actions for managing validation issues.
+ * It allows users to run validation, generate reports, and perform actions
+ * like resolving or ignoring multiple selected issues at once.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Array<string>} props.selectedIssues - An array of IDs for the currently selected issues.
+ * @param {Function} props.onBulkResolve - Callback function to resolve the selected issues.
+ * @param {Function} props.onBulkIgnore - Callback function to ignore the selected issues.
+ * @param {Function} props.onRunValidation - Callback function to trigger a full validation run.
+ * @param {Function} props.onGenerateReport - Callback function to generate a validation report.
+ * @param {Function} props.onAutoFixSafe - Callback function to auto-fix all safe issues.
+ * @param {boolean} [props.isValidating=false] - A flag indicating if the validation process is currently running.
+ * @param {boolean} [props.isGeneratingReport=false] - A flag indicating if a report is being generated.
+ * @param {number} [props.autoFixableCount=0] - The number of issues that can be automatically fixed.
+ * @returns {JSX.Element} The rendered bulk actions panel.
+ */
 const BulkActionsPanel = ({ 
   selectedIssues, 
   onBulkResolve, 

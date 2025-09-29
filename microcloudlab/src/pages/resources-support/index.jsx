@@ -10,6 +10,17 @@ import SupportChannelCard from './components/SupportChannelCard';
 import DocumentationSection from './components/DocumentationSection';
 import CommunityShowcase from './components/CommunityShowcase';
 
+/**
+ * @module ResourcesSupport
+ */
+
+/**
+ * The main page for accessing all resources and support channels.
+ * It features a tabbed navigation system to switch between learning paths,
+ * documentation, community showcases, support options, and downloads.
+ *
+ * @returns {JSX.Element} The rendered resources and support page.
+ */
 const ResourcesSupport = () => {
   const [activeSection, setActiveSection] = useState('learning-paths');
   const [searchQuery, setSearchQuery] = useState('');

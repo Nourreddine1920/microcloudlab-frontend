@@ -2,6 +2,24 @@ import React, { useState, useEffect } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module CodeEditor
+ */
+
+/**
+ * A component that provides a simple code editor with syntax highlighting,
+ * line numbers, and controls for compiling and running code. It is designed
+ * for the platform demo to simulate a real IDE experience.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object|null} props.selectedFile - The file object to be displayed in the editor.
+ * @param {Function} props.onCodeChange - A callback function executed when the code in the editor changes.
+ * @param {Function} props.onCompile - A callback function to handle the compile action.
+ * @param {Function} props.onRun - A callback function to handle the run action.
+ * @param {boolean} props.isCompiling - A flag indicating if the code is currently compiling.
+ * @param {boolean} props.isRunning - A flag indicating if the code is currently running.
+ * @returns {JSX.Element} The rendered code editor component.
+ */
 const CodeEditor = ({ selectedFile, onCodeChange, onCompile, onRun, isCompiling, isRunning }) => {
   const [code, setCode] = useState('');
   const [lineNumbers, setLineNumbers] = useState([]);

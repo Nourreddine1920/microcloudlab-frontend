@@ -4,6 +4,23 @@ import Select from "../../../../components/ui/Select";
 import { Checkbox } from "../../../../components/ui/Checkbox";
 import Icon from "../../../../components/AppIcon";
 
+/**
+ * @module ConfigurationForm
+ */
+
+/**
+ * A dynamic form for configuring peripheral settings.
+ * It renders form fields based on a provided schema for the active peripheral type and section.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string} props.activeSection - The currently active configuration section (e.g., 'basic', 'advanced').
+ * @param {object} [props.formData={}] - The current data for the form fields.
+ * @param {Function} [props.onFormChange=()=>{}] - A callback function to handle changes in form data.
+ * @param {object} [props.validationErrors={}] - An object containing validation errors for the form fields.
+ * @param {string} [props.peripheralType="UART"] - The type of the peripheral being configured.
+ * @param {object} [props.peripheralSchemas={}] - The schema object that defines the structure of the form.
+ * @returns {JSX.Element} The rendered configuration form.
+ */
 const ConfigurationForm = ({
   activeSection,
   formData = {},

@@ -3,6 +3,17 @@ import Button from './ui/Button';
 import { projectAPI, microcontrollerAPI, caseStudyAPI } from '../services/api';
 import { useApiState, useApiMutation } from '../hooks/useApiState';
 
+/**
+ * @module ApiTest
+ */
+
+/**
+ * A component for testing API endpoints for projects, microcontrollers, and case studies.
+ * It allows for fetching, creating, and displaying data from the backend.
+ * This component serves as a demonstration of frontend-backend integration.
+ *
+ * @returns {JSX.Element} The rendered API test component.
+ */
 const ApiTest = () => {
   const [activeTab, setActiveTab] = useState('projects');
   

@@ -1,6 +1,21 @@
 import React, { useState } from 'react';
 import Icon from '../../../../components/AppIcon';
 
+/**
+ * @module ParameterAccordion
+ */
+
+/**
+ * An accordion component for organizing and navigating through different sections of parameters.
+ * It allows expanding and collapsing sections to show or hide parameter groups.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Array<object>} props.sections - An array of section objects to be displayed in the accordion.
+ * @param {string} props.activeSection - The ID of the currently active section.
+ * @param {Function} props.onSectionChange - A callback function to be executed when a section is changed.
+ * @param {object} [props.validationErrors={}] - An object containing validation errors, used to display error counts on sections.
+ * @returns {JSX.Element} The rendered accordion component.
+ */
 const ParameterAccordion = ({ sections, activeSection, onSectionChange, validationErrors = {} }) => {
   const [expandedSections, setExpandedSections] = useState(new Set([activeSection]));
 

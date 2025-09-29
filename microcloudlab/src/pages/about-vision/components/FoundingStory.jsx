@@ -2,6 +2,17 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 
+/**
+ * @module FoundingStory
+ */
+
+/**
+ * A section component for the "About & Vision" page that narrates the founding story of MicroCloudLab.
+ * It highlights the problems faced in traditional embedded development and presents MicroCloudLab's
+ * solutions, along with a quote from the founder and the company's vision statement.
+ *
+ * @returns {JSX.Element} The rendered FoundingStory component.
+ */
 const FoundingStory = () => {
   const challenges = [
     {

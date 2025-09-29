@@ -35,6 +35,29 @@ const buttonVariants = cva(
     }
 );
 
+/**
+ * @module Button
+ */
+
+/**
+ * A customizable button component with variants, sizes, and support for icons and loading states.
+ * It is built using `cva` for class variance and forwards refs to the underlying element.
+ *
+ * @param {object} props - The properties for the button component.
+ * @param {string} [props.className] - Additional CSS classes to apply to the button.
+ * @param {('default'|'destructive'|'outline'|'secondary'|'ghost'|'link'|'success'|'warning'|'danger')} [props.variant='default'] - The visual style of the button.
+ * @param {('default'|'sm'|'lg'|'icon'|'xs'|'xl')} [props.size='default'] - The size of the button.
+ * @param {boolean} [props.asChild=false] - If true, renders the component as a `Slot` to merge props with the child element.
+ * @param {React.ReactNode} [props.children] - The content of the button.
+ * @param {boolean} [props.loading=false] - If true, displays a loading spinner and disables the button.
+ * @param {string} [props.iconName=null] - The name of the lucide-react icon to display.
+ * @param {('left'|'right')} [props.iconPosition='left'] - The position of the icon relative to the children.
+ * @param {number} [props.iconSize=null] - The size of the icon. If not provided, it's inferred from the button size.
+ * @param {boolean} [props.fullWidth=false] - If true, the button will take up the full width of its container.
+ * @param {boolean} [props.disabled=false] - If true, the button is disabled.
+ * @param {React.Ref} ref - The ref to forward to the button element.
+ * @returns {JSX.Element} The rendered button component.
+ */
 const Button = React.forwardRef(({
     className,
     variant,

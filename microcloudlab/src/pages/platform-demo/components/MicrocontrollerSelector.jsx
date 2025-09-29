@@ -2,6 +2,20 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 
+/**
+ * @module MicrocontrollerSelector
+ */
+
+/**
+ * A component that allows users to select a microcontroller from a list of available boards.
+ * The selected board is highlighted, and a confirmation message is displayed.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object|null} props.selectedBoard - The currently selected board object.
+ * @param {Function} props.onBoardSelect - A callback function to be executed when a board is selected. It receives the selected board object.
+ * @param {Array<object>} props.boards - An array of available board objects to be displayed.
+ * @returns {JSX.Element} The rendered microcontroller selector component.
+ */
 const MicrocontrollerSelector = ({ selectedBoard, onBoardSelect, boards }) => {
   return (
     <div className="bg-surface rounded-lg p-4 border border-border">

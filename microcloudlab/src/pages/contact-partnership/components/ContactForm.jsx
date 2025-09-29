@@ -5,6 +5,17 @@ import Icon from '../../../components/AppIcon';
 import { contactAPI } from '../../../services/api';
 import { useApiMutation } from '../../../hooks/useApiState';
 
+/**
+ * @module ContactForm
+ */
+
+/**
+ * A comprehensive form for users to submit inquiries.
+ * It handles various categories of contact, manages submission state (loading, success, error),
+ * and interacts with the contact API.
+ *
+ * @returns {JSX.Element} The rendered contact form, or a success/error message.
+ */
 const ContactForm = () => {
   const [formData, setFormData] = useState({
     name: '',

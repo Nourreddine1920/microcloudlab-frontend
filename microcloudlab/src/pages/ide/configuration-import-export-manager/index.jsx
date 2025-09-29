@@ -10,6 +10,17 @@ import ConfigurationComparison from './components/ConfigurationComparison';
 import Button from '../../../components/ui/Button';
 
 
+/**
+ * @module ConfigurationImportExportManager
+ */
+
+/**
+ * A full-page manager for handling the import and export of microcontroller configurations.
+ * It integrates a file browser, a configuration previewer, an import/export toolbar,
+ * and a comparison view to provide a comprehensive file management interface.
+ *
+ * @returns {JSX.Element} The rendered configuration import/export manager page.
+ */
 const ConfigurationImportExportManager = () => {
   const navigate = useNavigate();
   const [selectedConfig, setSelectedConfig] = useState(null);

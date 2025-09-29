@@ -2,6 +2,17 @@ import React, { useState } from 'react';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
 
+/**
+ * @module SupportChannels
+ */
+
+/**
+ * A component that outlines the various support channels available to users.
+ * It uses a tab-like interface to display detailed information for technical,
+ * sales, community, and educational support, including contact methods and pro tips.
+ *
+ * @returns {JSX.Element} The rendered support channels section.
+ */
 const SupportChannels = () => {
   const [selectedChannel, setSelectedChannel] = useState('technical-support');
 

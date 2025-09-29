@@ -1,6 +1,23 @@
 import React from 'react';
 import Icon from '../../../../components/AppIcon';
 
+/**
+ * @module ValidationStatusHeader
+ */
+
+/**
+ * A header component that displays the overall status of the configuration validation.
+ * It shows the last validation time, the number of critical issues and warnings,
+ * and a status message.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Date} props.lastValidated - The timestamp of the last validation run.
+ * @param {number} props.totalIssues - The total number of issues found.
+ * @param {number} props.criticalCount - The number of critical issues.
+ * @param {number} props.warningCount - The number of warnings.
+ * @param {boolean} [props.isValidating=false] - A flag indicating if the validation process is currently running.
+ * @returns {JSX.Element} The rendered validation status header component.
+ */
 const ValidationStatusHeader = ({ 
   lastValidated, 
   totalIssues, 

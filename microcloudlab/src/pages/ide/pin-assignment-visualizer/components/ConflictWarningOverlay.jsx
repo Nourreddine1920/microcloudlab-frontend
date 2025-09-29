@@ -2,6 +2,22 @@ import React from 'react';
 import Button from '../../../../components/ui/Button';
 import Icon from '../../../../components/AppIcon';
 
+/**
+ * @module ConflictWarningOverlay
+ */
+
+/**
+ * An overlay component that displays pin assignment conflicts and provides options for resolving them.
+ * It shows detailed information about each conflict and offers suggestions for resolution.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Array<object>} props.conflicts - An array of conflict objects to be displayed.
+ * @param {Function} props.onResolveConflict - A callback function to handle resolving a conflict.
+ * @param {Function} props.onDismiss - A callback function to close the overlay.
+ * @param {boolean} props.isVisible - A flag to control the visibility of the overlay.
+ * @param {string} [props.className=""] - Additional CSS classes to apply to the component's container.
+ * @returns {JSX.Element|null} The rendered conflict warning overlay, or null if it is not visible or there are no conflicts.
+ */
 const ConflictWarningOverlay = ({ 
   conflicts, 
   onResolveConflict, 

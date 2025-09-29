@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import Icon from '../../../components/AppIcon';
 
+/**
+ * @module PerformanceMetrics
+ */
+
+/**
+ * A component that displays real-time performance metrics for a running project.
+ * It shows data such as compilation time, execution speed, memory usage, and more,
+ * updating periodically when a project is active.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {boolean} props.isRunning - A flag indicating if a project is currently running.
+ * @param {object|null} props.selectedProject - The currently selected project object, used to determine base metrics.
+ * @returns {JSX.Element} The rendered performance metrics component.
+ */
 const PerformanceMetrics = ({ isRunning, selectedProject }) => {
   const [metrics, setMetrics] = useState({
     compilationTime: 0,

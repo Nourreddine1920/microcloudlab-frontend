@@ -3,6 +3,18 @@ import { Link } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
 
+/**
+ * @module HeroSection
+ */
+
+/**
+ * The main hero section for the homepage.
+ * It features a prominent headline, a brief introduction to the platform,
+ * key benefits, and an interactive code demo that simulates running code
+ * on a virtual microcontroller.
+ *
+ * @returns {JSX.Element} The rendered hero section component.
+ */
 const HeroSection = () => {
   const [activeCode, setActiveCode] = useState(0);
   const [isSimulating, setIsSimulating] = useState(false);

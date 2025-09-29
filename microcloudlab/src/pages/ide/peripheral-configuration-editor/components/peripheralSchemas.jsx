@@ -1,5 +1,24 @@
 // peripheralSchemas.js
 
+/**
+ * @module peripheralSchemas
+ */
+
+/**
+ * An object that defines the configuration form schemas for various peripherals.
+ * Each key in the object represents a peripheral type (e.g., 'UART', 'SPI').
+ * The value is an object containing `sections`, which are further divided into categories
+ * like 'basic', 'advanced', and 'pins'. Each section contains an array of field
+ * definition objects that describe the UI and properties for each configuration parameter.
+ *
+ * @property {object} UART - The schema definition for the UART peripheral.
+ * @property {object} SPI - The schema definition for the SPI peripheral.
+ * @property {object} I2C - The schema definition for the I2C peripheral.
+ * @property {object} sections - Contains the different configuration sections.
+ * @property {Array<object>} sections.basic - Fields for basic configuration.
+ * @property {Array<object>} sections.advanced - Fields for advanced configuration.
+ * @property {Array<object>} sections.pins - Fields for pin configuration.
+ */
 const peripheralSchemas = {
   UART: {
     sections: {

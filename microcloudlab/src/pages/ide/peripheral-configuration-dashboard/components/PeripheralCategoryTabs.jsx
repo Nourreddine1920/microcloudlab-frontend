@@ -1,6 +1,19 @@
 import React from 'react';
 import Icon from '../../../../components/AppIcon';
 
+/**
+ * @module PeripheralCategoryTabs
+ */
+
+/**
+ * A component that displays a set of tabs for filtering peripherals by category.
+ * Each tab shows the category name, an icon, a count of peripherals, and a description.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string} props.activeCategory - The ID of the currently active category tab.
+ * @param {Function} props.onCategoryChange - A callback function to be executed when a category tab is clicked. It receives the category ID as an argument.
+ * @returns {JSX.Element} The rendered peripheral category tabs component.
+ */
 const PeripheralCategoryTabs = ({ activeCategory, onCategoryChange }) => {
   const categories = [
     {

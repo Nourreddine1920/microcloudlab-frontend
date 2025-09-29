@@ -2,6 +2,13 @@
 
 import { apiRequest } from './api';
 
+/**
+ * @module peripheralService
+ * This module provides generic services for handling peripheral communication,
+ * including packing configuration data into frames and sending it to the backend.
+ */
+
+
 // Packet structure constants
 const PACKET_START = 0xAA;
 const PACKET_END = 0x55;
@@ -23,9 +30,10 @@ const PERIPHERAL_COMMANDS = {
 };
 
 /**
- * Convert byte array to hex string for display
- * @param {Uint8Array} bytes - The byte array to convert
- * @returns {string} - Hex string representation
+ * Converts a byte array to a hex string for display purposes.
+ * Each byte is converted to a two-digit uppercase hex representation.
+ * @param {Uint8Array} bytes - The byte array to convert.
+ * @returns {string} The hex string representation of the byte array.
  */
 function bytesToHex(bytes) {
   return Array.from(bytes)
@@ -34,9 +42,10 @@ function bytesToHex(bytes) {
 }
 
 /**
- * Format configuration frame for display
- * @param {Uint8Array} frame - The configuration frame
- * @returns {Object} - Formatted frame sections
+ * Formats a raw data frame into a structured object for display.
+ * It breaks the frame down into its constituent parts: start, command, length, data, and end.
+ * @param {Uint8Array} frame - The raw configuration frame.
+ * @returns {object} An object with formatted frame sections.
  */
 export function formatFrame(frame) {
   return {
@@ -50,9 +59,9 @@ export function formatFrame(frame) {
 }
 
 /**
- * Pack UART configuration into a byte array
- * @param {Object} config - The UART configuration object
- * @returns {Uint8Array} - Packed configuration data
+ * Packs a UART configuration object into a binary data frame.
+ * @param {object} config - The UART configuration object.
+ * @returns {Uint8Array} The packed binary data frame.
  */
 function packUARTConfiguration(config) {
   const dataSize = 32;
@@ -127,9 +136,9 @@ function packUARTConfiguration(config) {
 }
 
 /**
- * Pack SPI configuration into a byte array
- * @param {Object} config - The SPI configuration object
- * @returns {Uint8Array} - Packed configuration data
+ * Packs an SPI configuration object into a binary data frame.
+ * @param {object} config - The SPI configuration object.
+ * @returns {Uint8Array} The packed binary data frame.
  */
 function packSPIConfiguration(config) {
   const dataSize = 24;
@@ -183,9 +192,9 @@ function packSPIConfiguration(config) {
 }
 
 /**
- * Pack I2C configuration into a byte array
- * @param {Object} config - The I2C configuration object
- * @returns {Uint8Array} - Packed configuration data
+ * Packs an I2C configuration object into a binary data frame.
+ * @param {object} config - The I2C configuration object.
+ * @returns {Uint8Array} The packed binary data frame.
  */
 function packI2CConfiguration(config) {
   const dataSize = 20;
@@ -237,9 +246,9 @@ function packI2CConfiguration(config) {
 }
 
 /**
- * Pack PWM configuration into a byte array
- * @param {Object} config - The PWM configuration object
- * @returns {Uint8Array} - Packed configuration data
+ * Packs a PWM configuration object into a binary data frame.
+ * @param {object} config - The PWM configuration object.
+ * @returns {Uint8Array} The packed binary data frame.
  */
 function packPWMConfiguration(config) {
   const dataSize = 20;
@@ -283,9 +292,9 @@ function packPWMConfiguration(config) {
 }
 
 /**
- * Pack GPIO configuration into a byte array
- * @param {Object} config - The GPIO configuration object
- * @returns {Uint8Array} - Packed configuration data
+ * Packs a GPIO configuration object into a binary data frame.
+ * @param {object} config - The GPIO configuration object.
+ * @returns {Uint8Array} The packed binary data frame.
  */
 function packGPIOConfiguration(config) {
   const dataSize = 12;
@@ -317,10 +326,12 @@ function packGPIOConfiguration(config) {
 }
 
 /**
- * Generic function to pack peripheral configuration
- * @param {string} peripheralType - Type of peripheral (UART, SPI, I2C, PWM, GPIO)
- * @param {Object} config - The peripheral configuration object
- * @returns {Uint8Array} - Packed configuration data
+ * A generic function to pack a peripheral configuration based on its type.
+ * It dispatches to the appropriate packing function.
+ * @param {string} peripheralType - The type of peripheral (e.g., 'UART', 'SPI').
+ * @param {object} config - The configuration object for the peripheral.
+ * @returns {Uint8Array} The packed binary data frame.
+ * @throws {Error} If the peripheral type is unsupported.
  */
 export function packPeripheralConfiguration(peripheralType, config) {
   switch (peripheralType.toUpperCase()) {
@@ -340,12 +351,13 @@ export function packPeripheralConfiguration(peripheralType, config) {
 }
 
 /**
- * Send peripheral configuration to backend
- * @param {string} peripheralType - Type of peripheral
- * @param {string} instance - Peripheral instance
- * @param {string} mcuId - MCU identifier
- * @param {Object} config - The peripheral configuration object
- * @returns {Promise} - Resolution/rejection of the send operation
+ * Sends a packed peripheral configuration to the backend API.
+ * @param {string} peripheralType - The type of peripheral.
+ * @param {string} instance - The specific instance of the peripheral.
+ * @param {string} mcuId - The identifier of the target microcontroller.
+ * @param {object} config - The configuration object to send.
+ * @returns {Promise<any>} A promise that resolves with the API response.
+ * @throws {Error} If the API request fails.
  */
 export async function sendPeripheralConfiguration(peripheralType, instance, mcuId, config) {
   try {
@@ -372,8 +384,9 @@ export async function sendPeripheralConfiguration(peripheralType, instance, mcuI
 }
 
 /**
- * Get last peripheral data from backend
- * @returns {Promise} - Last peripheral data
+ * Fetches the last received peripheral data from the backend.
+ * @returns {Promise<any>} A promise that resolves with the last peripheral data.
+ * @throws {Error} If the API request fails.
  */
 export async function getLastPeripheralData() {
   try {
@@ -386,8 +399,9 @@ export async function getLastPeripheralData() {
 }
 
 /**
- * Get peripheral communication history from backend
- * @returns {Promise} - Peripheral communication history
+ * Fetches the history of all peripheral communications from the backend.
+ * @returns {Promise<any>} A promise that resolves with the communication history.
+ * @throws {Error} If the API request fails.
  */
 export async function getPeripheralHistory() {
   try {
@@ -400,9 +414,10 @@ export async function getPeripheralHistory() {
 }
 
 /**
- * Get peripheral data filtered by type
- * @param {string} peripheralType - Type of peripheral to filter by
- * @returns {Promise} - Filtered peripheral data
+ * Fetches peripheral data filtered by a specific type from the backend.
+ * @param {string} peripheralType - The type of peripheral to filter by.
+ * @returns {Promise<any>} A promise that resolves with the filtered data.
+ * @throws {Error} If the API request fails.
  */
 export async function getPeripheralDataByType(peripheralType) {
   try {
@@ -414,7 +429,10 @@ export async function getPeripheralDataByType(peripheralType) {
   }
 }
 
-// Export the peripheral service object
+/**
+ * An object containing all peripheral-related service functions.
+ * @type {object}
+ */
 export const peripheralService = {
   packPeripheralConfiguration,
   sendPeripheralConfiguration,

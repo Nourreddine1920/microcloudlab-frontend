@@ -7,6 +7,18 @@ import FeaturesSection from './components/FeaturesSection';
 import SocialProofSection from './components/SocialProofSection';
 import CTASection from './components/CTASection';
 
+/**
+ * @module Homepage
+ */
+
+/**
+ * The main homepage component for the MicroCloudLab application.
+ * It serves as the entry point for visitors, assembling various sections
+ * like Hero, Stats, Features, and Call to Action to provide a comprehensive
+ * overview of the platform.
+ *
+ * @returns {JSX.Element} The rendered homepage.
+ */
 const Homepage = () => {
   return (
     <div className="min-h-screen bg-background">

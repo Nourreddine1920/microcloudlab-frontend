@@ -2,6 +2,26 @@ import React, { useState } from 'react';
 import Icon from '../../../../components/AppIcon';
 import Button from '../../../../components/ui/Button';
 
+/**
+ * @module FileTreeBrowser
+ */
+
+/**
+ * A component that displays microcontroller configurations in a hierarchical file tree structure.
+ * It groups configurations into categories like "Recent", "Projects", "Templates", and "Archived".
+ * It supports selection, deletion, duplication, renaming, and context menu actions for configurations.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Array<object>} props.configurations - An array of configuration objects to display.
+ * @param {object|null} props.selectedConfig - The currently selected configuration object.
+ * @param {Function} props.onSelectConfig - Callback function when a configuration is selected.
+ * @param {Function} props.onDeleteConfig - Callback function to delete a configuration.
+ * @param {Function} props.onDuplicateConfig - Callback function to duplicate a configuration.
+ * @param {Function} props.onRenameConfig - Callback function to rename a configuration.
+ * @param {string} props.searchQuery - The search term to filter the configurations.
+ * @param {Function} props.onCreateFolder - Callback function to create a new folder.
+ * @returns {JSX.Element} The rendered file tree browser component.
+ */
 const FileTreeBrowser = ({ 
   configurations, 
   selectedConfig, 

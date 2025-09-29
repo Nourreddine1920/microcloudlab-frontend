@@ -1,6 +1,17 @@
 import React from 'react';
 import Icon from '../../../components/AppIcon';
 
+/**
+ * @module DemocratizingSection
+ */
+
+/**
+ * A section component for the "About & Vision" page that details how MicroCloudLab
+ * is democratizing innovation in embedded systems. It includes impact statistics,
+ * before-and-after comparisons, success stories, and a call to action.
+ *
+ * @returns {JSX.Element} The rendered DemocratizingSection component.
+ */
 const DemocratizingSection = () => {
   const impactStats = [
     {

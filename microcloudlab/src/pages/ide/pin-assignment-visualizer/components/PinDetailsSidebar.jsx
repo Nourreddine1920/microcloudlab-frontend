@@ -3,6 +3,24 @@ import Button from '../../../../components/ui/Button';
 import Select from '../../../../components/ui/Select';
 import Icon from '../../../../components/AppIcon';
 
+/**
+ * @module PinDetailsSidebar
+ */
+
+/**
+ * A sidebar component that displays detailed information about a selected pin.
+ * It allows users to view and modify the pin's assignment, function, and other properties.
+ * It is designed to be a persistent sidebar on desktop and a slide-out panel on mobile.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object|null} props.selectedPin - The pin object to display details for. If null, a placeholder is shown.
+ * @param {Function} props.onPinAssign - A callback function to assign a function to the selected pin.
+ * @param {Function} props.onPinClear - A callback function to clear the assignment of the selected pin.
+ * @param {boolean} props.isOpen - Controls the visibility of the sidebar on mobile views.
+ * @param {Function} props.onToggle - A callback function to toggle the sidebar's visibility on mobile.
+ * @param {string} [props.className=""] - Additional CSS classes for the component's container.
+ * @returns {JSX.Element} The rendered pin details sidebar component.
+ */
 const PinDetailsSidebar = ({ 
   selectedPin, 
   onPinAssign, 

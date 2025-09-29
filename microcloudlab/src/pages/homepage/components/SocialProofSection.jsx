@@ -3,6 +3,17 @@ import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 import Button from '../../../components/ui/Button';
 
+/**
+ * @module SocialProofSection
+ */
+
+/**
+ * A section for the homepage dedicated to building social proof.
+ * It displays user testimonials, logos of partner institutions, awards,
+ * and key community statistics to build trust and credibility.
+ *
+ * @returns {JSX.Element} The rendered social proof section component.
+ */
 const SocialProofSection = () => {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
 

@@ -3,6 +3,19 @@ import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 import { useMcu } from '../context/McuContext';
 
+/**
+ * @module BoardSimulator
+ */
+
+/**
+ * A component that simulates the behavior of a selected microcontroller board.
+ * It runs a series of simulated steps (initialization, configuration, pin mapping, validation, testing)
+ * based on the current MCU configuration and displays detailed results.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Function} [props.onSimulationComplete] - A callback function executed when the simulation is complete, passing the simulation results as an argument.
+ * @returns {JSX.Element} The rendered board simulator component.
+ */
 const BoardSimulator = ({ onSimulationComplete }) => {
   const { selectedMcu, getCurrentConfiguration } = useMcu();
   const [isSimulating, setIsSimulating] = useState(false);

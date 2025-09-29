@@ -9,6 +9,17 @@ import ConfigurationValidator from './ConfigurationValidator';
 import PinMappingVisualizer from './PinMappingVisualizer';
 import BoardSimulator from './BoardSimulator';
 
+/**
+ * @module IntegratedIDE
+ */
+
+/**
+ * A top-level component that provides a guided, step-by-step workflow for the entire
+ * embedded development process. It integrates various IDE components like MCU selection,
+ * configuration, validation, pin mapping, and simulation into a cohesive user experience.
+ *
+ * @returns {JSX.Element} The rendered integrated IDE component.
+ */
 const IntegratedIDE = () => {
   const { selectedMcu, selectMcu } = useMcu();
   const navigate = useNavigate();

@@ -2,6 +2,19 @@ import React, { useState } from 'react';
 import Button from '../../../../components/ui/Button';
 import { MCU_SPECIFICATIONS } from '../../context/McuContext';
 
+/**
+ * @module McuSelector
+ */
+
+/**
+ * A component that displays a grid of available microcontrollers for selection.
+ * It allows the user to choose an MCU, which is then highlighted, and triggers a callback.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Function} props.onSelect - A callback function to be executed when an MCU is selected. It receives the selected MCU object.
+ * @param {object} [props.currentMcu] - The currently selected MCU object, used for highlighting.
+ * @returns {JSX.Element} The rendered MCU selector component.
+ */
 const McuSelector = ({ onSelect, currentMcu }) => {
     const [loading, setLoading] = useState(false);
     

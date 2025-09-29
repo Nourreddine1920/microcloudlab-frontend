@@ -3,6 +3,25 @@ import Input from '../../../../components/ui/Input';
 import Button from '../../../../components/ui/Button';
 import Icon from '../../../../components/AppIcon';
 
+/**
+ * @module PinListSidebar
+ */
+
+/**
+ * A sidebar component that displays a filterable and searchable list of microcontroller pins.
+ * It groups pins by their port and shows their current status. It is designed to be a
+ * persistent sidebar on desktop and a slide-out panel on mobile.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Array<object>} props.pins - An array of pin objects to be displayed.
+ * @param {object|null} props.selectedPin - The currently selected pin object, used for highlighting.
+ * @param {Function} props.onPinSelect - A callback function to be executed when a pin is selected.
+ * @param {Function} props.onPinFilter - A callback function to handle pin filtering (not used in current implementation).
+ * @param {boolean} props.isOpen - Controls the visibility of the sidebar on mobile views.
+ * @param {Function} props.onToggle - A callback function to toggle the sidebar's visibility on mobile.
+ * @param {string} [props.className=""] - Additional CSS classes for the component's container.
+ * @returns {JSX.Element} The rendered pin list sidebar component.
+ */
 const PinListSidebar = ({ 
   pins, 
   selectedPin, 

@@ -2,6 +2,18 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 
+/**
+ * @module MicrocontrollerCard
+ */
+
+/**
+ * A card component for displaying information about a single microcontroller.
+ * It shows the microcontroller's name, type, description, specifications, and availability status.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object} props.microcontroller - The microcontroller object to display.
+ * @returns {JSX.Element} The rendered microcontroller card component.
+ */
 const MicrocontrollerCard = ({ microcontroller }) => {
   const {
     name,

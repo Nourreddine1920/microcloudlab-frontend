@@ -1,5 +1,14 @@
 import React from 'react';
 
+/**
+ * @module TestPage
+ */
+
+/**
+ * A simple test page to verify that routing is working correctly.
+ *
+ * @returns {JSX.Element} The rendered test page.
+ */
 const TestPage = () => {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">

@@ -4,6 +4,32 @@ import Icon from '../../../../components/AppIcon';
 import Button from '../../../../components/ui/Button';
 import ValidationStatusIndicator from '../../../../components/ui/ValidationStatusIndicator';
 
+/**
+ * @module ConfigurationToolbar
+ */
+
+/**
+ * A toolbar for the peripheral configuration editor page. It provides breadcrumb navigation,
+ * status indicators for validation and unsaved changes, and main actions like save, reset,
+
+ * validate, import, and export.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string} [props.peripheralType='UART'] - The type of the peripheral being configured.
+ * @param {string} [props.peripheralInstance='UART1'] - The specific instance of the peripheral.
+ * @param {string|null} [props.selectedBoard=null] - The name of the currently selected board.
+ * @param {boolean} [props.hasUnsavedChanges=false] - Flag indicating if there are unsaved changes.
+ * @param {number} [props.validationErrors=0] - The number of validation errors.
+ * @param {number} [props.validationWarnings=0] - The number of validation warnings.
+ * @param {boolean} [props.isValidating=false] - Flag indicating if validation is in progress.
+ * @param {Date|null} [props.lastValidated=null] - The timestamp of the last validation.
+ * @param {Function} props.onSave - Callback for the save action.
+ * @param {Function} props.onReset - Callback for the reset action.
+ * @param {Function} props.onValidate - Callback for the validate action.
+ * @param {Function} props.onExport - Callback for the export action.
+ * @param {Function} props.onImport - Callback for the import action.
+ * @returns {JSX.Element} The rendered toolbar component.
+ */
 const ConfigurationToolbar = ({
   peripheralType = 'UART',
   peripheralInstance = 'UART1',

@@ -11,6 +11,18 @@ import QuickStatsOverview from './components/QuickStatsOverview';
 import FloatingActionMenu from './components/FloatingActionMenu';
 import { useMcu } from '../context/McuContext';
 
+/**
+ * @module PeripheralConfigurationDashboard
+ */
+
+/**
+ * The main dashboard for viewing and managing peripheral configurations for a selected microcontroller.
+ * It dynamically displays peripherals grouped by category and allows users to search and filter them.
+ * The dashboard integrates various components to provide a comprehensive overview, including
+ * quick stats, category tabs, and a configuration preview panel.
+ *
+ * @returns {JSX.Element} The rendered peripheral configuration dashboard page.
+ */
 const PeripheralConfigurationDashboard = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();

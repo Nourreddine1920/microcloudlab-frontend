@@ -3,6 +3,28 @@ import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 import Image from '../../../components/AppImage';
 
+/**
+ * @module ResourceCard
+ */
+
+/**
+ * A card component for displaying a single educational or support resource.
+ * It shows the resource's title, description, type, difficulty, and other metadata,
+ * along with a call to action to access the resource.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {string} props.title - The title of the resource.
+ * @param {string} props.description - A short description of the resource.
+ * @param {string} props.type - The type of the resource (e.g., 'Tutorial', 'Guide').
+ * @param {('Beginner'|'Intermediate'|'Advanced')} props.difficulty - The difficulty level of the resource.
+ * @param {string} props.duration - The estimated time to consume the resource.
+ * @param {string} props.author - The author of the resource.
+ * @param {string} props.thumbnail - The URL for the resource's thumbnail image.
+ * @param {Array<string>} [props.tags=[]] - A list of tags associated with the resource.
+ * @param {boolean} [props.isNew=false] - A flag to indicate if the resource is new.
+ * @param {Function} props.onAccess - A callback function to be executed when the access button is clicked.
+ * @returns {JSX.Element} The rendered resource card component.
+ */
 const ResourceCard = ({ 
   title, 
   description, 

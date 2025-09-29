@@ -2,6 +2,18 @@ import React from 'react';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 
+/**
+ * @module ProjectCard
+ */
+
+/**
+ * A card component for displaying information about a single user project.
+ * It shows the project's title, description, type, owner, and other metadata.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object} props.project - The project object to display.
+ * @returns {JSX.Element} The rendered project card component.
+ */
 const ProjectCard = ({ project }) => {
   const {
     title,

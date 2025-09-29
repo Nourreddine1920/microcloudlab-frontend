@@ -3,6 +3,18 @@ import { Link } from 'react-router-dom';
 import Icon from '../../../../components/AppIcon';
 import Button from '../../../../components/ui/Button';
 
+/**
+ * @module PeripheralCard
+ */
+
+/**
+ * A card component that displays a summary of a single peripheral's configuration status.
+ * It shows the peripheral's name, description, status, and provides actions to configure or edit it.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object} props.peripheral - The peripheral object containing its details and status.
+ * @returns {JSX.Element} The rendered peripheral card component.
+ */
 const PeripheralCard = ({ peripheral }) => {
   const getStatusColor = (status) => {
     switch (status) {

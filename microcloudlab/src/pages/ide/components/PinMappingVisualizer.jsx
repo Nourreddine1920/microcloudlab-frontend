@@ -3,6 +3,20 @@ import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 import { useMcu } from '../context/McuContext';
 
+/**
+ * @module PinMappingVisualizer
+ */
+
+/**
+ * A component that provides a visual representation of the pin mappings for a selected microcontroller.
+ * It allows users to view pin assignments in different layouts (physical, logical, functional),
+ * filter the view, and identify any pin conflicts.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Function} [props.onPinSelect] - A callback function that is executed when a pin is selected in the visualizer. It receives the selected pin's name as an argument.
+ * @param {string|null} [props.selectedPin] - The name of the currently selected pin, used for highlighting.
+ * @returns {JSX.Element} The rendered pin mapping visualizer component, or a prompt to select an MCU.
+ */
 const PinMappingVisualizer = ({ onPinSelect, selectedPin }) => {
   const { selectedMcu, getCurrentConfiguration, getAvailablePins } = useMcu();
   const [viewMode, setViewMode] = useState('physical'); // 'physical', 'logical', 'functional'

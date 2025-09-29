@@ -2,6 +2,16 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Icon from '../AppIcon';
 
+/**
+ * @module Breadcrumb
+ */
+
+/**
+ * A breadcrumb navigation component that generates breadcrumbs based on the current URL path.
+ * It provides users with a way to trace their path back to the homepage.
+ *
+ * @returns {JSX.Element|null} The rendered breadcrumb component, or null if on the homepage or if the location is not available.
+ */
 const Breadcrumb = () => {
   const location = useLocation();
   

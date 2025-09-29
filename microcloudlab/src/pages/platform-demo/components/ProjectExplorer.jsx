@@ -1,6 +1,21 @@
 import React, { useState } from 'react';
 import Icon from '../../../components/AppIcon';
 
+/**
+ * @module ProjectExplorer
+ */
+
+/**
+ * A component that simulates a project file explorer, displaying a list of projects
+ * and their associated files in a collapsible tree structure.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Array<object>} props.projects - An array of project objects to be displayed.
+ * @param {object|null} props.selectedProject - The currently selected project object.
+ * @param {Function} props.onProjectSelect - A callback function to be executed when a project is selected.
+ * @param {Function} props.onFileSelect - A callback function to be executed when a file is selected.
+ * @returns {JSX.Element} The rendered project explorer component.
+ */
 const ProjectExplorer = ({ projects, selectedProject, onProjectSelect, onFileSelect }) => {
   const [expandedProjects, setExpandedProjects] = useState(new Set([projects[0]?.id]));
 

@@ -3,6 +3,19 @@ import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 import { useMcu } from '../context/McuContext';
 
+/**
+ * @module ConfigurationValidator
+ */
+
+/**
+ * A component that validates the current microcontroller configuration against a set of predefined rules.
+ * It checks for missing fields, pin conflicts, and invalid values, then presents a detailed report
+ * of errors, warnings, and conflicts.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {Function} [props.onValidationComplete] - A callback function that is executed when the validation process is complete. It receives the validation results object as an argument.
+ * @returns {JSX.Element} The rendered configuration validator component.
+ */
 const ConfigurationValidator = ({ onValidationComplete }) => {
   const { selectedMcu, getCurrentConfiguration, getAvailablePins } = useMcu();
   const [validationResults, setValidationResults] = useState(null);

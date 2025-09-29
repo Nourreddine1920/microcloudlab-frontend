@@ -4,6 +4,23 @@ import Select from '../../../../components/ui/Select';
 
 import Icon from '../../../../components/AppIcon';
 
+/**
+ * @module PinConfigurationPopover
+ */
+
+/**
+ * A popover component for configuring the detailed settings of a specific pin.
+ * It allows setting the pin's function, mode, pull resistors, and other parameters.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {object} props.pin - The pin object to be configured.
+ * @param {boolean} props.isVisible - A flag to control the visibility of the popover.
+ * @param {{x: number, y: number}} props.position - The position at which to display the popover.
+ * @param {Function} props.onClose - A callback function to close the popover.
+ * @param {Function} props.onSave - A callback function to save the pin's configuration.
+ * @param {string} [props.className=""] - Additional CSS classes to apply to the component's container.
+ * @returns {JSX.Element|null} The rendered pin configuration popover, or null if it is not visible or no pin is selected.
+ */
 const PinConfigurationPopover = ({ 
   pin, 
   isVisible, 
