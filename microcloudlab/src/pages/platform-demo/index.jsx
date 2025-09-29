@@ -304,26 +304,26 @@ void reconnectMQTT() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background circuit-pattern">
       <Header />
       
       {/* Hero Section */}
-      <section className="pt-24 pb-8 bg-gradient-to-br from-primary/5 via-background to-accent/5">
+      <section className="pt-24 pb-12 bg-gradient-to-br from-primary/5 via-background to-accent/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
+          <div className="text-center mb-12">
             <div className="flex items-center justify-center space-x-2 mb-4">
               <div className="w-3 h-3 bg-accent rounded-full pulse-glow"></div>
-              <span className="text-accent font-medium text-sm">LIVE DEMO</span>
+              <span className="text-accent font-semibold text-sm tracking-wider">LIVE DEMO</span>
             </div>
             
-            <h1 className="text-4xl lg:text-5xl font-headline text-text-primary mb-4">
+            <h1 className="text-4xl lg:text-5xl font-headline font-bold text-text-primary mb-4">
               Experience the Future of
-              <span className="block text-transparent bg-gradient-to-r from-primary to-accent bg-clip-text">
+              <span className="block text-transparent bg-gradient-to-r from-primary to-accent bg-clip-text mt-2">
                 Embedded Development
               </span>
             </h1>
             
-            <p className="text-xl text-text-secondary max-w-3xl mx-auto mb-8">
+            <p className="text-lg text-text-secondary max-w-3xl mx-auto mb-8">
               Program real microcontrollers in the cloud. No hardware setup, no delays, no limitations. 
               Just pure embedded development power at your fingertips.
             </p>
@@ -335,7 +335,7 @@ void reconnectMQTT() {
                 iconName="Play"
                 iconPosition="left"
                 onClick={() => setShowTutorial(true)}
-                className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-oscilloscope"
+                className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-brand"
               >
                 Start Guided Tour
               </Button>
@@ -346,6 +346,7 @@ void reconnectMQTT() {
                 iconName="Code"
                 iconPosition="left"
                 onClick={() => document.getElementById('demo-interface').scrollIntoView({ behavior: 'smooth' })}
+                className="shadow-brand"
               >
                 Jump to Demo
               </Button>
@@ -353,32 +354,32 @@ void reconnectMQTT() {
           </div>
           
           {/* Live Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            <div className="text-center p-4 bg-background/50 rounded-lg border border-border">
-              <div className="text-2xl font-bold text-accent">2.4K+</div>
-              <div className="text-sm text-text-secondary">Active Developers</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div className="text-center p-4 bg-background/60 backdrop-blur-sm rounded-lg border border-border shadow-md">
+              <div className="text-3xl font-bold text-accent">2.4K+</div>
+              <div className="text-sm text-text-secondary font-medium">Active Developers</div>
             </div>
-            <div className="text-center p-4 bg-background/50 rounded-lg border border-border">
-              <div className="text-2xl font-bold text-primary">50+</div>
-              <div className="text-sm text-text-secondary">Microcontrollers</div>
+            <div className="text-center p-4 bg-background/60 backdrop-blur-sm rounded-lg border border-border shadow-md">
+              <div className="text-3xl font-bold text-primary">50+</div>
+              <div className="text-sm text-text-secondary font-medium">Microcontrollers</div>
             </div>
-            <div className="text-center p-4 bg-background/50 rounded-lg border border-border">
-              <div className="text-2xl font-bold text-success">99.9%</div>
-              <div className="text-sm text-text-secondary">Uptime</div>
+            <div className="text-center p-4 bg-background/60 backdrop-blur-sm rounded-lg border border-border shadow-md">
+              <div className="text-3xl font-bold text-success">99.9%</div>
+              <div className="text-sm text-text-secondary font-medium">Uptime</div>
             </div>
-            <div className="text-center p-4 bg-background/50 rounded-lg border border-border">
-              <div className="text-2xl font-bold text-warning">15K+</div>
-              <div className="text-sm text-text-secondary">Projects Created</div>
+            <div className="text-center p-4 bg-background/60 backdrop-blur-sm rounded-lg border border-border shadow-md">
+              <div className="text-3xl font-bold text-warning">15K+</div>
+              <div className="text-sm text-text-secondary font-medium">Projects Created</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Demo Interface */}
-      <section id="demo-interface" className="py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="demo-interface" className="py-16">
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Microcontroller Selection */}
-          <div className="mb-8">
+          <div className="mb-10">
             <MicrocontrollerSelector
               selectedBoard={selectedBoard}
               onBoardSelect={handleBoardSelect}
@@ -387,9 +388,9 @@ void reconnectMQTT() {
           </div>
 
           {/* Main Demo Interface */}
-          <div className="grid lg:grid-cols-12 gap-6 mb-8">
+          <div className="grid lg:grid-cols-12 gap-6 mb-10">
             {/* Left Sidebar - Project Explorer */}
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-3 bg-background/60 backdrop-blur-sm rounded-lg border border-border shadow-md p-4">
               <ProjectExplorer
                 projects={sampleProjects}
                 selectedProject={selectedProject}
@@ -399,7 +400,7 @@ void reconnectMQTT() {
             </div>
 
             {/* Main Content - Code Editor */}
-            <div className="lg:col-span-6">
+            <div className="lg:col-span-6 bg-background/60 backdrop-blur-sm rounded-lg border border-border shadow-md p-4">
               <CodeEditor
                 selectedFile={selectedFile}
                 onCodeChange={handleCodeChange}
@@ -411,7 +412,7 @@ void reconnectMQTT() {
             </div>
 
             {/* Right Sidebar - Performance Metrics */}
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-3 bg-background/60 backdrop-blur-sm rounded-lg border border-border shadow-md p-4">
               <PerformanceMetrics
                 isRunning={isRunning}
                 selectedProject={selectedProject}
@@ -420,9 +421,9 @@ void reconnectMQTT() {
           </div>
 
           {/* Bottom Panel - Monitoring Tools */}
-          <div className="grid lg:grid-cols-2 gap-6 mb-8">
+          <div className="grid lg:grid-cols-2 gap-6">
             {/* Serial Monitor */}
-            <div className="h-96">
+            <div className="h-96 bg-background/60 backdrop-blur-sm rounded-lg border border-border shadow-md p-4">
               <SerialMonitor
                 isRunning={isRunning}
                 selectedProject={selectedProject}
@@ -430,7 +431,7 @@ void reconnectMQTT() {
             </div>
 
             {/* Virtual Oscilloscope */}
-            <div className="h-96">
+            <div className="h-96 bg-background/60 backdrop-blur-sm rounded-lg border border-border shadow-md p-4">
               <VirtualOscilloscope
                 isRunning={isRunning}
                 selectedProject={selectedProject}
@@ -441,19 +442,19 @@ void reconnectMQTT() {
       </section>
 
       {/* Feature Highlights */}
-      <section className="py-16 bg-gradient-to-br from-surface/50 to-background">
+      <section className="py-20 bg-gradient-to-br from-surface/50 to-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <FeatureHighlights onStartTrial={handleStartTrial} />
         </div>
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-primary to-accent">
+      <section className="py-20 bg-gradient-to-r from-primary to-accent">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-headline text-white mb-4">
+          <h2 className="text-3xl lg:text-4xl font-headline font-bold text-white mb-4">
             Ready to Transform Your Development Workflow?
           </h2>
-          <p className="text-xl text-white/90 mb-8">
+          <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
             Join thousands of developers who have already made the switch to cloud-based embedded development.
           </p>
           
@@ -464,7 +465,7 @@ void reconnectMQTT() {
               iconName="Rocket"
               iconPosition="left"
               onClick={handleStartTrial}
-              className="bg-white text-primary hover:bg-white/90 shadow-xl"
+              className="bg-white text-primary hover:bg-white/90 shadow-2xl transform hover:scale-105 transition-transform"
             >
               Start Free Trial
             </Button>

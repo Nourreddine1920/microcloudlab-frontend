@@ -184,6 +184,9 @@ module.exports = {
       backdropBlur: {
         'xs': '2px',
       },
+      maxWidth: {
+        '8xl': '90rem',
+      },
     },
   },
   plugins: [

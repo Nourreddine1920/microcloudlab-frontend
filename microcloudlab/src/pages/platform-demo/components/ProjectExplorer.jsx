@@ -31,14 +31,14 @@ const ProjectExplorer = ({ projects, selectedProject, onProjectSelect, onFileSel
   };
 
   return (
-    <div className="bg-surface rounded-lg border border-border h-full flex flex-col">
-      <div className="flex items-center justify-between p-4 border-b border-border">
+    <div className="bg-surface/50 rounded-lg border border-border h-full flex flex-col">
+      <div className="flex items-center justify-between p-3 border-b border-border">
         <div className="flex items-center space-x-2">
-          <Icon name="FolderOpen" size={18} className="text-primary" />
+          <Icon name="FolderOpen" size={20} className="text-primary" />
           <h3 className="font-semibold text-text-primary">Project Explorer</h3>
         </div>
-        <button className="p-1 hover:bg-surface-hover rounded">
-          <Icon name="MoreHorizontal" size={16} className="text-text-secondary" />
+        <button className="p-1.5 hover:bg-surface-hover rounded-md">
+          <Icon name="MoreHorizontal" size={18} className="text-text-secondary" />
         </button>
       </div>
       
@@ -50,41 +50,41 @@ const ProjectExplorer = ({ projects, selectedProject, onProjectSelect, onFileSel
                 toggleProject(project.id);
                 onProjectSelect(project);
               }}
-              className={`w-full flex items-center space-x-2 p-3 text-left hover:bg-surface-hover transition-colors ${
-                selectedProject?.id === project.id ? 'bg-primary/5 border-r-2 border-primary' : ''
+              className={`w-full flex items-center space-x-2.5 p-3 text-left hover:bg-surface-hover transition-colors ${
+                selectedProject?.id === project.id ? 'bg-primary/10 border-r-4 border-primary' : 'border-r-4 border-transparent'
               }`}
             >
               <Icon 
                 name={expandedProjects.has(project.id) ? 'ChevronDown' : 'ChevronRight'} 
-                size={14} 
-                className="text-text-secondary" 
+                size={16}
+                className="text-text-secondary transition-transform"
               />
-              <Icon name="Folder" size={16} className="text-accent" />
+              <Icon name="Folder" size={18} className="text-accent" />
               <div className="flex-1">
-                <div className="font-medium text-text-primary text-sm">{project.name}</div>
-                <div className="text-xs text-text-secondary">{project.description}</div>
+                <div className="font-semibold text-text-primary text-sm">{project.name}</div>
+                <div className="text-xs text-text-secondary truncate">{project.description}</div>
               </div>
-              <div className="flex items-center space-x-1">
-                <div className={`w-2 h-2 rounded-full ${
+              <div className="flex items-center space-x-1.5">
+                <div className={`w-2.5 h-2.5 rounded-full ${
                   project.difficulty === 'Beginner' ? 'bg-success' :
                   project.difficulty === 'Intermediate' ? 'bg-warning' : 'bg-error'
                 }`}></div>
-                <span className="text-xs text-text-secondary">{project.difficulty}</span>
+                <span className="text-xs text-text-secondary font-medium">{project.difficulty}</span>
               </div>
             </button>
             
             {expandedProjects.has(project.id) && (
-              <div className="pl-8 pb-2">
+              <div className="pl-9 pr-2 py-1 bg-black/5">
                 {project.files.map((file, index) => (
                   <button
                     key={index}
                     onClick={() => onFileSelect(file)}
-                    className="w-full flex items-center space-x-2 p-2 text-left hover:bg-surface-hover rounded text-sm"
+                    className="w-full flex items-center space-x-2.5 p-2 text-left hover:bg-primary/10 rounded-md text-sm transition-colors"
                   >
-                    <Icon name={getFileIcon(file.name)} size={14} className="text-text-secondary" />
-                    <span className="text-text-primary">{file.name}</span>
+                    <Icon name={getFileIcon(file.name)} size={16} className="text-text-secondary" />
+                    <span className="text-text-primary flex-1 truncate">{file.name}</span>
                     {file.isMain && (
-                      <span className="text-xs bg-primary/10 text-primary px-1 py-0.5 rounded">main</span>
+                      <span className="text-2xs bg-primary/20 text-primary font-semibold px-1.5 py-0.5 rounded-full">main</span>
                     )}
                   </button>
                 ))}
@@ -95,11 +95,11 @@ const ProjectExplorer = ({ projects, selectedProject, onProjectSelect, onFileSel
       </div>
       
       <div className="p-3 border-t border-border bg-background/50">
-        <div className="flex items-center justify-between text-xs text-text-secondary">
-          <span>{projects.length} projects</span>
-          <div className="flex items-center space-x-1">
-            <Icon name="Cloud" size={12} />
-            <span>Synced</span>
+        <div className="flex items-center justify-between text-xs text-text-secondary font-medium">
+          <span>{projects.length} projects loaded</span>
+          <div className="flex items-center space-x-1.5">
+            <Icon name="Cloud" size={14} className="text-success" />
+            <span>Cloud Synced</span>
           </div>
         </div>
       </div>
