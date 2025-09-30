@@ -9,7 +9,7 @@ const McuContext = createContext(undefined);
 // Initial state for MCU selection
 const initialMcuState = {
   selectedMcu: null,
-  peripheralStatus: {},,
+  peripheralStatus: {},
   configurations: {}
 };
 
