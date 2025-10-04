@@ -62,8 +62,18 @@ const PeripheralConfigurationDashboard = () => {
 
     const allStatuses = getAllPeripheralStatuses();
 
+    // Get default supported peripherals if none specified
+    const supportedPeripherals = selectedMcu.supportedPeripherals || {
+      'UART': ['UART1', 'UART2'],
+      'SPI': ['SPI1'],
+      'I2C': ['I2C1'],
+      'PWM': ['PWM1', 'PWM2', 'PWM3', 'PWM4'],
+      'ADC': ['ADC1'],
+      'GPIO': ['PORTA', 'PORTB', 'PORTC']
+    };
+
     // Process MCU peripherals with dynamic status
-    Object.keys(selectedMcu.supportedPeripherals).forEach(peripheralType => {
+    Object.keys(supportedPeripherals).forEach(peripheralType => {
       const instances = getAvailablePeripheralInstances(peripheralType);
       const category = getPeripheralCategory(peripheralType);
       

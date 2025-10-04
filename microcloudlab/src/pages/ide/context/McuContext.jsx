@@ -2,23 +2,42 @@ import React, { createContext, useContext, useState, useCallback, useMemo, useEf
 
 const McuContext = createContext(undefined);
 
-/**
- * @module McuContext
- */
+// Helper function to get initial peripheral status
+const getInitialPeripheralStatus = (mcu) => {
+  if (!mcu || !mcu.supportedPeripherals) return {};
+  
+  const status = {};
+  Object.keys(mcu.supportedPeripherals).forEach(type => {
+    mcu.supportedPeripherals[type].instances.forEach(instance => {
+      status[instance] = {
+        configured: false,
+        enabled: false,
+        errors: [],
+        warnings: []
+      };
+    });
+  });
+  return status;
+};
 
 // Initial state for MCU selection
 const initialMcuState = {
   selectedMcu: null,
   peripheralStatus: {},
-  configurations: {}
+  configurations: {},
+  peripheralConfigurations: {}
 };
 
-/**
- * A comprehensive object containing the specifications for all statically defined
- * microcontrollers available in the platform. This includes details like name,
- * description, pinouts, and supported peripherals.
- * @type {object}
- */
+// MCU Context Hook
+export const useMcu = () => {
+  const context = useContext(McuContext);
+  if (context === undefined) {
+    throw new Error("useMcu must be used within a McuProvider");
+  }
+  return context;
+};
+
+// MCU specifications and configurations
 export const MCU_SPECIFICATIONS = {
   "arduino-uno": {
     id: "arduino-uno",
@@ -77,31 +96,12 @@ export const MCU_SPECIFICATIONS = {
       },
       GPIO: {
         instances: [
-          "D0",
-          "D1",
-          "D2",
-          "D3",
-          "D4",
-          "D5",
-          "D6",
-          "D7",
-          "D8",
-          "D9",
-          "D10",
-          "D11",
-          "D12",
-          "D13",
-          "A0",
-          "A1",
-          "A2",
-          "A3",
-          "A4",
-          "A5",
+          "D0", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9",
+          "D10", "D11", "D12", "D13", "A0", "A1", "A2", "A3", "A4", "A5"
         ],
         pins: {
           D0: { pin: "D0" },
           D1: { pin: "D1" },
-          // ...repeat for all pins...
           A5: { pin: "A5" },
         },
       },
@@ -117,15 +117,7 @@ export const MCU_SPECIFICATIONS = {
     status: "available",
     difficulty: "Intermediate",
     peripherals: [
-      "WiFi",
-      "Bluetooth",
-      "GPIO",
-      "UART",
-      "SPI",
-      "I2C",
-      "ADC",
-      "DAC",
-      "PWM",
+      "WiFi", "Bluetooth", "GPIO", "UART", "SPI", "I2C", "ADC", "DAC", "PWM"
     ],
     price: "Free",
     pinout: {
@@ -160,16 +152,7 @@ export const MCU_SPECIFICATIONS = {
         },
       },
       PWM: {
-        instances: [
-          "PWM0",
-          "PWM1",
-          "PWM2",
-          "PWM3",
-          "PWM4",
-          "PWM5",
-          "PWM6",
-          "PWM7",
-        ],
+        instances: ["PWM0", "PWM1", "PWM2", "PWM3", "PWM4", "PWM5", "PWM6", "PWM7"],
         pins: {
           PWM0: { output: "GPIO2" },
           PWM1: { output: "GPIO4" },
@@ -193,15 +176,7 @@ export const MCU_SPECIFICATIONS = {
     status: "available",
     difficulty: "Advanced",
     peripherals: [
-      "GPIO",
-      "UART",
-      "SPI",
-      "I2C",
-      "ADC",
-      "DAC",
-      "PWM",
-      "CAN",
-      "USB",
+      "GPIO", "UART", "SPI", "I2C", "ADC", "DAC", "PWM", "CAN", "USB"
     ],
     price: "Free",
     pinout: {
@@ -248,20 +223,11 @@ export const MCU_SPECIFICATIONS = {
   },
 };
 
-/**
- * Provides MCU-related state and functions to its children components.
- * This includes the selected MCU, its configuration, and methods to manage them.
- * It also persists configurations and peripheral statuses to localStorage.
- *
- * @param {object} props - The properties for the component.
- * @param {React.ReactNode} props.children - The child components that will consume the context.
- * @returns {JSX.Element} The McuContext provider.
- */
+// MCU Context Provider
 export const McuProvider = ({ children }) => {
-  const [selectedMcu, setSelectedMcu] = useState(null);
+  const [state, setState] = useState(initialMcuState);
   const [mcuConfigurations, setMcuConfigurations] = useState({});
   const [peripheralStatus, setPeripheralStatus] = useState({});
-  const mcuSpecifications = MCU_SPECIFICATIONS; // Make MCU_SPECIFICATIONS available through context
 
   // Load configurations from localStorage on mount
   useEffect(() => {
@@ -286,10 +252,7 @@ export const McuProvider = ({ children }) => {
 
   // Save configurations to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem(
-      "mcuConfigurations",
-      JSON.stringify(mcuConfigurations)
-    );
+    localStorage.setItem("mcuConfigurations", JSON.stringify(mcuConfigurations));
   }, [mcuConfigurations]);
 
   // Save peripheral status to localStorage whenever it changes
@@ -297,43 +260,54 @@ export const McuProvider = ({ children }) => {
     localStorage.setItem("peripheralStatus", JSON.stringify(peripheralStatus));
   }, [peripheralStatus]);
 
-  const selectMcu = (mcuId) => {
-    const mcu = MCU_SPECIFICATIONS[mcuId];
-    if (mcu) {
-      setSelectedMcu(mcu);
+  const selectMcu = useCallback((mcu) => {
+    console.log("Selecting MCU:", mcu);
+    if (mcu && mcu.id) {
+      console.log("Setting MCU:", mcu);
+      setState(prevState => ({
+        ...prevState,
+        selectedMcu: mcu
+      }));
+      // Initialize peripheral status for the new MCU
+      setPeripheralStatus(getInitialPeripheralStatus(mcu));
+    } else {
+      console.warn("Invalid MCU object:", mcu);
+    }
+  }, []);
+
+  const updateMcuConfiguration = (configUpdate) => {
+    if (state.selectedMcu) {
+      setMcuConfigurations((prev) => ({
+        ...prev,
+        [state.selectedMcu.id]: {
+          ...prev[state.selectedMcu.id],
+          ...configUpdate,
+        },
+      }));
     }
   };
 
-  const updateMcuConfiguration = (configUpdate) => {
-    setMcuConfigurations((prev) => ({
-      ...prev,
-      [selectedMcu.id]: {
-        ...prev[selectedMcu.id],
-        ...configUpdate,
-      },
-    }));
-  };
-
   const getCurrentConfiguration = () => {
-    return mcuConfigurations[selectedMcu?.id] || {};
+    return mcuConfigurations[state.selectedMcu?.id] || {};
   };
 
   const getAvailablePeripheralInstances = (peripheralType) => {
-    if (!selectedMcu?.supportedPeripherals?.[peripheralType]) return [];
-    return selectedMcu.supportedPeripherals[peripheralType].instances || [];
+    if (!state.selectedMcu?.supportedPeripherals?.[peripheralType]?.instances) {
+      console.log('No instances found for peripheral type:', peripheralType);
+      return [];
+    }
+    return state.selectedMcu.supportedPeripherals[peripheralType].instances;
   };
 
   const getPeripheralPins = (peripheralType, instance) => {
-    if (!selectedMcu?.supportedPeripherals?.[peripheralType]?.pins?.[instance])
+    if (!state.selectedMcu?.supportedPeripherals?.[peripheralType]?.pins?.[instance])
       return {};
-    return (
-      selectedMcu.supportedPeripherals[peripheralType].pins[instance] || {}
-    );
+    return state.selectedMcu.supportedPeripherals[peripheralType].pins[instance] || {};
   };
 
   const getAvailablePins = () => {
-    if (!selectedMcu?.pinout) return [];
-    return Object.values(selectedMcu.pinout).flat();
+    if (!state.selectedMcu?.pinout) return [];
+    return Object.values(state.selectedMcu.pinout).flat();
   };
 
   const isPinAvailable = (pinName) => {
@@ -349,12 +323,7 @@ export const McuProvider = ({ children }) => {
     return true;
   };
 
-  const assignPinToPeripheral = (
-    peripheralType,
-    instance,
-    pinFunction,
-    pinName
-  ) => {
+  const assignPinToPeripheral = (peripheralType, instance, pinFunction, pinName) => {
     const currentConfig = getCurrentConfiguration();
     const peripheralConfig = currentConfig[peripheralType] || {};
     const instanceConfig = peripheralConfig[instance] || {};
@@ -376,12 +345,7 @@ export const McuProvider = ({ children }) => {
     updateMcuConfiguration(updatedConfig);
   };
 
-  // New functions for dynamic peripheral management
-  const savePeripheralConfiguration = (
-    peripheralType,
-    instance,
-    configuration
-  ) => {
+  const savePeripheralConfiguration = (peripheralType, instance, configuration) => {
     const currentConfig = getCurrentConfiguration();
     const peripheralConfig = currentConfig[peripheralType] || {};
 
@@ -442,13 +406,11 @@ export const McuProvider = ({ children }) => {
 
   const getPeripheralStatus = (peripheralType, instance) => {
     const statusKey = `${peripheralType}_${instance}`;
-    return (
-      peripheralStatus[statusKey] || {
-        status: "available",
-        lastModified: null,
-        completeness: 0,
-      }
-    );
+    return peripheralStatus[statusKey] || {
+      status: "available",
+      lastModified: null,
+      completeness: 0,
+    };
   };
 
   const calculateCompleteness = (configuration) => {
@@ -473,20 +435,61 @@ export const McuProvider = ({ children }) => {
       }
     });
 
-    return Math.min(
-      100,
-      Math.round(
-        (score / (requiredFields.length * 2 + optionalFields.length)) * 100
-      )
-    );
+    return Math.min(100, Math.round((score / (requiredFields.length * 2 + optionalFields.length)) * 100));
   };
 
   const getAllPeripheralStatuses = () => {
     const statuses = {};
-    if (!selectedMcu) return statuses;
+    if (!state.selectedMcu || !state.selectedMcu.supportedPeripherals) return statuses;
 
-    Object.keys(selectedMcu.supportedPeripherals).forEach((peripheralType) => {
-      const instances = getAvailablePeripheralInstances(peripheralType);
+    // Get default supported peripherals if none specified
+    const supportedPeripherals = state.selectedMcu.supportedPeripherals || {
+      'UART': {
+        instances: ['UART1', 'UART2'],
+        pins: {
+          'UART1': { tx: 'TX1', rx: 'RX1' },
+          'UART2': { tx: 'TX2', rx: 'RX2' }
+        }
+      },
+      'SPI': {
+        instances: ['SPI1'],
+        pins: {
+          'SPI1': { mosi: 'MOSI', miso: 'MISO', sck: 'SCK' }
+        }
+      },
+      'I2C': {
+        instances: ['I2C1'],
+        pins: {
+          'I2C1': { sda: 'SDA', scl: 'SCL' }
+        }
+      },
+      'PWM': {
+        instances: ['PWM1', 'PWM2', 'PWM3', 'PWM4'],
+        pins: {
+          'PWM1': { output: 'PWM1' },
+          'PWM2': { output: 'PWM2' },
+          'PWM3': { output: 'PWM3' },
+          'PWM4': { output: 'PWM4' }
+        }
+      },
+      'ADC': {
+        instances: ['ADC1'],
+        pins: {
+          'ADC1': { input: 'ADC1' }
+        }
+      },
+      'GPIO': {
+        instances: ['PORTA', 'PORTB', 'PORTC'],
+        pins: {
+          'PORTA': { pin: 'PA' },
+          'PORTB': { pin: 'PB' },
+          'PORTC': { pin: 'PC' }
+        }
+      }
+    };
+
+    Object.keys(supportedPeripherals).forEach((peripheralType) => {
+      const instances = supportedPeripherals[peripheralType].instances || [];
       instances.forEach((instance) => {
         const statusKey = `${peripheralType}_${instance}`;
         statuses[statusKey] = getPeripheralStatus(peripheralType, instance);
@@ -496,9 +499,11 @@ export const McuProvider = ({ children }) => {
     return statuses;
   };
 
-  const value = {
-    selectedMcu,
+  const value = useMemo(() => ({
+    selectedMcu: state.selectedMcu,
     selectMcu,
+    mcuConfigurations,
+    peripheralStatus,
     updateMcuConfiguration,
     getCurrentConfiguration,
     getAvailablePeripheralInstances,
@@ -511,40 +516,25 @@ export const McuProvider = ({ children }) => {
     getPeripheralConfiguration,
     getPeripheralStatus,
     getAllPeripheralStatuses,
-    MCU_SPECIFICATIONS,
-  };
+    MCU_SPECIFICATIONS
+  }), [
+    state.selectedMcu,
+    mcuConfigurations,
+    peripheralStatus,
+    selectMcu,
+    updateMcuConfiguration,
+    getCurrentConfiguration,
+    getAvailablePeripheralInstances,
+    getPeripheralPins,
+    getAvailablePins,
+    isPinAvailable,
+    assignPinToPeripheral,
+    savePeripheralConfiguration,
+    deletePeripheralConfiguration,
+    getPeripheralConfiguration,
+    getPeripheralStatus,
+    getAllPeripheralStatuses
+  ]);
 
   return <McuContext.Provider value={value}>{children}</McuContext.Provider>;
-};
-
-/**
- * Custom hook for accessing the MCU context.
- * Provides access to the selected MCU's state, specifications, and a suite of functions
- * for managing configurations and peripherals.
- *
- * @returns {{
- *   selectedMcu: object | null,
- *   selectMcu: (mcuId: string) => void,
- *   updateMcuConfiguration: (configUpdate: object) => void,
- *   getCurrentConfiguration: () => object,
- *   getAvailablePeripheralInstances: (peripheralType: string) => string[],
- *   getPeripheralPins: (peripheralType: string, instance: string) => object,
- *   getAvailablePins: () => object[],
- *   isPinAvailable: (pinName: string) => boolean,
- *   assignPinToPeripheral: (peripheralType: string, instance: string, pinFunction: string, pinName: string) => void,
- *   savePeripheralConfiguration: (peripheralType: string, instance: string, configuration: object) => void,
- *   deletePeripheralConfiguration: (peripheralType: string, instance: string) => void,
- *   getPeripheralConfiguration: (peripheralType: string, instance: string) => object | null,
- *   getPeripheralStatus: (peripheralType: string, instance: string) => object,
- *   getAllPeripheralStatuses: () => object,
- *   MCU_SPECIFICATIONS: object
- * }} The MCU context.
- * @throws {Error} If used outside of an `McuProvider`.
- */
-export const useMcu = () => {
-  const context = useContext(McuContext);
-  if (!context) {
-    throw new Error("useMcu must be used within a McuProvider");
-  }
-  return context;
 };

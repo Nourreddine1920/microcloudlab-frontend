@@ -64,11 +64,31 @@ const Routes = () => {
             }
           />
           <Route
-            path="/ide/integrated"
+            path="/ide/mcu-selection"
             element={
               <ProtectedRoute requireAuth>
                 <McuProvider>
                   <IntegratedIDE />
+                </McuProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ide/peripheral-configuration-dashboard/*"
+            element={
+              <ProtectedRoute requireAuth>
+                <McuProvider>
+                  <PeripheralConfigurationDashboard />
+                </McuProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ide/peripheral-configuration-editor/*"
+            element={
+              <ProtectedRoute requireAuth>
+                <McuProvider>
+                  <PeripheralConfigurationEditor />
                 </McuProvider>
               </ProtectedRoute>
             }
@@ -84,11 +104,11 @@ const Routes = () => {
             }
           />
           <Route
-            path="/ide/configuration-import-export-manager"
+            path="/ide/pin-assignment-visualizer"
             element={
               <ProtectedRoute requireAuth>
                 <McuProvider>
-                  <ConfigurationImportExportManager />
+                  <PinAssignmentVisualizer />
                 </McuProvider>
               </ProtectedRoute>
             }
