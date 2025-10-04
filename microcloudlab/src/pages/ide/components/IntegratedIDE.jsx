@@ -4,10 +4,6 @@ import { useMcu } from '../context/McuContext';
 import Header from '../../../components/ui/Header';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
-import EnhancedMcuSelector from './EnhancedMcuSelector';
-import ConfigurationValidator from './ConfigurationValidator';
-import PinMappingVisualizer from './PinMappingVisualizer';
-import BoardSimulator from './BoardSimulator';
 
 /**
  * @module IntegratedIDE
