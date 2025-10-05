@@ -1,20 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Icon from '../../../components/AppIcon';
 
-/**
- * @module PerformanceMetrics
- */
-
-/**
- * A component that displays real-time performance metrics for a running project.
- * It shows data such as compilation time, execution speed, memory usage, and more,
- * updating periodically when a project is active.
- *
- * @param {object} props - The properties for the component.
- * @param {boolean} props.isRunning - A flag indicating if a project is currently running.
- * @param {object|null} props.selectedProject - The currently selected project object, used to determine base metrics.
- * @returns {JSX.Element} The rendered performance metrics component.
- */
 const PerformanceMetrics = ({ isRunning, selectedProject }) => {
   const [metrics, setMetrics] = useState({
     compilationTime: 0,
@@ -112,13 +98,13 @@ const PerformanceMetrics = ({ isRunning, selectedProject }) => {
   const getStatusColor = (value, type) => {
     switch (type) {
       case 'good':
-        return value > 80 ? 'text-success-400' : value > 60 ? 'text-warning-400' : 'text-error-400';
+        return value > 80 ? 'text-success' : value > 60 ? 'text-warning' : 'text-error';
       case 'usage':
-        return value < 30 ? 'text-success-400' : value < 70 ? 'text-warning-400' : 'text-error-400';
+        return value < 30 ? 'text-success' : value < 70 ? 'text-warning' : 'text-error';
       case 'latency':
-        return value < 20 ? 'text-success-400' : value < 50 ? 'text-warning-400' : 'text-error-400';
+        return value < 20 ? 'text-success' : value < 50 ? 'text-warning' : 'text-error';
       default:
-        return 'text-gray-200';
+        return 'text-text-primary';
     }
   };
 
@@ -127,15 +113,15 @@ const PerformanceMetrics = ({ isRunning, selectedProject }) => {
       title: 'Compilation Time',
       value: `${metrics.compilationTime.toFixed(1)}s`,
       icon: 'Clock',
-      description: 'Cloud compilation',
-      color: metrics.compilationTime < 2 ? 'text-success-400' : metrics.compilationTime < 5 ? 'text-warning-400' : 'text-error-400',
+      description: 'Cloud compilation speed',
+      color: metrics.compilationTime < 2 ? 'text-success' : metrics.compilationTime < 5 ? 'text-warning' : 'text-error',
       trend: 'stable'
     },
     {
       title: 'Execution Speed',
       value: `${metrics.executionSpeed.toFixed(0)}%`,
       icon: 'Zap',
-      description: 'Performance',
+      description: 'Performance efficiency',
       color: getStatusColor(metrics.executionSpeed, 'good'),
       trend: 'up'
     },
@@ -159,97 +145,94 @@ const PerformanceMetrics = ({ isRunning, selectedProject }) => {
       title: 'Network Latency',
       value: `${metrics.networkLatency.toFixed(0)}ms`,
       icon: 'Wifi',
-      description: 'Cloud connection',
+      description: 'Cloud connection speed',
       color: getStatusColor(metrics.networkLatency, 'latency'),
       trend: 'stable'
     },
     {
       title: 'Uptime',
       value: formatUptime(metrics.uptime),
-      icon: 'ShieldCheck',
+      icon: 'Clock',
       description: 'Session duration',
-      color: 'text-success-400',
+      color: 'text-success',
       trend: 'up'
     }
   ];
 
   return (
-    <div className="bg-surface/50 rounded-lg border border-border h-full flex flex-col">
-      <div className="flex items-center justify-between p-3 border-b border-border">
+    <div className="bg-surface rounded-lg border border-border p-4">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
-          <Icon name="BarChart3" size={20} className="text-primary" />
+          <Icon name="BarChart3" size={18} className="text-primary" />
           <h3 className="font-semibold text-text-primary">Performance Metrics</h3>
         </div>
         
         <div className="flex items-center space-x-2">
-          <div className={`w-2.5 h-2.5 rounded-full ${isRunning ? 'bg-success animate-pulse' : 'bg-gray-500'}`}></div>
-          <span className="text-xs text-text-secondary font-medium">
-            {isRunning ? 'Live' : 'Standby'}
+          <div className={`w-2 h-2 rounded-full ${isRunning ? 'bg-success pulse-glow' : 'bg-text-secondary'}`}></div>
+          <span className="text-xs text-text-secondary">
+            {isRunning ? 'Live Monitoring' : 'Standby'}
           </span>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-3">
-        {!isRunning ? (
-          <div className="text-center py-12">
-            <Icon name="BarChart3" size={36} className="text-text-secondary mx-auto mb-3 opacity-40" />
-            <p className="text-text-secondary font-medium">Run a project</p>
-            <p className="text-text-secondary text-sm">to see performance metrics</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-            {metricCards.map((metric, index) => (
-              <div key={index} className="bg-surface rounded-md p-3 border border-border transform transition-transform hover:scale-105 hover:shadow-lg">
-                <div className="flex items-center justify-between mb-2">
-                  <Icon name={metric.icon} size={18} className="text-primary" />
-                  <Icon
-                    name={
-                      metric.trend === 'up' ? 'TrendingUp' :
-                      metric.trend === 'down' ? 'TrendingDown' : 'Minus'
-                    }
-                    size={14}
-                    className={
-                      metric.trend === 'up' ? 'text-success-400' :
-                      metric.trend === 'down' ? 'text-error-400' : 'text-gray-500'
-                    }
-                  />
-                </div>
-
-                <div className={`text-xl font-bold ${metric.color} mb-0.5`}>
-                  {metric.value}
-                </div>
-
-                <div className="text-xs text-text-primary font-semibold">
-                  {metric.title}
-                </div>
-
-                <div className="text-2xs text-text-secondary mt-0.5">
-                  {metric.description}
-                </div>
+      {!isRunning ? (
+        <div className="text-center py-8">
+          <Icon name="BarChart3" size={32} className="text-text-secondary mx-auto mb-2 opacity-50" />
+          <p className="text-text-secondary">Run a project to see performance metrics</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+          {metricCards.map((metric, index) => (
+            <div key={index} className="bg-background rounded-lg p-3 border border-border">
+              <div className="flex items-center justify-between mb-2">
+                <Icon name={metric.icon} size={16} className="text-primary" />
+                <Icon 
+                  name={
+                    metric.trend === 'up' ? 'TrendingUp' : 
+                    metric.trend === 'down' ? 'TrendingDown' : 'Minus'
+                  } 
+                  size={12} 
+                  className={
+                    metric.trend === 'up' ? 'text-success' : 
+                    metric.trend === 'down' ? 'text-error' : 'text-text-secondary'
+                  } 
+                />
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+              
+              <div className={`text-lg font-semibold ${metric.color} mb-1`}>
+                {metric.value}
+              </div>
+              
+              <div className="text-xs text-text-secondary">
+                {metric.title}
+              </div>
+              
+              <div className="text-xs text-text-secondary mt-1 opacity-75">
+                {metric.description}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* System Status */}
       {isRunning && (
-        <div className="p-3 border-t border-border bg-background/50">
-          <div className="flex items-center justify-between text-xs text-text-secondary font-medium">
-            <div className="flex items-center space-x-3">
+        <div className="mt-4 pt-4 border-t border-border">
+          <div className="flex items-center justify-between text-xs text-text-secondary">
+            <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1">
-                <Icon name="Server" size={14} className="text-success-400" />
-                <span>Cloud: OK</span>
+                <Icon name="Server" size={12} className="text-success" />
+                <span>Cloud Server: Online</span>
               </div>
               <div className="flex items-center space-x-1">
-                <Icon name="Shield" size={14} className="text-success-400" />
-                <span>Security: OK</span>
+                <Icon name="Shield" size={12} className="text-success" />
+                <span>Security: Active</span>
               </div>
             </div>
             
-            <div className="flex items-center space-x-1.5">
+            <div className="flex items-center space-x-1">
               <Icon name="RefreshCw" size={12} className="text-primary animate-spin" />
-              <span>Auto-refreshing</span>
+              <span>Auto-refresh: 1s</span>
             </div>
           </div>
         </div>

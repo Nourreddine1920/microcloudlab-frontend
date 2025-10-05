@@ -2,20 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
-/**
- * @module SerialMonitor
- */
-
-/**
- * A component that simulates a serial monitor for viewing output from and sending commands to a running project.
- * It displays timestamped messages with different types (info, success, error, data, command, response)
- * and provides an input field for sending commands.
- *
- * @param {object} props - The properties for the component.
- * @param {boolean} props.isRunning - A flag indicating if a project is currently running, which activates the monitor.
- * @param {object|null} props.selectedProject - The currently selected project object, used to source the appropriate mock output.
- * @returns {JSX.Element} The rendered serial monitor component.
- */
 const SerialMonitor = ({ isRunning, selectedProject }) => {
   const [output, setOutput] = useState([]);
   const [input, setInput] = useState('');
@@ -106,13 +92,13 @@ const SerialMonitor = ({ isRunning, selectedProject }) => {
 
   const getMessageColor = (type) => {
     switch (type) {
-      case 'success': return 'text-success-400';
-      case 'error': return 'text-error-400';
-      case 'warning': return 'text-warning-400';
-      case 'command': return 'text-accent-400';
-      case 'response': return 'text-primary-400';
-      case 'data': return 'text-gray-200';
-      default: return 'text-gray-400';
+      case 'success': return 'text-success';
+      case 'error': return 'text-error';
+      case 'warning': return 'text-warning';
+      case 'command': return 'text-accent';
+      case 'response': return 'text-primary';
+      case 'data': return 'text-text-primary';
+      default: return 'text-text-secondary';
     }
   };
 
@@ -121,22 +107,22 @@ const SerialMonitor = ({ isRunning, selectedProject }) => {
       case 'success': return 'CheckCircle';
       case 'error': return 'XCircle';
       case 'warning': return 'AlertTriangle';
-      case 'command': return 'ChevronsRight';
-      case 'response': return 'ChevronsLeft';
-      case 'data': return 'Code';
+      case 'command': return 'Terminal';
+      case 'response': return 'ArrowLeft';
+      case 'data': return 'Activity';
       default: return 'Info';
     }
   };
 
   return (
-    <div className="bg-gray-900 rounded-lg border border-border h-full flex flex-col shadow-lg">
+    <div className="bg-surface rounded-lg border border-border h-full flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b border-gray-700 bg-gray-800/50 rounded-t-lg">
+      <div className="flex items-center justify-between p-4 border-b border-border">
         <div className="flex items-center space-x-3">
-          <Icon name="Terminal" size={20} className="text-primary" />
+          <Icon name="Terminal" size={18} className="text-primary" />
           <div>
-            <h3 className="font-semibold text-white">Serial Monitor</h3>
-            <div className="flex items-center space-x-2 text-xs text-gray-400">
+            <h3 className="font-semibold text-text-primary">Serial Monitor</h3>
+            <div className="flex items-center space-x-2 text-xs text-text-secondary">
               <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-success' : 'bg-error'}`}></div>
               <span>{isConnected ? 'Connected' : 'Disconnected'}</span>
               <span>•</span>
@@ -149,7 +135,7 @@ const SerialMonitor = ({ isRunning, selectedProject }) => {
           <select 
             value={baudRate} 
             onChange={(e) => setBaudRate(Number(e.target.value))}
-            className="text-xs bg-gray-800 border border-gray-600 rounded px-2 py-1 text-white focus:ring-primary focus:border-primary"
+            className="text-xs bg-background border border-border rounded px-2 py-1 text-text-primary"
           >
             <option value={9600}>9600</option>
             <option value={19200}>19200</option>
@@ -162,7 +148,7 @@ const SerialMonitor = ({ isRunning, selectedProject }) => {
             size="sm"
             iconName="Trash2"
             onClick={clearOutput}
-            className="text-xs !border-gray-600 hover:!bg-gray-700"
+            className="text-xs"
           >
             Clear
           </Button>
@@ -172,10 +158,10 @@ const SerialMonitor = ({ isRunning, selectedProject }) => {
       {/* Output Area */}
       <div 
         ref={outputRef}
-        className="flex-1 overflow-y-auto p-4 bg-black/30 font-mono text-sm"
+        className="flex-1 overflow-y-auto p-4 bg-background/50 font-code text-sm"
       >
         {output.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-500">
+          <div className="flex items-center justify-center h-full text-text-secondary">
             <div className="text-center">
               <Icon name="Terminal" size={32} className="mx-auto mb-2 opacity-50" />
               <p>Serial monitor ready</p>
@@ -183,18 +169,18 @@ const SerialMonitor = ({ isRunning, selectedProject }) => {
             </div>
           </div>
         ) : (
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             {output.map((item) => (
-              <div key={item.id} className="flex items-start space-x-3">
-                <span className="text-xs text-gray-600">
+              <div key={item.id} className="flex items-start space-x-2">
+                <span className="text-xs text-text-secondary font-mono">
                   {item.timestamp.toLocaleTimeString()}
                 </span>
                 <Icon 
                   name={getMessageIcon(item.type)} 
-                  size={14}
+                  size={12} 
                   className={`mt-0.5 ${getMessageColor(item.type)}`} 
                 />
-                <span className={`flex-1 ${getMessageColor(item.type)} whitespace-pre-wrap`}>
+                <span className={`flex-1 ${getMessageColor(item.type)}`}>
                   {item.message}
                 </span>
               </div>
@@ -204,7 +190,7 @@ const SerialMonitor = ({ isRunning, selectedProject }) => {
       </div>
 
       {/* Input Area */}
-      <div className="p-3 border-t border-gray-700 bg-gray-800/50 rounded-b-lg">
+      <div className="p-4 border-t border-border">
         <div className="flex space-x-2">
           <input
             type="text"
@@ -213,7 +199,7 @@ const SerialMonitor = ({ isRunning, selectedProject }) => {
             onKeyPress={(e) => e.key === 'Enter' && handleSendCommand()}
             placeholder={isConnected ? "Send command to device..." : "Connect to device first"}
             disabled={!isConnected}
-            className="flex-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary font-mono"
+            className="flex-1 px-3 py-2 bg-background border border-border rounded text-sm text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary font-code"
           />
           <Button
             variant="primary"
@@ -221,7 +207,7 @@ const SerialMonitor = ({ isRunning, selectedProject }) => {
             iconName="Send"
             onClick={handleSendCommand}
             disabled={!isConnected || !input.trim()}
-            className="bg-accent hover:bg-accent/90 text-black"
+            className="bg-accent hover:bg-accent/90"
           >
             Send
           </Button>

@@ -2,19 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 
-/**
- * @module VirtualOscilloscope
- */
-
-/**
- * A component that simulates a virtual oscilloscope to visualize waveforms from a running project.
- * It uses the HTML5 Canvas API to draw a grid and the waveform, which is generated based on the selected project.
- *
- * @param {object} props - The properties for the component.
- * @param {boolean} props.isRunning - A flag indicating if a project is currently running, which activates the oscilloscope.
- * @param {object|null} props.selectedProject - The currently selected project object, used to determine the type of waveform to display.
- * @returns {JSX.Element} The rendered virtual oscilloscope component.
- */
 const VirtualOscilloscope = ({ isRunning, selectedProject }) => {
   const canvasRef = useRef(null);
   const [isActive, setIsActive] = useState(false);
@@ -48,7 +35,7 @@ const VirtualOscilloscope = ({ isRunning, selectedProject }) => {
 
     const animate = () => {
       // Clear canvas
-      ctx.fillStyle = '#0f172a'; // slate-900
+      ctx.fillStyle = '#0a0a0a';
       ctx.fillRect(0, 0, width, height);
 
       // Draw grid
@@ -78,14 +65,14 @@ const VirtualOscilloscope = ({ isRunning, selectedProject }) => {
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#0f172a'; // slate-900
+      ctx.fillStyle = '#0a0a0a';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       drawGrid(ctx, canvas.width, canvas.height);
     }
   };
 
   const drawGrid = (ctx, width, height) => {
-    ctx.strokeStyle = 'rgba(0, 255, 136, 0.1)';
+    ctx.strokeStyle = '#1a1a2e';
     ctx.lineWidth = 1;
 
     // Vertical lines
@@ -105,8 +92,8 @@ const VirtualOscilloscope = ({ isRunning, selectedProject }) => {
     }
 
     // Center lines (brighter)
-    ctx.strokeStyle = 'rgba(0, 255, 136, 0.2)';
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#334155';
+    ctx.lineWidth = 2;
     
     // Center horizontal
     ctx.beginPath();
@@ -156,9 +143,9 @@ const VirtualOscilloscope = ({ isRunning, selectedProject }) => {
     if (waveform.length === 0) return;
 
     ctx.strokeStyle = '#00ff88';
-    ctx.lineWidth = 2.5;
-    ctx.shadowColor = 'rgba(0, 255, 136, 0.5)';
-    ctx.shadowBlur = 12;
+    ctx.lineWidth = 2;
+    ctx.shadowColor = '#00ff88';
+    ctx.shadowBlur = 10;
 
     ctx.beginPath();
     
@@ -209,18 +196,18 @@ const VirtualOscilloscope = ({ isRunning, selectedProject }) => {
   const waveformInfo = getProjectWaveformInfo(selectedProject?.id);
 
   return (
-    <div className="bg-gray-900 rounded-lg border border-border h-full flex flex-col shadow-lg">
+    <div className="bg-surface rounded-lg border border-border h-full flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b border-gray-700 bg-gray-800/50 rounded-t-lg">
+      <div className="flex items-center justify-between p-4 border-b border-border">
         <div className="flex items-center space-x-3">
-          <Icon name="Activity" size={20} className="text-accent" />
+          <Icon name="Activity" size={18} className="text-accent" />
           <div>
-            <h3 className="font-semibold text-white">Virtual Oscilloscope</h3>
-            <div className="flex items-center space-x-2 text-xs text-gray-400">
-              <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-accent pulse-glow' : 'bg-gray-500'}`}></div>
+            <h3 className="font-semibold text-text-primary">Virtual Oscilloscope</h3>
+            <div className="flex items-center space-x-2 text-xs text-text-secondary">
+              <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-accent pulse-glow' : 'bg-text-secondary'}`}></div>
               <span>{isActive ? 'Active' : 'Standby'}</span>
               <span>•</span>
-              <span className="truncate max-w-[150px]">{waveformInfo.signal}</span>
+              <span>{waveformInfo.signal}</span>
             </div>
           </div>
         </div>
@@ -230,7 +217,7 @@ const VirtualOscilloscope = ({ isRunning, selectedProject }) => {
             variant="outline"
             size="sm"
             iconName="Settings"
-            className="text-xs !border-gray-600 hover:!bg-gray-700"
+            className="text-xs"
           >
             Settings
           </Button>
@@ -238,8 +225,8 @@ const VirtualOscilloscope = ({ isRunning, selectedProject }) => {
       </div>
 
       {/* Oscilloscope Display */}
-      <div className="flex-1 p-4 bg-black/30">
-        <div className="bg-slate-900 rounded-md h-full relative overflow-hidden border border-gray-700">
+      <div className="flex-1 p-4">
+        <div className="bg-black rounded-lg border-2 border-accent/20 h-full relative overflow-hidden">
           <canvas
             ref={canvasRef}
             width={600}
@@ -249,30 +236,30 @@ const VirtualOscilloscope = ({ isRunning, selectedProject }) => {
           />
           
           {/* Voltage Indicator */}
-          <div className="absolute top-3 right-3 bg-slate-800/70 backdrop-blur-sm rounded-md px-3 py-1.5 border border-accent/20">
-            <div className="text-accent font-mono text-xl font-bold tracking-wider">
+          <div className="absolute top-4 right-4 bg-black/80 rounded px-3 py-2 border border-accent/30">
+            <div className="text-accent font-code text-lg font-bold">
               {voltage.toFixed(2)}V
             </div>
-            <div className="text-xs text-gray-400 text-right">Live</div>
+            <div className="text-xs text-text-secondary">Current</div>
           </div>
           
           {/* Signal Info */}
-          <div className="absolute bottom-3 left-3 bg-slate-800/70 backdrop-blur-sm rounded-md px-3 py-1.5 border border-accent/20">
-            <div className="text-accent text-sm font-semibold">{waveformInfo.type}</div>
-            <div className="text-xs text-gray-400 truncate max-w-[250px]">{waveformInfo.description}</div>
+          <div className="absolute bottom-4 left-4 bg-black/80 rounded px-3 py-2 border border-accent/30">
+            <div className="text-accent text-sm font-medium">{waveformInfo.type}</div>
+            <div className="text-xs text-text-secondary">{waveformInfo.description}</div>
           </div>
         </div>
       </div>
 
       {/* Controls */}
-      <div className="p-3 border-t border-gray-700 bg-gray-800/50 rounded-b-lg">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="p-4 border-t border-border bg-background/50">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
-            <label className="block text-xs text-gray-400 mb-1">Time Scale</label>
+            <label className="block text-xs text-text-secondary mb-1">Time Scale</label>
             <select 
               value={timeScale}
               onChange={(e) => setTimeScale(Number(e.target.value))}
-              className="w-full text-xs bg-gray-800 border border-gray-600 rounded px-2 py-1.5 text-white focus:ring-primary focus:border-primary"
+              className="w-full text-xs bg-background border border-border rounded px-2 py-1 text-text-primary"
             >
               <option value={0.5}>0.5s/div</option>
               <option value={1}>1s/div</option>
@@ -282,11 +269,11 @@ const VirtualOscilloscope = ({ isRunning, selectedProject }) => {
           </div>
           
           <div>
-            <label className="block text-xs text-gray-400 mb-1">Voltage Scale</label>
+            <label className="block text-xs text-text-secondary mb-1">Voltage Scale</label>
             <select 
               value={voltageScale}
               onChange={(e) => setVoltageScale(Number(e.target.value))}
-              className="w-full text-xs bg-gray-800 border border-gray-600 rounded px-2 py-1.5 text-white focus:ring-primary focus:border-primary"
+              className="w-full text-xs bg-background border border-border rounded px-2 py-1 text-text-primary"
             >
               <option value={1}>1V/div</option>
               <option value={2}>2V/div</option>
@@ -296,11 +283,11 @@ const VirtualOscilloscope = ({ isRunning, selectedProject }) => {
           </div>
           
           <div>
-            <label className="block text-xs text-gray-400 mb-1">Frequency</label>
+            <label className="block text-xs text-text-secondary mb-1">Frequency</label>
             <select 
               value={frequency}
               onChange={(e) => setFrequency(Number(e.target.value))}
-              className="w-full text-xs bg-gray-800 border border-gray-600 rounded px-2 py-1.5 text-white focus:ring-primary focus:border-primary"
+              className="w-full text-xs bg-background border border-border rounded px-2 py-1 text-text-primary"
             >
               <option value={0.5}>0.5 Hz</option>
               <option value={1}>1 Hz</option>
@@ -313,11 +300,11 @@ const VirtualOscilloscope = ({ isRunning, selectedProject }) => {
             <Button
               variant={isActive ? "primary" : "outline"}
               size="sm"
-              iconName={isActive ? "PauseCircle" : "PlayCircle"}
+              iconName={isActive ? "Pause" : "Play"}
               iconPosition="left"
               fullWidth
               onClick={() => isActive ? stopOscilloscope() : startOscilloscope()}
-              className={`text-xs ${isActive ? 'bg-accent hover:bg-accent/90 text-black' : '!border-gray-600 hover:!bg-gray-700'}`}
+              className="text-xs"
             >
               {isActive ? 'Pause' : 'Start'}
             </Button>
